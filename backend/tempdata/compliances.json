@@ -1,0 +1,1 @@
+[{"model": "api.compliance", "pk": "EFI-전자금융-202001", "fields": {"id": 2, "name": "전자금융", "category": "EFI", "alias": "", "year": 2020, "no": 1, "date": "2021-01-21"}}, {"model": "api.compliance", "pk": "EFI-전자금융-202101", "fields": {"id": 1, "name": "전자금융", "category": "EFI", "alias": "", "year": 2021, "no": 1, "date": "2021-01-21"}}]
