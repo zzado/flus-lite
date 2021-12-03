@@ -29,10 +29,22 @@ class SignInAPI(views.APIView):
     def post(self, request):
         userObj = authenticate(username=request.data.get('username'), password=request.data.get('password'))
         if userObj is not None:
-            token = Token.objects.get(user=userObj)
-            return response.Response({"Token": token.key})
+            tokenObj = Token.objects.get(user=userObj)
+            return response.Response({"Token": tokenObj.key})
         else:
             return response.Response({f'Wrong ID/PW'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class UserInfoGetAPI(views.APIView):
+    def get(self, request):
+        try:
+            tokenObj = Token.objects.get(key=request.auth)
+        except Token.DoesNotExist:
+            return response.Response({'Invaild Token.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return response.Response({'username': tokenObj.user.username,'is_manager': tokenObj.user.is_staff, 'is_admin':tokenObj.user.is_superuser})
+        
+
+            
 
 

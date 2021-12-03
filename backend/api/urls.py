@@ -5,7 +5,8 @@ from api.views import *
 urlpatterns = [
     path('auth/signup/', SignUpAPI.as_view()),
     path('auth/signin/', SignInAPI.as_view()),
-
+    path('auth/user/', UserInfoGetAPI.as_view()),
+    
     path('project/', ProjectListCreateAPI.as_view()),
     path('project/<int:pk>/', ProjectDetailUpdateDeleteAPI.as_view()),
 
