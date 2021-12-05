@@ -1,5 +1,4 @@
-import NavBar from '../NavBar/navbar'
-import { useState, useEffect, Fragment, useContext } from 'react';
+import { useEffect, Fragment, useContext } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import {LayOutContext} from "../LayOut/layout"
 import * as utils from '../../utils'

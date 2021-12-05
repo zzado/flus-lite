@@ -1,4 +1,4 @@
-import { Link, } from "react-router-dom";
+import { Link, Navigate} from "react-router-dom";
 import {Dropdown,DropdownButton } from "react-bootstrap";
 import {LayOutContext} from "../LayOut/layout";
 import {useContext} from "react";
@@ -9,8 +9,8 @@ function TopBar(props){
   const ProjectSelectButton = () => {
     return (
       <DropdownButton id="dropdown-basic-button" size="sm" 
-         onSelect={(evtkey)=>
-          {
+        onSelect={(evtkey)=>
+        {
             setSelectedProject(projectList.find( (e) => e.id === parseInt(evtkey)));
          }} 
         title={selectedProject.name || "프로젝트 선택 (클릭하세요)"}
@@ -96,8 +96,8 @@ function SideBar(props){
   return (
     <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
       <div className="banner">
-        <Link to="/dashboard" className="logo" style={{ textDecoration: 'none' }}><span>FLUS</span><span className="logo version">LITE</span></Link>
-        <Link to="/dashboard"><img className="logo image" src="/img/banner-logo.png" alt=""/></Link>
+        <a href="/dashboard" className="logo" style={{ textDecoration: 'none' }}><span>FLUS</span><span className="logo version">LITE</span></a>
+        <a href="/dashboard"><img className="logo image" src="/img/banner-logo.png" alt=""/></a>
       </div>
 
       <div className="sidebar-heading" style={{color: '#FFF'}}>
@@ -105,28 +105,28 @@ function SideBar(props){
       </div>
 
       <li className="nav-item">
-        <a className="nav-link" href="/dashboard/">
+        <a className="nav-link" href="/dashboard">
           <i className="fas fa-fw fa-tasks" />
           <span>프로젝트 진행현황</span>
         </a>
       </li>
 
       <li className="nav-item">
-        <a className="nav-link collapsed" href="/p/">
+        <a className="nav-link collapsed" href="/p">
           <i className="fas fa-fw fa-cog" />
           <span>프로젝트 관리</span>
         </a>
       </li>
 
       <li className="nav-item">
-        <a className="nav-link collapsed">
+        <span className="nav-link collapsed">
           <i className="fas fa-fw fa-wrench" />
           <span>분야별 평가수행</span>
-        </a>
+        </span>
         <div className="collapse_display">
           <div className="bg-white py-2 collapse-inner rounded">
           { areaAliasList && areaAliasList.map((areaAlias, idx) => (
-            <Link to={`/p/${selectedProject}/${areaAlias}`} className="dropdown-item dropdown-item1 flus_url">{areaAlias}</Link>
+            <Link to={`/p/${selectedProject}/${areaAlias}`} key={idx} className="dropdown-item dropdown-item1 flus_url">{areaAlias}</Link>
           ))}
           </div>
         </div>
@@ -146,8 +146,8 @@ function SideBar(props){
 
         <div className="collapse_display" >
           <div className="bg-white py-2 collapse-inner rounded">
-            <a className="dropdown-item dropdown-item1" style={{cursor: 'pointer'}} href="/p/total_project_stats/">프로젝트 통계</a>
-            <a className="dropdown-item dropdown-item2" style={{cursor: 'pointer'}} href="/p/total_project_report/">프로젝트 결과서</a>
+            <a className="dropdown-item dropdown-item1" style={{cursor: 'pointer'}} href="/p/total_project_stats">프로젝트 통계</a>
+            <a className="dropdown-item dropdown-item2" style={{cursor: 'pointer'}} href="/p/total_project_report">프로젝트 결과서</a>
           </div>
         </div>
       </li>
@@ -171,11 +171,11 @@ function SideBar(props){
       </div>
       <div className="collapse_display">
         <div className="bg-white py-2 collapse-inner rounded">
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/tools/2021-01/fsi_server_tools%20(script).zip">서버 점검 스크립트</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/tools/2021-01/fsi_db_tools%20(sql_script).zip">DB 점검 SQL/스크립트</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/tools/2021-01/PersonalWindowsAnalysis_batch.zip">단말기 정보 수집 스크립트</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/tools/2021-01/FISM_INF.zip">비조치 의견서 모음</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/tools/2021-01/FSI_Standard.zip">취약점 분석평가 기준(엑셀)</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/tools/2021-01/fsi_server_tools%20(script).zip">서버 점검 스크립트</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/tools/2021-01/fsi_db_tools%20(sql_script).zip">DB 점검 SQL/스크립트</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/tools/2021-01/PersonalWindowsAnalysis_batch.zip">단말기 정보 수집 스크립트</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/tools/2021-01/FISM_INF.zip">비조치 의견서 모음</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/tools/2021-01/FSI_Standard.zip">취약점 분석평가 기준(엑셀)</a>
         </div>
       </div>
     </li>
@@ -187,9 +187,9 @@ function SideBar(props){
       </div>
       <div className="collapse_display">
         <div className="bg-white py-2 collapse-inner rounded">
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/documents/vul_statistics%20(graph).xlsx">통계 그래프 양식(XlSX)</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/documents/2021-01/document_form.zip">회의자료/결과서 양식</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/static/documents/2021-01/FSS.zip">금감원 제출 결과보고서 양식</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/documents/vul_statistics%20(graph).xlsx">통계 그래프 양식(XlSX)</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/documents/2021-01/document_form.zip">회의자료/결과서 양식</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/static/documents/2021-01/FSS.zip">금감원 제출 결과보고서 양식</a>
         </div>
       </div>
     </li>
@@ -205,8 +205,8 @@ function SideBar(props){
       <div className="collapse_display">
         <div className="bg-white py-2 collapse-inner rounded">
           <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/B4B31897454E430EF17C8FDB44FA140E/">계정 관리</a>
-          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} file-url="/compliance/">평가기준 관리</a>
-          <a className="dropdown-item dropdown-item1" style={{cursor: 'pointer'}} id="export_log_link"  data-url="/p/export_log/">로그 내보내기</a>
+          <a className="dropdown-item dropdown-item1 static_file_download" style={{cursor: 'pointer'}} href="/compliance/">평가기준 관리</a>
+          <a className="dropdown-item dropdown-item1" style={{cursor: 'pointer'}} id="export_log_link"  href="/p/export_log/">로그 내보내기</a>
         </div>
       </div>
     </li>

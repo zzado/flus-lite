@@ -1,5 +1,4 @@
-import { BrowserRouter,Routes, Route,useNavigate } from "react-router-dom";
-import { useState,useEffect } from 'react';
+import { BrowserRouter,Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./utils";
 
 import AuthPage from "./components/AuthPage/auth";
@@ -7,6 +6,7 @@ import DashBoard from "./components/DashBoard/dashboard";
 import ProjectManager from "./components/ProjectManager/project-manager";
 import  LayOut from './components/LayOut/layout'
 
+import './bootstrap.min.css';
 import './flus.css';
 
 function App (){

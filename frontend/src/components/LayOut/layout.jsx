@@ -1,10 +1,10 @@
-import { useState,useEffect, useContext, useMemo, createContext } from 'react';
+import { useState,useEffect, useMemo, createContext } from 'react';
 import { Outlet,useNavigate } from "react-router-dom";
 import { SideBar, TopBar } from "../NavBar/navbar";
 import * as utils from '../../utils'
 
 export const LayOutContext = createContext({
-  selectedProject: () => {},
+  setSelectedProject: () => {},
   setSelectedAreaAlias: () => {},
   setAreaAliasList: () => {},
   selectedProject : {},
@@ -42,7 +42,6 @@ export default function LayOut(props){
       (result)? setProjectList(jsonData) : navigate('/auth');
     }
     getProjectInfo();
-    
   },[]);
 
   return(

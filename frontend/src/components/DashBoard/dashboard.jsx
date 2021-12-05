@@ -1,5 +1,4 @@
-import NavBar from '../NavBar/navbar'
-import { useState,useEffect,Fragment } from 'react';
+import { Fragment } from 'react';
 
 export default function DashBoard(props){
   
