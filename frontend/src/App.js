@@ -7,9 +7,6 @@ import DashBoard from "./components/DashBoard/dashboard";
 import ProjectManager from "./components/ProjectManager/project-manager";
 import  LayOut from './components/LayOut/layout'
 
-import './App.css';
-import './bootstrap.min.css';
-import './sb-admin-2.css';
 import './flus.css';
 
 function App (){
