@@ -24,10 +24,10 @@ function TopBar(props){
 
   const ProjectAreaSelectButton = (props) => {
     return (selectedProject.hasOwnProperty('id')) ? 
-      (<DropdownButton id="dropdown-basic-button" onSelect={(evtkey)=>
-        {
+      (<DropdownButton id="dropdown-basic-button" size="sm" title={selectedAreaAlias || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}} onSelect={(evtkey)=>
+      {
           setSelectedAreaAlias(evtkey);
-       }} size="sm" title={selectedAreaAlias || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}}>
+      }}>
       { areaAliasList && areaAliasList.map((areaAlias, idx) => (
         <Dropdown.Item as={Link} to={`/p/${selectedProject.id}/${areaAlias}`} key={idx} eventKey={areaAlias}>{areaAlias}</Dropdown.Item>
       ))}

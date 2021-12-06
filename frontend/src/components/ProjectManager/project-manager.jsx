@@ -7,7 +7,7 @@ export default function ProjectManager(props){
   const params = useParams();
   const navigate = useNavigate();
 
-  const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject  } = useContext(LayOutContext);
+  const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias  } = useContext(LayOutContext);
 
   useEffect(() => {
     const getProject = async()=>{
@@ -16,16 +16,28 @@ export default function ProjectManager(props){
       const [result, jsonData] = await utils.APIRequest(URL, OPTION);
       if(result){
         setSelectedProject(jsonData);
-        setAreaAliasList(selectedProject.area);
-        setSelectedAreaAlias('');
       }else{
         navigate('/auth');
       }
     }
-    (!selectedProject.hasOwnProperty('id')) ? getProject() : setAreaAliasList(selectedProject.area);
+    console.log('effected!');
+    if(!selectedProject.hasOwnProperty('id')){
+      getProject();
+    }
 
+  },[]);
+
+  useEffect(() => {
+    setAreaAliasList(selectedProject.area);
   },[selectedProject]);
 
+
+  return (params.areaAlias) ? <AreaAliasDetail/> : <ProjectDetail/>
+}
+
+
+function ProjectDetail(props){
+  const { selectedProject } = useContext(LayOutContext);
   return (
     <Fragment>
     <div style={{float: 'left', width: '100%', marginLeft: '1rem', marginBottom: '0.5rem', padding: 0}}>
@@ -34,7 +46,24 @@ export default function ProjectManager(props){
       </ol>
     </div>
     <div className="container-fluid" style={{width: '95%'}}>
-      proejct manager {params.projectId} 
+    ProjectDetail {selectedProject.id} 
+    </div>
+    </Fragment>
+  );
+}
+
+function AreaAliasDetail(props){
+  const { selectedProject, selectedAreaAlias } = useContext(LayOutContext);
+  
+  return (
+    <Fragment>
+    <div style={{float: 'left', width: '100%', marginLeft: '1rem', marginBottom: '0.5rem', padding: 0}}>
+      <ol className="breadcrumb" style={{margin: 0, padding: 0, background: 'rgba(255, 255, 255, 0)'}}>
+        <li className="breadcrumb-item">Nagivate</li>
+      </ol>
+    </div>
+    <div className="container-fluid" style={{width: '95%'}}>
+    AreaAliasDetail {selectedProject.id} {selectedAreaAlias} 
     </div>
     </Fragment>
   );
