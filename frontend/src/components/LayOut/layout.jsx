@@ -27,6 +27,11 @@ export default function LayOut(props){
   const contextValue = useMemo(() => ({ setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList }), [setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList ]);
   
   useEffect(() => {
+    setAreaAliasList(selectedProject.area);
+  },[selectedProject]);
+
+  useEffect(() => {
+    console.log('effetc! get projct')
     const getUserInfo = async()=>{
       const URL = 'api/auth/user/';
       const OPTION = {method: 'GET'};

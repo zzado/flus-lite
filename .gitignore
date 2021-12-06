@@ -1,0 +1,8 @@
+frontend/node_modlues/
+node_modules
+./frontend/node_modules/
+./activate
+venv/
+__pycache__/
+*.pyc
+.DS_Store

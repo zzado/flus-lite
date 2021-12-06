@@ -7,29 +7,12 @@ export default function ProjectManager(props){
   const params = useParams();
   const navigate = useNavigate();
 
-  const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias  } = useContext(LayOutContext);
+  const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, projectList  } = useContext(LayOutContext);
 
   useEffect(() => {
-    const getProject = async()=>{
-      const URL = `api/project/${params.projectId}/`;
-      const OPTION = {method: 'GET'};
-      const [result, jsonData] = await utils.APIRequest(URL, OPTION);
-      if(result){
-        setSelectedProject(jsonData);
-      }else{
-        navigate('/auth');
-      }
-    }
-    console.log('effected!');
-    if(!selectedProject.hasOwnProperty('id')){
-      getProject();
-    }
-
-  },[]);
-
-  useEffect(() => {
-    setAreaAliasList(selectedProject.area);
-  },[selectedProject]);
+    const projectObj = projectList.find((e) => e.id === parseInt(params.projectId));
+    if(projectObj) setSelectedProject( projectObj );
+  },[projectList]);
 
 
   return (params.areaAlias) ? <AreaAliasDetail/> : <ProjectDetail/>
