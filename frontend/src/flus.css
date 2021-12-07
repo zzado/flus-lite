@@ -526,3 +526,12 @@ label{float:left;min-width:80px;padding-right:10px;font-size:0.75rem;color:#8587
   text-decoration:none;
   margin-top: 0;
 }
+
+.menu-tabs{
+  padding-right: 0.1rem;
+}
+
+.menu-tabs-button{
+  font-weight: bold;
+  font-size: 0.75rem;
+}

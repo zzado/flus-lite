@@ -6,7 +6,7 @@ import DashBoard from "./components/DashBoard/dashboard";
 import ProjectManager from "./components/ProjectManager/project-manager";
 import  LayOut from './components/LayOut/layout'
 
-import './bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './flus.css';
 
 function App (){
@@ -19,11 +19,9 @@ function App (){
         <Route path="/" element={<PrivateRoute><LayOut /></PrivateRoute>} >
           <Route index element={<DashBoard />} />
           <Route path="dashboard" element={<DashBoard />} />
+          <Route path="p/" element={<ProjectManager />} />
           <Route path="p/:projectId/" element={<ProjectManager />} />
           <Route path="p/:projectId/:areaAlias" element={<ProjectManager />} />
-          <Route path="p/:projectId/:areaAlias/a/" element={<ProjectManager />} />
-          <Route path="p/:projectId/:areaAlias/a/:assetId" element={<ProjectManager />} />
-          
         </Route>
       </Routes>
     </BrowserRouter>

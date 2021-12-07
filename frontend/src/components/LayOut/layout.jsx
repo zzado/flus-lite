@@ -1,5 +1,5 @@
-import { useState,useEffect, useMemo, createContext } from 'react';
-import { Outlet,useNavigate } from "react-router-dom";
+import { useState,useEffect, useMemo, createContext, } from 'react';
+import { Outlet,useNavigate, useParams } from "react-router-dom";
 import { SideBar, TopBar } from "../NavBar/navbar";
 import * as utils from '../../utils'
 
@@ -16,22 +16,30 @@ export const LayOutContext = createContext({
 
 export default function LayOut(props){
   const [projectList, setProjectList] = useState([]);
-  const [selectedProject, setSelectedProject] = useState({});
-  
+  const [selectedProject, setSelectedProject] = useState({});  
   const [areaAliasList, setAreaAliasList] = useState([]);
   const [selectedAreaAlias, setSelectedAreaAlias] = useState('');
-  
   const [currentUser, setCurrentUser] = useState({ username: '', is_admin: '', is_manager: '' });
-  const navigate = useNavigate();
 
-  const contextValue = useMemo(() => ({ setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList }), [setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList ]);
+  const contextValue = useMemo(() => (
+    { setSelectedProject, 
+      setSelectedAreaAlias, 
+      setAreaAliasList, 
+      selectedProject, 
+      selectedAreaAlias, 
+      currentUser, 
+      projectList, 
+      areaAliasList 
+    }), [setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList ]);
   
   useEffect(() => {
     setAreaAliasList(selectedProject.area);
   },[selectedProject]);
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
-    console.log('effetc! get projct')
+    // init
     const getUserInfo = async()=>{
       const URL = 'api/auth/user/';
       const OPTION = {method: 'GET'};

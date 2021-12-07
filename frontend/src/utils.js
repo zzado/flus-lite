@@ -12,9 +12,7 @@ export async function APIRequest(URL, OPTION){
   OPTION.headers['Content-Type'] = 'application/json';
   
   const AUTH_TOKEN = localStorage.getItem('Token');
-  if(AUTH_TOKEN !== null){ 
-    OPTION.headers['Authorization'] = `Token ${AUTH_TOKEN}`;
-  }
+  if(AUTH_TOKEN !== null) OPTION.headers['Authorization'] = `Token ${AUTH_TOKEN}`;
   
   const responseObj = await fetch(URL, OPTION);
   if(responseObj.ok){

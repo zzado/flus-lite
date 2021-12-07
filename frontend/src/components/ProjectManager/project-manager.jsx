@@ -1,53 +1,21 @@
 import { useEffect, Fragment, useContext } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
-import {LayOutContext} from "../LayOut/layout"
-import * as utils from '../../utils'
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { LayOutContext } from "../LayOut/layout"
+import ProjectDetailPage from "./project-detail"
+import ProjectListPage from "./project-list"
 
 export default function ProjectManager(props){
-  const params = useParams();
-  const navigate = useNavigate();
-
-  const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, projectList  } = useContext(LayOutContext);
-
-  useEffect(() => {
-    const projectObj = projectList.find((e) => e.id === parseInt(params.projectId));
-    if(projectObj) setSelectedProject( projectObj );
-  },[projectList]);
-
-
-  return (params.areaAlias) ? <AreaAliasDetail/> : <ProjectDetail/>
-}
-
-
-function ProjectDetail(props){
-  const { selectedProject } = useContext(LayOutContext);
-  return (
-    <Fragment>
-    <div style={{float: 'left', width: '100%', marginLeft: '1rem', marginBottom: '0.5rem', padding: 0}}>
-      <ol className="breadcrumb" style={{margin: 0, padding: 0, background: 'rgba(255, 255, 255, 0)'}}>
-        <li className="breadcrumb-item">Nagivate</li>
-      </ol>
-    </div>
-    <div className="container-fluid" style={{width: '95%'}}>
-    ProjectDetail {selectedProject.id} 
-    </div>
-    </Fragment>
-  );
-}
-
-function AreaAliasDetail(props){
-  const { selectedProject, selectedAreaAlias } = useContext(LayOutContext);
+	const params = useParams();
   
-  return (
-    <Fragment>
-    <div style={{float: 'left', width: '100%', marginLeft: '1rem', marginBottom: '0.5rem', padding: 0}}>
-      <ol className="breadcrumb" style={{margin: 0, padding: 0, background: 'rgba(255, 255, 255, 0)'}}>
-        <li className="breadcrumb-item">Nagivate</li>
-      </ol>
-    </div>
-    <div className="container-fluid" style={{width: '95%'}}>
-    AreaAliasDetail {selectedProject.id} {selectedAreaAlias} 
-    </div>
-    </Fragment>
-  );
+	const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, projectList  } = useContext(LayOutContext);
+
+	useEffect(() => {
+		if(params.projectId){
+			const projectObj = projectList.find((e) => e.id === parseInt(params.projectId));
+			if(projectObj) setSelectedProject( projectObj );
+		}
+		if(params.areaAlias) setSelectedAreaAlias( params.areaAlias );
+	},[projectList, params]);
+
+	return (params.projectId) ? <ProjectDetailPage/> : <ProjectListPage/>
 }

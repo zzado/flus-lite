@@ -1,7 +1,7 @@
 import { Link, Navigate} from "react-router-dom";
 import {Dropdown,DropdownButton } from "react-bootstrap";
 import {LayOutContext} from "../LayOut/layout";
-import {useContext} from "react";
+import { useContext, Fragment } from "react";
 
 function TopBar(props){
   const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList } = useContext(LayOutContext);
@@ -12,7 +12,7 @@ function TopBar(props){
         onSelect={(evtkey)=>
         {
             setSelectedProject(projectList.find( (e) => e.id === parseInt(evtkey)));
-         }} 
+        }} 
         title={selectedProject.name || "프로젝트 선택 (클릭하세요)"}
         style={{float: 'left'}}>
       { projectList && projectList.map((projectObj) => (
@@ -73,8 +73,19 @@ function TopBar(props){
       ) : null;
   }
 
+  const CurrentPageInfo = () => {
+	return (
+		<div style={{float: 'left', width: '100%', marginLeft: '1rem', marginBottom: '1rem', marginTop: '1rem', padding: 0}}>
+			<ol className="breadcrumb" style={{margin: 0, padding: 0, background: 'rgba(255, 255, 255, 0)'}}>
+				<li className="breadcrumb-item">Nagivate</li>
+			</ol>
+		</div>
+	);
+  }
+
   return (
-    <nav className="navbar navbar-expand navbar-light mb-4 leftbar" style={{padding: '0px', margin: '0px', width: '100%', marginBottom: '0rem!important'}}>
+    <Fragment>
+    <nav className="navbar navbar-expand navbar-light leftbar" style={{padding: '0px', margin: '0px', width: '100%', marginBottom: '0rem!important'}}>
       <div className="shadow" style={{flexWrap: 'wrap', padding: '0.75rem 1rem', marginBottom: '1rem', listStyle: 'none', backgroundColor: '#fafafa', borderRadius: '0rem', margin: '0px', fontWeight: 'bold', width: '100%'}}>
         <ProjectSelectButton />
         <ProjectAreaSelectButton />
@@ -85,6 +96,8 @@ function TopBar(props){
         <AdminBadge/>
       </div>
     </nav>
+    <CurrentPageInfo/>
+    </Fragment>
   );
 };
 
@@ -112,7 +125,7 @@ function SideBar(props){
       </li>
 
       <li className="nav-item">
-        <a className="nav-link collapsed" href="/p">
+        <a className="nav-link collapsed" href="/p/">
           <i className="fas fa-fw fa-cog" />
           <span>프로젝트 관리</span>
         </a>
