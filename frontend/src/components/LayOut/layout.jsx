@@ -1,50 +1,24 @@
-import { useState,useEffect, useMemo, createContext, } from 'react';
+import { useState,useEffect, useMemo, createContext, useContext} from 'react';
 import { Outlet,useNavigate, useParams } from "react-router-dom";
 import { SideBar, TopBar } from "../NavBar/navbar";
 import * as utils from '../../utils'
 
-export const LayOutContext = createContext({
-  setSelectedProject: () => {},
-  setSelectedAreaAlias: () => {},
-  setAreaAliasList: () => {},
-  selectedProject : {},
-  selectedAreaAlias : {},
-  currentUser : {},
-  projectList : [],
-  areaAliasList : [],
-});
-
-export default function LayOut(props){
-  const [projectList, setProjectList] = useState([]);
-  const [selectedProject, setSelectedProject] = useState({});  
-  const [areaAliasList, setAreaAliasList] = useState([]);
-  const [selectedAreaAlias, setSelectedAreaAlias] = useState('');
-  const [currentUser, setCurrentUser] = useState({ username: '', is_admin: '', is_manager: '' });
-
-  const contextValue = useMemo(() => (
-    { setSelectedProject, 
-      setSelectedAreaAlias, 
-      setAreaAliasList, 
-      selectedProject, 
-      selectedAreaAlias, 
-      currentUser, 
-      projectList, 
-      areaAliasList 
-    }), [setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList ]);
-  
-  useEffect(() => {
-    setAreaAliasList(selectedProject.area);
-  },[selectedProject]);
-
+import { AppContext } from '../../Context/AppContext'
+export const LayOutContext = {};
+export default function LayOut({children}){
+  const {contextState, contextDispatch} = useContext(AppContext);
   const navigate = useNavigate();
   
+  // useEffect(() => {
+  //   contextDispatch({ type: 'effectProject' });
+  // },[contextState.projectList]);
+
   useEffect(() => {
-    // init
     const getUserInfo = async()=>{
       const URL = 'api/auth/user/';
       const OPTION = {method: 'GET'};
       const [result, jsonData] = await utils.APIRequest(URL, OPTION);
-      (result)? setCurrentUser(jsonData) : navigate('/auth');
+      (result)? contextDispatch({ type: 'setUser', value: jsonData }) : navigate('/auth');
     }
     getUserInfo();
 
@@ -52,22 +26,20 @@ export default function LayOut(props){
       const URL = 'api/project/';
       const OPTION = {method: 'GET'};
       const [result, jsonData] = await utils.APIRequest(URL, OPTION);
-      (result)? setProjectList(jsonData) : navigate('/auth');
+      (result)? contextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth');
     }
     getProjectInfo();
   },[]);
 
   return(
-    <LayOutContext.Provider value={contextValue}>
     <div id="wrapper">
       <SideBar/>
       <div id="content-wrapper" className="d-flex flex-column">
         <TopBar/>  
         <div>
-        <Outlet/>
+        {children}
         </div>
       </div>
     </div>
-    </LayOutContext.Provider>
     );
 };

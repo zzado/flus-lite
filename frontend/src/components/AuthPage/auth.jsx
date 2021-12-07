@@ -1,9 +1,13 @@
 import { Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as utils from '../../utils'
 
+import { AppContext } from '../../Context/AppContext'
+
 export default function AuthPage() {
+
+
   const [inputID, setInputID] = useState('');
   const [inputPW, setInputPW] = useState('');
   const navigate = useNavigate();

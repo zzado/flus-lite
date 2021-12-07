@@ -2,20 +2,21 @@ import { Link, Navigate} from "react-router-dom";
 import {Dropdown,DropdownButton } from "react-bootstrap";
 import {LayOutContext} from "../LayOut/layout";
 import { useContext, Fragment } from "react";
+import { AppContext} from '../../Context/AppContext' 
 
 function TopBar(props){
-  const { setSelectedProject, setSelectedAreaAlias, setAreaAliasList, selectedProject, selectedAreaAlias, currentUser, projectList, areaAliasList } = useContext(LayOutContext);
-  
+  const {contextState, contextDispatch} = useContext(AppContext);
+
   const ProjectSelectButton = () => {
     return (
       <DropdownButton id="dropdown-basic-button" size="sm" 
         onSelect={(evtkey)=>
         {
-            setSelectedProject(projectList.find( (e) => e.id === parseInt(evtkey)));
+          contextDispatch({ type: 'setProject', value: evtkey });
         }} 
-        title={selectedProject.name || "프로젝트 선택 (클릭하세요)"}
+        title={contextState.currentProject.name || "프로젝트 선택 (클릭하세요)"}
         style={{float: 'left'}}>
-      { projectList && projectList.map((projectObj) => (
+      { contextState.projectList && contextState.projectList.map((projectObj) => (
         <Dropdown.Item as={Link} to={`/p/${projectObj.id}`} key={projectObj.id} eventKey={projectObj.id}>{projectObj.name}</Dropdown.Item>
       ))}
       </DropdownButton>
@@ -23,13 +24,13 @@ function TopBar(props){
   }
 
   const ProjectAreaSelectButton = (props) => {
-    return (selectedProject.hasOwnProperty('id')) ? 
-      (<DropdownButton id="dropdown-basic-button" size="sm" title={selectedAreaAlias || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}} onSelect={(evtkey)=>
+    return (contextState.currentProject) ? 
+      (<DropdownButton id="dropdown-basic-button" size="sm" title={contextState.currentArea || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}} onSelect={(evtkey)=>
       {
-          setSelectedAreaAlias(evtkey);
+        contextDispatch({ type: 'setArea', value: evtkey });
       }}>
-      { areaAliasList && areaAliasList.map((areaAlias, idx) => (
-        <Dropdown.Item as={Link} to={`/p/${selectedProject.id}/${areaAlias}`} key={idx} eventKey={areaAlias}>{areaAlias}</Dropdown.Item>
+      { contextState.currentProject.area && contextState.currentProject.area.map((areaAlias, idx) => (
+        <Dropdown.Item as={Link} to={`/p/${contextState.currentProject.id}/${areaAlias}`} key={idx} eventKey={areaAlias}>{areaAlias}</Dropdown.Item>
       ))}
       </DropdownButton>):null;
   }
@@ -52,13 +53,13 @@ function TopBar(props){
   const UserNameBadge = () => {
     return (
       <div style={{float: 'right', marginLeft: '10px'}}>
-          <span className="badge badge-secondary" style={{padding: '0.3rem', fontSize: '12px'}}> {currentUser.username} 님</span>
+          <span className="badge badge-secondary" style={{padding: '0.3rem', fontSize: '12px'}}> {contextState.currentUser.username} 님</span>
       </div>
       );
   }
 
   const ManagerBadge = () => {
-    return (currentUser.is_manager) ? (
+    return (contextState.currentUser.is_manager) ? (
       <div style={{float: 'right', marginLeft: '10px'}}>
         <span className="badge badge-success" style={{padding: '0.3rem', fontSize: '12px'}}>프로젝트 관리자</span>
       </div>
@@ -66,7 +67,7 @@ function TopBar(props){
   }
 
   const AdminBadge = () => {
-    return (currentUser.is_admin) ? (
+    return (contextState.currentUser.is_admin) ? (
       <div style={{float: 'right', marginLeft: '10px'}}>
           <span className="badge badge-danger" style={{padding: '0.3rem', fontSize: '12px'}}>최고 관리자</span>
         </div>
@@ -103,9 +104,7 @@ function TopBar(props){
 
 
 function SideBar(props){
-  const { setSelectedAreaAlias, selectedAreaAlias, currentUser, areaAliasList, selectedProject } = useContext(LayOutContext);
-  
-
+  const {contextState, contextDispatch} = useContext(AppContext);
   return (
     <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
       <div className="banner">
@@ -138,8 +137,8 @@ function SideBar(props){
         </span>
         <div className="collapse_display">
           <div className="bg-white py-2 collapse-inner rounded">
-          { areaAliasList && areaAliasList.map((areaAlias, idx) => (
-            <Link to={`/p/${selectedProject}/${areaAlias}`} key={idx} className="dropdown-item dropdown-item1 flus_url">{areaAlias}</Link>
+          { contextState.currentProject.area && contextState.currentProject.area.map((areaAlias, idx) => (
+            <Link to={`/p/${contextState.currentProject.id}/${areaAlias}`} key={idx} className="dropdown-item dropdown-item1 flus_url">{areaAlias}</Link>
           ))}
           </div>
         </div>
