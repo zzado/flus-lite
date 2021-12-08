@@ -6,9 +6,10 @@ import DashBoard from './Pages/DashBoard';
 import ProjectListPage from './Pages/ProjectListPage';
 import ProjectDetailPage from './Pages/ProjectDetailPage';
 import LayOut from './Pages/LayOut';
+import ProjectUpdatePage from './Pages/ProjectUpdatePage';
 
-import { AppContextProvider } from './Context/AppContext'
-import '@fortawesome/fontawesome-svg-core/styles.css'
+import { AppContextProvider } from './Context/AppContext';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Assets/css/flus.css';
@@ -24,6 +25,7 @@ export default function App (){
           <Route path="dashboard/" element={<DashBoard />} />
           <Route path="p/" element={<ProjectListPage />} />
           <Route path="p/:projectId/" element={<ProjectDetailPage />} />
+          <Route path="p/:projectId/update" element={<ProjectUpdatePage />} />
         </Route>
         
       </Routes>

@@ -30,8 +30,6 @@ img{vertical-align:middle;border-style:none;}
 label{display:inline-block;margin-bottom:0.5rem;}
 button{border-radius:0;}
 button:focus{outline:1px dotted;outline:5px auto -webkit-focus-ring-color;}
-input,button,select,textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit;}
-button,input{overflow:visible;}
 button,select{text-transform:none;}
 select{word-wrap:normal;}
 button,[type="button"],[type="submit"]{-webkit-appearance:button;}
@@ -427,7 +425,6 @@ body{font-family:'맑은고딕', '맑은 고딕', 'NanumGothic', 'MalgunGothic';
 .card-body{padding-top:1rem;}
 .btn-sm{padding:0.25rem 0.5rem;font-size:0.75rem;line-height:1;border-radius:0.2rem;}
 ol,ul{padding:0;margin:0 0 1rem 0;}
-select,textarea,input[type="text"]{height:calc(1.5em + .75rem + 2px);}
 .sidebar .nav-item .nav-link span{font-size:0.8rem;}
 .collapse{height:auto;}
 .collapse_display:not(.show){display:block;}

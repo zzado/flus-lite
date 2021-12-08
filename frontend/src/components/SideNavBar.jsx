@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { AppContext } from '../Context/AppContext' 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faTasks, faWrench } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faTasks, faWrench, faChartBar, faDownload } from '@fortawesome/free-solid-svg-icons'
 
 export default function SideNavBar(props){
   const { contextState } = useContext(AppContext);
@@ -33,10 +33,10 @@ export default function SideNavBar(props){
       </li>
 
       <li className="nav-item">
-        <span className="nav-link" style={{cursor: 'default'}}>
+        <div className="nav-link" style={{cursor: 'default'}}>
         <FontAwesomeIcon icon={faWrench} />
           <span> 분야별 평가수행</span>
-        </span>
+        </div>
         <div className="collapse_display">
           <div className="bg-white py-2 collapse-inner rounded">
           { contextState.currentProject.area && contextState.currentProject.area.map((areaAlias, idx) => (
@@ -53,9 +53,9 @@ export default function SideNavBar(props){
       </div>
 
       <li className="nav-item">
-        <div className="nav-link collapsed">
-          <i className="fas fa-fw fa-chart-bar" />
-          <span>프로젝트 통계/결과서</span>
+        <div className="nav-link" style={{cursor: 'default'}}>
+          <FontAwesomeIcon icon={faChartBar} />
+          <span> 프로젝트 통계/결과서</span>
         </div>
 
         <div className="collapse_display" >
@@ -80,8 +80,8 @@ export default function SideNavBar(props){
 
     <li className="nav-item">
       <div className="nav-link collapsed">
-        <i className="fas fa-download" />
-        <span>평가도구 다운로드</span>
+        <FontAwesomeIcon icon={faDownload} />  
+        <span> 평가도구 다운로드</span>
       </div>
       <div className="collapse_display">
         <div className="bg-white py-2 collapse-inner rounded">
@@ -96,8 +96,8 @@ export default function SideNavBar(props){
 
     <li className="nav-item">
       <div className="nav-link collapsed">
-        <i className="fas fa-download" />
-        <span>문서 양식 다운로드</span>
+        <FontAwesomeIcon icon={faDownload} />  
+        <span> 문서 양식 다운로드</span>
       </div>
       <div className="collapse_display">
         <div className="bg-white py-2 collapse-inner rounded">
@@ -113,8 +113,8 @@ export default function SideNavBar(props){
     </div>
     <li className="nav-item">
       <div className="nav-link collapsed">
-        <i className="fas fa-fw fa-cog" />
-        <span>도구 관리</span>
+        <FontAwesomeIcon icon={faCog} />  
+        <span> 도구 관리</span>
       </div>
       <div className="collapse_display">
         <div className="bg-white py-2 collapse-inner rounded">
