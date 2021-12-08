@@ -22,14 +22,23 @@ export async function APIRequest(URL, OPTION){
   }
 }
 
+export const deleteProject = async(projectId)=>{
+  const URL = `api/project/${projectId}/`;
+  const OPTION = {method: 'DELETE'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return result;
+};
 
+export const getUserInfo = async()=>{
+  const URL = 'api/auth/user/';
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
 
-
-    // const jsonData = await fetch(URL, OPTION).then((responseObj)=>{
-    //         if(responseObj.ok){
-    //             return [true, await responseObj.json()]
-    //         }else{
-    //             return [false, await responseObj.json()]
-    //         }
-    //     }).then((jsonData) => jsonData);
-    // return jsonData;
+export const getProjectList = async()=>{
+  const URL = 'api/project/';
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}

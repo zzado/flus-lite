@@ -1,36 +1,32 @@
-import { BrowserRouter,Routes, Route } from "react-router-dom";
-import { PrivateRoute } from "./utils";
+import { BrowserRouter,Routes, Route } from 'react-router-dom';
+import { PrivateRoute } from './utils';
 
-import AuthPage from "./Components/AuthPage/auth";
-import DashBoard from "./Components/DashBoard/dashboard";
-import ProjectManager from "./Components/ProjectManager/project-manager";
-import LayOut from './Components/LayOut/layout'
+import AuthPage from './Pages/AuthPage';
+import DashBoard from './Pages/DashBoard';
+import ProjectListPage from './Pages/ProjectListPage';
+import ProjectDetailPage from './Pages/ProjectDetailPage';
+import LayOut from './Pages/LayOut';
 
-import {AppContextProvider} from './Context/AppContext'
+import { AppContextProvider } from './Context/AppContext'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './flus.css';
+import './Assets/css/flus.css';
 
-function App (){
+export default function App (){
   
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth" element={ <AuthPage />} />
-        <Route path="/dashboard" element={ <AppContextProvider><DashBoard /></AppContextProvider>} />
-        
+        <Route path="/auth/" element={ <AuthPage />} />
+        <Route path="/" element={<PrivateRoute><AppContextProvider><LayOut /></AppContextProvider></PrivateRoute>} >
+          <Route index element={<DashBoard />} />
+          <Route path="dashboard/" element={<DashBoard />} />
+          <Route path="p/" element={<ProjectListPage />} />
+          <Route path="p/:projectId/" element={<ProjectDetailPage />} />
+        </Route>
         
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;
-
-// <Route path="/" element={<PrivateRoute><LayOut /></PrivateRoute>} >
-//           <Route index element={<DashBoard />} />
-//           <Route path="dashboard" element={<DashBoard />} />
-//           <Route path="p/" element={<ProjectManager />} />
-//           <Route path="p/:projectId/" element={<ProjectManager />} />
-//           <Route path="p/:projectId/:areaAlias" element={<ProjectManager />} />
-//         </Route>
