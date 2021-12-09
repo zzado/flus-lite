@@ -1,4 +1,4 @@
 from api.views.project import ProjectListCreateAPI, ProjectDetailUpdateDeleteAPI
 from api.views.asset import AssetListCreateAPI, AssetDetailUpdateDeleteAPI, AssetListByProjectAPI, AssetListByAreaAliasAPI
 from api.views.vulnerability import VulnerabilityDetailUpdateDeleteAPI, VulnerabilityListCreateAPI, VulnerabilityListByAssetAPI
-from api.views.authentication import SignUpAPI, SignInAPI, UserInfoGetAPI
+from api.views.authentication import SignUpAPI, SignInAPI, UserInfoGetAPI, UserListAPI

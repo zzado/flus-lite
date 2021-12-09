@@ -1,10 +1,9 @@
-import React from 'react';
+import {React, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
 export const PrivateRoute = ({ children }) => {
   return localStorage.getItem('Token') ? children : <Navigate to="/auth" />;
 }
-
 
 export async function APIRequest(URL, OPTION){
   URL = `http://127.0.0.1:8000/${URL}`;
@@ -31,6 +30,13 @@ export const deleteProject = async(projectId)=>{
 
 export const getUserInfo = async()=>{
   const URL = 'api/auth/user/';
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getUserList = async()=>{
+  const URL = 'api/user/';
   const OPTION = {method: 'GET'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];

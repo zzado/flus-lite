@@ -43,8 +43,13 @@ class UserInfoGetAPI(views.APIView):
             return response.Response({'Invaild Token.'}, status=status.HTTP_400_BAD_REQUEST)
         
         return response.Response({'username': tokenObj.user.username,'is_manager': tokenObj.user.is_staff, 'is_admin':tokenObj.user.is_superuser})
-        
 
-            
 
+class UserListAPI(mixins.ListModelMixin,generics.GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request)
 

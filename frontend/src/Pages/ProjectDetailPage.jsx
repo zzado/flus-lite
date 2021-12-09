@@ -10,13 +10,12 @@ export default function ProjectDetailPage(){
   const params = useParams();
 
   useEffect(() => {
-    contextDispatch({ type: 'setProject', value: params.projectId });
-    // contextState.projectList 를 넣은이유? URL 직접 접근시 projectList 값 채워지면 다시 실행되도록
+    if(contextState.projectList.length) contextDispatch({ type: 'setProject', value: params.projectId });
   },[contextState.projectList, params]);
 
-  const ProjectUpdateButton = () => {
+  const ProjectEditButton = () => {
     return (
-      <Button size="sm" as={Link} to={`/p/${contextState.currentProject.id}/update`} style={{marginLeft : '5px'}}>편집</Button>
+      <Button size="sm" as={Link} to={`/p/${contextState.currentProject.id}/edit`} style={{marginLeft : '5px'}}>편집</Button>
     );
   }
 
@@ -62,25 +61,28 @@ export default function ProjectDetailPage(){
                 <th colSpan={1}>평가분야</th>
                 <td colSpan={6} className="text-left">
                 { contextState.currentProject.area && contextState.currentProject.area.map((areaAlias, idx) => (
-                  <span style={{fontSize:"0.9rem"}}><Badge as={Link} to={`/p/${contextState.currentProject.id}/${areaAlias}`} key={idx} style={{textDecoration:"none"}}>{areaAlias}</Badge></span>
+                  <span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/p/${contextState.currentProject.id}/${areaAlias}`} key={idx} style={{textDecoration:"none"}}>{areaAlias}</Badge> </span>
                 ))}
                 </td>
               </tr>
               <tr>
-                <th colSpan={2}>프로젝트 시작일</th>
+                <th colSpan={1}>프로젝트 시작일</th>
                 <td colSpan={2}>{contextState.currentProject.start_date || ''}</td>
-                <th colSpan={2}>평가대상 기관</th>
-                <td colSpan={4}>{contextState.currentProject.client_company || ''}</td>
+                <th colSpan={1}>평가대상 기관</th>
+                <td colSpan={2}>{contextState.currentProject.client_company || ''}</td>
+                <th colSpan={1} rowSpan={2}>평가자</th>
+                <td colSpan={3} rowSpan={2}>
+                  {contextState.currentProject.assessors && contextState.currentProject.assessors.map((e=>`${e}, `)) || ''}
+                </td>
               </tr>
               <tr>
-                <th colSpan={2}>프로젝트 종료일</th>
+                <th colSpan={1}>프로젝트 종료일</th>
                 <td colSpan={2}>{contextState.currentProject.end_date || ''}</td>
-                <th colSpan={2}>평가 기관</th>
-                <td colSpan={4}>{contextState.currentProject.assessment_company || ''}</td>
+                <th colSpan={1}>평가 기관</th>
+                <td colSpan={2}>{contextState.currentProject.assessment_company || ''}</td>
               </tr>
               <tr>
-                <th colSpan={1}>평가자</th>
-                <td colSpan={9}>{contextState.currentProject.assessors || ''}</td>
+                
               </tr>              
               <tr>
                 <th colSpan={1}>비고</th>
@@ -89,7 +91,7 @@ export default function ProjectDetailPage(){
             </tbody>
           </Table>
           <div className="form-actions">
-            <ProjectUpdateButton/>
+            <ProjectEditButton/>
             <ProjectDeleteButton/>
           </div>
         </div>

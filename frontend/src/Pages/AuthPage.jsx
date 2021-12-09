@@ -7,7 +7,7 @@ export default function AuthPage() {
   const [inputID, setInputID] = useState('');
   const [inputPW, setInputPW] = useState('');
   const navigate = useNavigate();
-
+  
   const updateInputID = e => {
       setInputID(e.target.value);
   };

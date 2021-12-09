@@ -14,3 +14,8 @@ class SignUpUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f'length error')
 
         return userObj
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username")

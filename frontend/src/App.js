@@ -6,7 +6,7 @@ import DashBoard from './Pages/DashBoard';
 import ProjectListPage from './Pages/ProjectListPage';
 import ProjectDetailPage from './Pages/ProjectDetailPage';
 import LayOut from './Pages/LayOut';
-import ProjectUpdatePage from './Pages/ProjectUpdatePage';
+import ProjectEditPage from './Pages/ProjectEditPage';
 
 import { AppContextProvider } from './Context/AppContext';
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -24,8 +24,9 @@ export default function App (){
           <Route index element={<DashBoard />} />
           <Route path="dashboard/" element={<DashBoard />} />
           <Route path="p/" element={<ProjectListPage />} />
-          <Route path="p/:projectId/" element={<ProjectDetailPage />} />
-          <Route path="p/:projectId/update" element={<ProjectUpdatePage />} />
+          <Route path="p/create" element={<ProjectEditPage/>} />
+          <Route path="p/:projectId/" element={<ProjectDetailPage/>} />
+          <Route path="p/:projectId/edit" element={<ProjectEditPage/>} />
         </Route>
         
       </Routes>

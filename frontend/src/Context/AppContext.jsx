@@ -14,7 +14,7 @@ const initialState = {
 };
 
 const contextReducer = (state, action) => {
-  const newState = { projectList : state.projectList, currentProject : state.currentProject, currentUser : state.currentUser, currentArea : state.currentArea, reset : state.reset };
+  const newState = { ...state };
   console.log(action);
   switch (action.type) {
     case 'setProjectList':
