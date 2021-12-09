@@ -1,7 +1,7 @@
 import { useMemo, createContext, useReducer } from 'react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
-import { getUserInfo, getProjectList } from '../utils'
+import { getUserInfoReq, getProjectListReq } from '../utils'
 
 export const AppContext = createContext();
 
@@ -48,8 +48,8 @@ export const AppContextProvider = ({children}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUserInfo().then( ([result, jsonData]) => (result)? contextDispatch({ type: 'setUser', value: jsonData }) : navigate('/auth'));
-    getProjectList().then( ([result, jsonData]) => (result)? contextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth'));
+    getUserInfoReq().then( ([result, jsonData]) => (result)? contextDispatch({ type: 'setUser', value: jsonData }) : navigate('/auth'));
+    getProjectListReq().then( ([result, jsonData]) => (result)? contextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth'));
   },[]);
 
   return (

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from api.models import *
 
 class ProjectSerializer(serializers.ModelSerializer):
-    assessors = serializers.SlugRelatedField(slug_field='username', many=True, read_only=True,)
+    #assessors = serializers.SlugRelatedField(slug_field='username', many=True, read_only=True,)
 
     def validate_area(self, data):
         complianceObj = Compliance.objects.get(pk=self.initial_data['compliance'])

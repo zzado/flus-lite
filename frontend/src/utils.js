@@ -21,30 +21,37 @@ export async function APIRequest(URL, OPTION){
   }
 }
 
-export const deleteProject = async(projectId)=>{
+export const deleteProjectReq = async(projectId)=>{
   const URL = `api/project/${projectId}/`;
   const OPTION = {method: 'DELETE'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return result;
 };
 
-export const getUserInfo = async()=>{
+export const getUserInfoReq = async()=>{
   const URL = 'api/auth/user/';
   const OPTION = {method: 'GET'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }
 
-export const getUserList = async()=>{
+export const getUserListReq = async()=>{
   const URL = 'api/user/';
   const OPTION = {method: 'GET'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }
 
-export const getProjectList = async()=>{
+export const getProjectListReq = async()=>{
   const URL = 'api/project/';
   const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const editProjectReq = async(payload)=>{
+  const URL = `api/project/${payload.id}/`;
+  const OPTION = {method: 'PUT', body: JSON.stringify(payload),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }

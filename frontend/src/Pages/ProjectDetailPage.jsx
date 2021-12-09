@@ -2,7 +2,7 @@ import { useEffect, Fragment, useContext } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Table, Button, Badge } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
-import { deleteProject } from '../utils';
+import { deleteProjectReq } from '../utils';
 
 export default function ProjectDetailPage(){
   const {contextState, contextDispatch} = useContext(AppContext);
@@ -22,7 +22,7 @@ export default function ProjectDetailPage(){
   const ProjectDeleteButton = () => {
     return (
       <Button size="sm" onClick={()=>{ 
-        (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProject(contextState.currentProject.id)) ? navigate('/auth') : navigate('/auth')): console.log('deleted cancel'); }}>삭제</Button>
+        (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(contextState.currentProject.id)) ? navigate('/p/') : navigate('/auth')): console.log('deleted cancel'); }}>삭제</Button>
     );
   }
 
