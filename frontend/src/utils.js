@@ -71,8 +71,8 @@ export const createProjectReq = async(payload)=>{
   return [result, jsonData];
 }
 
-export const getAssetListReq = async(payload)=>{
-  const URL = `api/asset-by-project/<int:projectId>/<str:areaAlias>/`;
+export const getAssetListByAreaAliasReq = async(projectid, areaAlias)=>{
+  const URL = `api/asset-by-project/${projectid}/${areaAlias}/`;
   const OPTION = {method: 'GET', body: JSON.stringify(payload),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];

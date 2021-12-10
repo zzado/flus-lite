@@ -2,13 +2,17 @@ import { Fragment, useContext, useEffect } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
+import { AnalysisContext } from '../Context/AnalysisContext';
 import  AnalysisStepNavBar from '../Components/AnalysisStepNavBar';
-
+import { getAssetListByAreaAliasReq } from '../utils'
 
 export default function AnalysisPageStep1(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { analysisContextState, analysisContextDispatch } = useContext(AnalysisContext);
   const { projectList, currentArea } = appContextState;
   const { projectId, areaAlias } = useParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if(projectList.length) appContextDispatch({ type: 'setProject', value: projectId });
@@ -16,7 +20,9 @@ export default function AnalysisPageStep1(){
 
   useEffect(() => {
     appContextDispatch({ type: 'setArea', value: areaAlias });
+    getAssetListByAreaAliasReq().then( ([result, jsonData]) => (result)? analysisContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
   },[]);
+
 
   const SubMenuBox = () => {
     return (

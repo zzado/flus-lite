@@ -1,7 +1,7 @@
 import { useMemo, createContext, useReducer } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { getUserInfoReq, getProjectListReq } from '../utils'
+import { getUserInfoReq, getAssetListByAreaAliasReq } from '../utils'
 
 export const AnalysisContext = createContext();
 
@@ -24,11 +24,6 @@ const contextReducer = (state, action) => {
 export const AnalysisContextProvider = ({children}) => {
   const [analysisContextState, analysisContextDispatch] = useReducer(contextReducer, initialState);
   const contextValue = useMemo(() => ({ analysisContextState, analysisContextDispatch }),[analysisContextState, analysisContextDispatch]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getAssetListReq().then( ([result, jsonData]) => (result)? appContextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth'));
-  },[]);
 
   return (
     <AnalysisContext.Provider value={contextValue}>
