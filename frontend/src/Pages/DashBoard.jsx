@@ -2,11 +2,11 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../Context/AppContext';
 
 export default function DashBoard(props){
-  const {contextState, contextDispatch} = useContext(AppContext);
+  const {appContextState, appContextDispatch} = useContext(AppContext);
   
   useEffect(() => {
-    contextDispatch({ type: 'unSetProject'});
-    contextDispatch({ type: 'unSetArea'});
+    appContextDispatch({ type: 'unSetProject'});
+    appContextDispatch({ type: 'unSetArea'});
   },[]);
   
   return (

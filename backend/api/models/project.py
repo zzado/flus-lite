@@ -17,7 +17,7 @@ class Project(models.Model):
     man_day = models.SmallIntegerField('적수', blank=True, null=True)
     
     class Meta:
-        ordering = ['start_date']
+        ordering = ['id']
         
     def __str__(self):
         return self.name

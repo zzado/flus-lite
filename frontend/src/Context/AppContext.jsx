@@ -1,5 +1,5 @@
 import { useMemo, createContext, useReducer } from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { getUserInfoReq, getProjectListReq } from '../utils'
 
@@ -43,13 +43,13 @@ const contextReducer = (state, action) => {
 };
 
 export const AppContextProvider = ({children}) => {
-  const [contextState, contextDispatch] = useReducer(contextReducer, initialState);
-  const contextValue = useMemo(() => ({ contextState, contextDispatch }),[contextState, contextDispatch]);
+  const [appContextState, appContextDispatch] = useReducer(contextReducer, initialState);
+  const contextValue = useMemo(() => ({ appContextState, appContextDispatch }),[appContextState, appContextDispatch]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUserInfoReq().then( ([result, jsonData]) => (result)? contextDispatch({ type: 'setUser', value: jsonData }) : navigate('/auth'));
-    getProjectListReq().then( ([result, jsonData]) => (result)? contextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth'));
+    getUserInfoReq().then( ([result, jsonData]) => (result)? appContextDispatch({ type: 'setUser', value: jsonData }) : navigate('/auth'));
+    getProjectListReq().then( ([result, jsonData]) => (result)? appContextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth'));
   },[]);
 
   return (

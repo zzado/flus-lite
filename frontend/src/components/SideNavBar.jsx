@@ -6,7 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faTasks, faWrench, faChartBar, faDownload } from '@fortawesome/free-solid-svg-icons'
 
 export default function SideNavBar(props){
-  const { contextState } = useContext(AppContext);
+  const { appContextState } = useContext(AppContext);
+  const { currentProject } = appContextState;
+
   return (
     <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
       <div className="banner">
@@ -39,8 +41,8 @@ export default function SideNavBar(props){
         </div>
         <div className="collapse_display">
           <div className="bg-white py-2 collapse-inner rounded">
-          { contextState.currentProject.area && contextState.currentProject.area.map((areaAlias, idx) => (
-            <Link to={`/p/${contextState.currentProject.id}/${areaAlias}`} key={idx} className="dropdown-item dropdown-item1 flus_url">{areaAlias}</Link>
+          { currentProject.area && currentProject.area.map((areaAlias, idx) => (
+            <Link to={`/p/${currentProject.id}/${areaAlias.split('-').pop()}`} key={idx} className="dropdown-item dropdown-item1 flus_url">{global.config.AREA_RNAME[areaAlias.split('-').pop()]}</Link>
           ))}
           </div>
         </div>

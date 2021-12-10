@@ -4,23 +4,24 @@ import { useContext, Fragment } from 'react';
 import { AppContext } from '../Context/AppContext';
 
 export default function TopNavBar(props){
-  const {contextState, contextDispatch} = useContext(AppContext);
+  const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { currentProject, projectList, currentArea, currentUser } = appContextState;
 
   const ProjectSelectButton = () => {
     return (
-      <DropdownButton id="dropdown-basic-button" size="sm" title={contextState.currentProject.name || "프로젝트 선택 (클릭하세요)"} style={{float: 'left'}}>
-      { contextState.projectList && contextState.projectList.map((projectObj) => (
-        <Dropdown.Item as={Link} to={`/p/${projectObj.id}`} key={projectObj.id} eventKey={projectObj.id}>{projectObj.name}</Dropdown.Item>
+      <DropdownButton id="dropdown-basic-button" size="sm" title={currentProject.name || "프로젝트 선택 (클릭하세요)"} style={{float: 'left'}}>
+      { projectList && projectList.map((projectObj, idx) => (
+        <Dropdown.Item as={Link} to={`/p/${projectObj.id}`} key={idx}>{projectObj.name}</Dropdown.Item>
       ))}
       </DropdownButton>
     )
   }
 
   const ProjectAreaSelectButton = (props) => {
-    return (Object.keys(contextState.currentProject).length) ? 
-      (<DropdownButton id="dropdown-basic-button" size="sm" title={contextState.currentArea || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}} onSelect={(evtkey)=> contextDispatch({ type: 'setArea', value: evtkey })}>
-      { contextState.currentProject.area && contextState.currentProject.area.map((areaAlias, idx) => (
-        <Dropdown.Item as={Link} to={`/p/${contextState.currentProject.id}/${areaAlias}`} key={idx} eventKey={areaAlias}>{areaAlias}</Dropdown.Item>
+    return (Object.keys(currentProject).length) ? 
+      (<DropdownButton id="dropdown-basic-button" size="sm" title={currentArea || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}}>
+      { currentProject.area && currentProject.area.map((areaAlias, idx) => (
+        <Dropdown.Item as={Link} to={`/p/${currentProject.id}/${areaAlias.split('-').pop()}`} key={idx}>{global.config.AREA_RNAME[areaAlias.split('-').pop()]}</Dropdown.Item>
       ))}
       </DropdownButton>):null;
   }
@@ -43,13 +44,13 @@ export default function TopNavBar(props){
   const UserNameBadge = () => {
     return (
       <div style={{float: 'right', marginLeft: '10px'}}>
-          <span className="badge badge-secondary" style={{padding: '0.3rem', fontSize: '12px'}}> {contextState.currentUser.username} 님</span>
+          <span className="badge badge-secondary" style={{padding: '0.3rem', fontSize: '12px'}}> {currentUser.username} 님</span>
       </div>
       );
   }
 
   const ManagerBadge = () => {
-    return (contextState.currentUser.is_manager) ? (
+    return (currentUser.is_manager) ? (
       <div style={{float: 'right', marginLeft: '10px'}}>
         <span className="badge badge-success" style={{padding: '0.3rem', fontSize: '12px'}}>프로젝트 관리자</span>
       </div>
@@ -57,7 +58,7 @@ export default function TopNavBar(props){
   }
 
   const AdminBadge = () => {
-    return (contextState.currentUser.is_admin) ? (
+    return (currentUser.is_admin) ? (
       <div style={{float: 'right', marginLeft: '10px'}}>
           <span className="badge badge-danger" style={{padding: '0.3rem', fontSize: '12px'}}>최고 관리자</span>
         </div>

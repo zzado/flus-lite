@@ -1,5 +1,6 @@
-import {React, useState } from 'react';
+import {React } from 'react';
 import { Navigate } from 'react-router-dom';
+import './config';
 
 export const PrivateRoute = ({ children }) => {
   return localStorage.getItem('Token') ? children : <Navigate to="/auth" />;
@@ -55,3 +56,39 @@ export const editProjectReq = async(payload)=>{
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }
+
+export const getComplianceListReq = async()=>{
+  const URL = `api/compliance/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const createProjectReq = async(payload)=>{
+  const URL = `api/project/`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getAssetListReq = async(payload)=>{
+  const URL = `api/asset-by-project/<int:projectId>/<str:areaAlias>/`;
+  const OPTION = {method: 'GET', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+
+export const payloadEmptyCheck = (payload, fields) =>{
+  for(let _ in payload){
+    if(fields.hasOwnProperty(_)){
+      if(payload[_].length === 0){
+        return [false, fields[_]];
+      }
+    }
+  }
+  return [true, null];
+}
+
+
+
