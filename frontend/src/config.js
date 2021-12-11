@@ -39,3 +39,85 @@ module.exports = global.config = {
     ]
 
 };
+
+// 공통
+// {
+// "id": 1, 
+// "num": 1,
+// "area_alias": "SRV",
+// "project": 25,
+
+// "code": "S01",   // 자산코드
+// "name": "ㅋㅋㄹㄴ", // 자산이름(업무명/용도)
+// "asset_value": 5, // 자산가치
+// "is_new": false,    //신규, 
+
+// "progress": 1,  // 진행과정
+// "manual_done": false, //완료여부
+
+// "operator": "", // 담당자
+// "assessors": "김개똥", // 평가자
+
+// "note": "",   //비고
+
+
+// }
+
+// FISM
+// {}
+
+// INF
+
+// SRV
+// "is_test": false, //테스트,운영
+// "hostname": "test-host", //호스트명
+// "ip_url": "1",
+// "version": "",
+// "platform": "WINDOWS",
+// "platform_t": "ㄹ",
+
+// DBM
+// "is_test": false, //테스트,운영
+// "hostname": "test-host", //호스트명
+// "ip_url": "1",
+// "version": "",
+// "platform": "WINDOWS",
+// "platform_t": "ㄹ",
+
+// NET
+// "is_external": false
+// "is_test": false, //테스트,운영
+// "hostname": "test-host", //호스트명
+// "ip_url": "1",
+// "version": "",
+// "platform": "WINDOWS",
+// "platform_t": "ㄹ",
+// "is_switch": true,   
+// "backup_cycle": 0,
+// "pwd_change_cycle": 0,
+// "product_model": "",
+
+// ISS
+// "is_test": false, //테스트,운영
+// "hostname": "test-host", //호스트명
+// "ip_url": "1",
+// "platform": "WINDOWS",
+// "platform_t": "ㄹ",
+// "product_model": "",
+
+
+// WEB
+// "ip_url": "1",
+// "is_financial": false,
+// "is_https": false,
+
+// MOB
+// "is_test": false, //테스트,운영
+// "platform": "WINDOWS",
+// "platform_t": "ㄹ",
+// "is_financial": false,
+// "is_server": false,
+
+// HTS
+// "is_test": false, //테스트,운영
+// "is_financial": false,

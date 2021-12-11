@@ -9,6 +9,7 @@ import { getAssetListByAreaAliasReq } from '../utils'
 export default function AnalysisPageStep1(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
   const { analysisContextState, analysisContextDispatch } = useContext(AnalysisContext);
+  const { assetList } = analysisContextState;
   const { projectList, currentArea } = appContextState;
   const { projectId, areaAlias } = useParams();
   const navigate = useNavigate();
@@ -20,15 +21,15 @@ export default function AnalysisPageStep1(){
 
   useEffect(() => {
     appContextDispatch({ type: 'setArea', value: areaAlias });
-    getAssetListByAreaAliasReq().then( ([result, jsonData]) => (result)? analysisContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
-  },[]);
+    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? analysisContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+  },[areaAlias]);
 
 
   const SubMenuBox = () => {
     return (
       <div className="card-header py-3">
         <DropdownButton size="sm" title="자산 등록">
-          <Dropdown.Item as={Link} to="/p/create">개별 등록</Dropdown.Item>
+          <Dropdown.Item as={Link} to={`/p/${projectId}/${areaAlias}/a/create`}>개별 등록</Dropdown.Item>
           <Dropdown.Item as={Link} to="/p/create">일괄 등록(XLSX)</Dropdown.Item>
         </DropdownButton>
       </div>
@@ -37,7 +38,6 @@ export default function AnalysisPageStep1(){
   
   return (
     <Fragment>
-    <div className="container-fluid" style={{width: '95%'}}>
       <AnalysisStepNavBar step={1}/>
       <div className="card shadow mb-4">
         <SubMenuBox/>
@@ -55,20 +55,21 @@ export default function AnalysisPageStep1(){
             </tr>
           </thead>
           <tbody>
-            <tr>
+            { assetList && assetList.map( (assetObj, idx) => (
+            <tr key={idx}>
               <td><input type="checkbox"/></td>
               <td>1</td>
-              <td><span className="label">M1</span></td>
-              <td><a href="/asset/analysis/9/FISM/290/A/">정보보호관리체계</a></td>
+              <td><span className="label">{assetObj.code}</span></td>
+              <td><Link to={`/a/${projectId}/${areaAlias}/${assetObj.id}`}>{assetObj.name}</Link></td>
               <td ><span className="label">미정</span></td>
               <td ><span className="label">미정</span></td>
               <td><span className="label label-secondary">분석중</span></td>
             </tr>
+            ))}
           </tbody>
         </Table>
         </div>
       </div>
-    </div>
     </Fragment>
   );
 }

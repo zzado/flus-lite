@@ -3,8 +3,8 @@ import TopNavBar from '../Components/TopNavBar';
 
 import { Outlet } from 'react-router-dom';
 
-export const LayOutContext = {};
-  export default function LayOut({children}){
+
+export default function AppLayOut({children}){
   return(
     <div id="wrapper">
       <SideNavBar/>
