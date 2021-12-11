@@ -32,6 +32,7 @@ export default function ProjectDetailPage(){
   // currentProject value set when URL direct access
   useEffect(() => {
     if(projectList.length) appContextDispatch({ type: 'setProject', value: projectId });
+    appContextDispatch({ type: 'unSetArea'});
   },[projectList, projectId]);
 
   return (

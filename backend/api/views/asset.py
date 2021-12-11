@@ -6,8 +6,8 @@ from api.models import *
 
 class AssetListCreateAPI(mixins.ListModelMixin, mixins.CreateModelMixin,generics.GenericAPIView):
     queryset = Asset.objects.all()
-    #serializer_class = AssetSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = AssetSerializer
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         return self.list(request)
@@ -17,8 +17,8 @@ class AssetListCreateAPI(mixins.ListModelMixin, mixins.CreateModelMixin,generics
 
 class AssetDetailUpdateDeleteAPI(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Asset.objects.all()
-    #serializer_class = AssetSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = AssetSerializer
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
