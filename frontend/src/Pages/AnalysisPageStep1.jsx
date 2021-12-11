@@ -1,5 +1,5 @@
 import { Fragment, useContext, useEffect } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import { AnalysisContext } from '../Context/AnalysisContext';
