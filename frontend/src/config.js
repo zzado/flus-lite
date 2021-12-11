@@ -85,13 +85,14 @@ module.exports = global.config = {
 // "platform_t": "ㄹ",
 
 // NET
-// "is_external": false
 // "is_test": false, //테스트,운영
 // "hostname": "test-host", //호스트명
 // "ip_url": "1",
 // "version": "",
 // "platform": "WINDOWS",
 // "platform_t": "ㄹ",
+
+// "is_external": false
 // "is_switch": true,   
 // "backup_cycle": 0,
 // "pwd_change_cycle": 0,
@@ -103,6 +104,8 @@ module.exports = global.config = {
 // "ip_url": "1",
 // "platform": "WINDOWS",
 // "platform_t": "ㄹ",
+
+
 // "product_model": "",
 
 

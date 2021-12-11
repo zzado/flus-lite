@@ -66,7 +66,7 @@ export default function ProjectEditPage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     editProjectReq(payload).then( ([result, jsonData]) => {
-      if(result){ projectList.push(jsonData); navigate(`/p/${projectId}/`); }else{ navigate('/auth');}
+      if(result){ appContextDispatch({ type: 'reset' }); navigate(`/p/${projectId}/`); }else{ navigate('/auth');}
     });
   };
 

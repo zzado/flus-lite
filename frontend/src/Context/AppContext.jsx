@@ -36,7 +36,9 @@ const contextReducer = (state, action) => {
     case 'unSetArea':
       newState.currentArea = '';
       return newState;
-    
+    case 'reset':
+      newState.reset = !newState.reset;
+      return newState;
     default :
       return state;
   }
@@ -50,7 +52,7 @@ export const AppContextProvider = ({children}) => {
   useEffect(() => {
     getUserInfoReq().then( ([result, jsonData]) => (result)? appContextDispatch({ type: 'setUser', value: jsonData }) : navigate('/auth'));
     getProjectListReq().then( ([result, jsonData]) => (result)? appContextDispatch({ type: 'setProjectList', value: jsonData }) : navigate('/auth'));
-  },[]);
+  },[appContextState.reset]);
 
   return (
     <AppContext.Provider value={contextValue}>

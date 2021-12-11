@@ -6,7 +6,7 @@ from api.models.vulnerability import Vulnerability
 class AssetAbstractModel(models.Model):
     num = models.IntegerField('자산번호')
     project = models.ForeignKey('Project', verbose_name='프로젝트', on_delete=models.CASCADE)
-    area_alias = models.CharField('분야', max_length=10, null=False, blank=False, choices=(('FISM', '정보보호관리체계'), ('SRV', '서버'),('DBM', '데이터베이스'), ('INF', '네트워크 인프라'),('NET', '네트워크 장비'), ('WEB', '웹 애플리케이션'),('MOB', '모바일 애플리케이션'), ('HTS', 'HTS')))
+    area_alias = models.CharField('분야', max_length=10, null=False, blank=False, choices=(('FISM', '정보보호관리체계'), ('SRV', '서버'),('DBM', '데이터베이스'), ('INF', '네트워크 인프라'),('NET', '네트워크 장비'), ('ISS', '정보보호시스템'),('WEB', '웹 애플리케이션'),('MOB', '모바일 애플리케이션'), ('HTS', 'HTS')))
     code = models.CharField('자산코드', max_length=100, null=False, blank=False, default='')
     name = models.CharField('업무명/용도', null=False, blank=False, max_length=100, default='')
     assessors = models.CharField('평가자', null=True, blank=True, max_length=100, default='')

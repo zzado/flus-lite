@@ -10,7 +10,7 @@ import { getUserListReq, getComplianceListReq, payloadEmptyCheck, createProjectR
 import { getAssetListByAreaAliasReq } from '../utils'
 
 export default function AssetDetailPage(){
-  const { projectId,areaAlias } = useParams();
+  const { projectId, areaAlias } = useParams();
   const navigate = useNavigate();
 
   return (
@@ -21,7 +21,9 @@ export default function AssetDetailPage(){
           <span className="m-0 font-weight-bold search-title">프로젝트 상세</span>
         </div>
         <div className="card-body">
-          <AssetInfoTable/>
+          <AssetInfoTable
+            areaAlias = {areaAlias}
+            assetName='zzado'/>
           <div className="form-actions">
             <Button>편집</Button>
             <Button>취소</Button>

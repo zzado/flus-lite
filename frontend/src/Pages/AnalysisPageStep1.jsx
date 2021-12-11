@@ -29,7 +29,7 @@ export default function AnalysisPageStep1(){
     return (
       <div className="card-header py-3">
         <DropdownButton size="sm" title="자산 등록">
-          <Dropdown.Item as={Link} to={`/p/${projectId}/${areaAlias}/a/create`}>개별 등록</Dropdown.Item>
+          <Dropdown.Item as={Link} to={`/a/${projectId}/${areaAlias}/create`}>개별 등록</Dropdown.Item>
           <Dropdown.Item as={Link} to="/p/create">일괄 등록(XLSX)</Dropdown.Item>
         </DropdownButton>
       </div>

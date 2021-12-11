@@ -63,7 +63,7 @@ export default function ProjectCreatePage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     createProjectReq(payload).then( ([result, jsonData]) => {
-      if(result){ projectList.push(jsonData); navigate(`/p/`); }else{ navigate('/auth');}
+      if(result){ appContextDispatch({ type: 'reset' }); navigate(`/p/`); }else{ navigate('/auth');}
     });
 
   };
