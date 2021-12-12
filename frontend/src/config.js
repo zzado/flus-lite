@@ -92,11 +92,13 @@ module.exports = global.config = {
 // "platform": "WINDOWS",
 // "platform_t": "ㄹ",
 
+// "product_model": "",
+
+
 // "is_external": false
 // "is_switch": true,   
 // "backup_cycle": 0,
 // "pwd_change_cycle": 0,
-// "product_model": "",
 
 // ISS
 // "is_test": false, //테스트,운영
@@ -113,11 +115,13 @@ module.exports = global.config = {
 // "ip_url": "1",
 // "is_financial": false,
 // "is_https": false,
+// "is_test": false, //테스트,운영
 
 // MOB
-// "is_test": false, //테스트,운영
 // "platform": "WINDOWS",
 // "platform_t": "ㄹ",
+// "is_test": false, //테스트,운영
+
 // "is_financial": false,
 // "is_server": false,
 
