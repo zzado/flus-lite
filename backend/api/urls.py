@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('compliance/', ComplianceListAPI.as_view()),
 
+    path('platform/<str:complianceKey>/<str:areaAlias>/', PlatformListAPI.as_view()),
+
     path('project/', ProjectListCreateAPI.as_view()),
     path('project/<int:pk>/', ProjectDetailUpdateDeleteAPI.as_view()),
 
@@ -24,6 +26,5 @@ urlpatterns = [
 
     path('vuls-by-asset/<int:assetId>/', VulnerabilityListByAssetAPI.as_view()),
 
-
-
+    path('realgrid/asset/<int:projectId>/<str:areaAlias>/', RealGridAssetAPI.as_view()),
 ]

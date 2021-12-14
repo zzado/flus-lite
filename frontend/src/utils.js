@@ -71,9 +71,45 @@ export const createProjectReq = async(payload)=>{
   return [result, jsonData];
 }
 
+export const createAssetReq = async(payload)=>{
+  const URL = `api/asset/`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
 export const getAssetListByAreaAliasReq = async(projectid, areaAlias)=>{
   const URL = `api/asset-by-project/${projectid}/${areaAlias}/`;
   const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getAssetReq = async(assetId)=>{
+  const URL = `api/asset/${assetId}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getPlatformListReq = async(compliance, areaAlias)=>{
+  const URL = `api/platform/${compliance}/${areaAlias}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const editAssetReq = async(assetId, payload)=>{
+  const URL = `api/asset/${assetId}/`;
+  const OPTION = {method: 'PUT', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+
+export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
+  const URL = `api/realgrid/asset/${projectId}/${areaAlias}/`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }
@@ -82,9 +118,8 @@ export const getAssetListByAreaAliasReq = async(projectid, areaAlias)=>{
 export const payloadEmptyCheck = (payload, fields) =>{
   for(let _ in payload){
     if(fields.hasOwnProperty(_)){
-      if(payload[_].length === 0){
+      if(payload[_] === '' || payload[_] === null || payload[_] === undefined)
         return [false, fields[_]];
-      }
     }
   }
   return [true, null];

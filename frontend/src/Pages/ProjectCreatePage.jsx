@@ -41,9 +41,9 @@ export default function ProjectCreatePage(){
   const projectAgencyForm = () => <input id="projectAgencyEID" style={{width:'100%'}} />;
   const projectNoteForm = () => <textarea id="projectNoteEID" style={{width:'100%', height:'80px'}}/>;
 
-  const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false} hideSelectedOptions={false} onChange={e=>setProjectAreaList(e)} isDisabled={(Object.keys(projectCompliance).length)? false :true} options={ (Object.keys(projectCategory).length)? (projectCategory.value === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST : []} />
+  const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false}  onChange={e=>setProjectAreaList(e)} isDisabled={(Object.keys(projectCompliance).length)? false :true} options={ (Object.keys(projectCategory).length)? (projectCategory.value === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST : []} />
 
-  const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} hideSelectedOptions={false} onChange={e=>setProjectUserList(e)} options={ allUserList }/>;
+  const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} options={ allUserList }/>;
   
   const createProject = () =>{
     const payload = {

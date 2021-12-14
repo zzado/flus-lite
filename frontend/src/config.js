@@ -21,12 +21,20 @@ module.exports = global.config = {
         'client_company': '평가대상 기관',
         'assessment_company': '평가 기관',
     },
+    ASSET_VALID_CHECK_FIELDS : {
+        'num': '자산번호',
+        'name': '자산명',
+        'is_new': '신규/기존',
+        'is_test': '테스트/운영',
+        'platform': '자산종류',
+        'asset_value': '자산가치',
+    },
     
     EFI_PROJECT_AREALIST : [
+        {value:'FISM', label: '정보보호관리체계'},
         {value:'SRV', label: '서버'},
         {value:'DBM', label: '데이터베이스'},
         {value:'NET', label: '네트워크 장비'},
-        {value:'FISM', label: '정보보호관리체계'},
         {value:'INF', label: '네트워크 인프라'},
         {value:'ISS', label: '정보보호시스템'},
         {value:'WEB', label: '웹 애플리케이션'},
@@ -36,7 +44,15 @@ module.exports = global.config = {
     OPEN_PROJECT_AREALIST : [
         {value:'WEB', label: '웹 애플리케이션'},
         {value:'MOB', label: '모바일 애플리케이션'},
+    ],
+
+    INFRA_DEVICE_AREA_LIST : [
+        'SRV',
+        'DBM',
+        'NET',
+        'ISS',
     ]
+
 
 };
 

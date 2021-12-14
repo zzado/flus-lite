@@ -7,7 +7,7 @@ import ProjectInfoTable from '../Components/ProjectInfoTable';
 
 export default function ProjectDetailPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject} = appContextState;
+  const { projectList, currentProject, currentArea} = appContextState;
   const { projectId } = useParams();
   const navigate = useNavigate();
   
@@ -22,17 +22,11 @@ export default function ProjectDetailPage(){
   const projectAreaList = () => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/p/${projectId}/${areaAlias.split('-').pop()}`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>));
   const projectAssessors = () => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)) || '';
 
-  const ProjectEditButton = () => <Button size="sm" as={Link} to={`/p/${projectId}/edit`} style={{marginLeft : '5px'}}>편집</Button>;
-  const ProjectDeleteButton = () => 
-    <Button size="sm" 
-      onClick={()=>{ 
-        (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate('/p/') : navigate('/auth')): console.log('deleted cancel'); 
-      }}>삭제</Button>;
 
-  // currentProject value set when URL direct access
+  // currentProject value set when URL direct access w
   useEffect(() => {
-    if(projectList.length) appContextDispatch({ type: 'setProject', value: projectId });
-    appContextDispatch({ type: 'unSetArea'});
+    if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
+    if( currentArea.length ) appContextDispatch({ type: 'unSetArea'});
   },[projectList, projectId]);
 
   return (
@@ -56,8 +50,9 @@ export default function ProjectDetailPage(){
             projectNote={projectNote}
           />
           <div className="form-actions">
-            <ProjectEditButton/>
-            <ProjectDeleteButton/>
+            <Button size="sm" as={Link} to={`/p/${projectId}/edit`} style={{marginLeft : '5px'}}>편집</Button>
+            <Button size="sm" onClick={()=>{ (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate('/p/') : navigate('/auth')): console.log('deleted cancel'); }}>삭제</Button>;
+
           </div>
         </div>
       </div>

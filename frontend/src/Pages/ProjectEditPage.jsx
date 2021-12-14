@@ -8,21 +8,22 @@ import ProjectInfoTable from '../Components/ProjectInfoTable'
 
 export default function ProjectEditPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject} = appContextState;
+  const { projectList, currentProject, currentArea } = appContextState;
   const [ projectUserList, setProjectUserList ] = useState([]);
   const [ areaAliasList, setAreaAliasList ] = useState([]);
   const [ allUserList, setAllUserList ] = useState([]);
   const { projectId } = useParams();
   const navigate = useNavigate();
   
-  // currentProject value set when URL direct access
   useEffect(() => {
-    if(projectList.length && Object.keys(currentProject).length === 0) appContextDispatch({ type: 'setProject', value: projectId });
+    if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
+    if( currentArea.length ) appContextDispatch({ type: 'unSetArea'});
   },[projectList, projectId]);
+
   
   // areaAliasList, allUserList value set
   useEffect(() => {
-    if(Object.keys(currentProject).length !== 0){
+    if(Object.keys(currentProject).length){
       setAreaAliasList( currentProject.area.map( (e) => { const areaName = e.split('-').pop(); return {value: areaName, label: global.config.AREA_RNAME[areaName]}}));
       getUserListReq().then( ([result, jsonData]) => {
         (result) ? setAllUserList(jsonData.map( (e) => { return {value: e.id, label: e.username}; })) : navigate('/auth');
@@ -32,9 +33,10 @@ export default function ProjectEditPage(){
 
   // projectUserList value set
   useEffect(() => {
-    if(allUserList.length !== 0)
+    if(allUserList.length)
       setProjectUserList(currentProject.assessors.map( (e) => allUserList.find( (e2) => e2.value === e )));
   },[allUserList]);
+
 
   const projectNameForm = () => <input id="projectNameEID" defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>;
   const projectCategoryForm = () => currentProject.category || '';
@@ -44,8 +46,8 @@ export default function ProjectEditPage(){
   const projectEndDateForm = () => <input id="projectEndDateEID" type="date" style={{width:'100%'}} defaultValue={currentProject.end_date || ''}/>;
   const projectAgencyForm = () => <input id="projectAgencyEID" defaultValue={currentProject.assessment_company || ''} type="text" style={{width:'100%'}}/>;
   const projectNoteForm = () => <textarea id="projectNoteEID" defaultValue={currentProject.note || ''} style={{width:'100%', height:'80px'}}/>;
-  const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false} hideSelectedOptions={false} onChange={e=>setAreaAliasList(e)} value={ areaAliasList } options={ (currentProject.category === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST} />;
-  const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} hideSelectedOptions={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>;
+  const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setAreaAliasList(e)} value={ areaAliasList } options={ (currentProject.category === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST} />;
+  const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>;
   
   const editProject = () => {
     const payload = {

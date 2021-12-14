@@ -1,0 +1,92 @@
+import { Fragment, useContext, useEffect, useState } from 'react';
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
+import { AppContext } from '../Context/AppContext';
+import { WorkSpaceContext } from '../Context/WorkSpaceContext';
+import { getAssetListByAreaAliasReq } from '../utils'
+import exportXlsx from '../Services/exportXlsx';
+import { loadGridData, saveGridData } from '../Services/realGrid';
+import { GridView, LocalDataProvider } from 'realgrid';
+
+export default function WorkSpaceStep1(){
+  const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { WorkSpaceContextState, WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
+  const { assetList } = WorkSpaceContextState;
+  const { projectList, currentArea, currentProject } = appContextState;
+  const { projectId, areaAlias } = useParams();
+  const navigate = useNavigate();
+
+  const [isGridView, setIsGridView] = useState(false);
+  const [gridView, setGridView] = useState(null);
+  const [dataProvider, setDataProvider] = useState(null);
+
+  useEffect(() => {
+    if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
+    if( areaAlias !== currentArea ){
+      appContextDispatch({ type: 'setArea', value: areaAlias });
+      getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+    }
+    },[projectList, projectId, areaAlias]);
+
+  const realGridInit = () => {
+    setIsGridView(!isGridView);
+    const tempObj1 = new GridView(document.getElementById('realgrid'));
+    const tempObj2 = new LocalDataProvider(false);
+    if(gridView === null) setGridView(tempObj1);
+    if(dataProvider === null) setDataProvider(tempObj2);
+    loadGridData(tempObj1, tempObj2, assetList, areaAlias);
+  };
+
+  const saveRealGrid = () => {
+    if(gridView && dataProvider) saveGridData(gridView, dataProvider, projectId, areaAlias);
+  };
+
+  const SubMenuBox = () => {
+    return (
+      <div className="card-header py-3">
+        <Button size="sm" as={Link} to={`/a/${projectId}/${areaAlias}/create`} style={{marginLeft : '5px'}}>자산 등록</Button>
+        <Button size="sm" onClick={() => exportXlsx(assetList)} style={{marginLeft : '5px'}}>일괄 등록</Button>
+      </div>
+    )
+  };
+  //()=>{ return (isGridView) ? {display: 'none'}: null }
+  return (
+    <Fragment>
+      <div className="card shadow mb-4">
+        <SubMenuBox/>
+        <div className="card-body" style={ {display : (isGridView)? 'none' : ''} }>
+        <Table responsive="md" hover >
+          <thead>
+            <tr>
+              <th><input type="checkbox"/></th>
+              <th>번호</th>
+              <th>자산코드</th>
+              <th>업무명/용도</th>
+              <th>평가자</th>
+              <th>담당자</th>
+              <th>진행상황</th>
+            </tr>
+          </thead>
+          <tbody>
+            { assetList && assetList.map( (assetObj, idx) => (
+            <tr key={idx}>
+              <td><input type="checkbox"/></td>
+              <td>1</td>
+              <td><span className="label">{assetObj.code}</span></td>
+              <td><Link to={`/a/${projectId}/${areaAlias}/${assetObj.id}`}>{assetObj.name}</Link></td>
+              <td ><span className="label">미정</span></td>
+              <td ><span className="label">미정</span></td>
+              <td><span className="label label-secondary">분석중</span></td>
+            </tr>
+            ))}
+          </tbody>
+        </Table>
+        
+        <Button size="sm" onClick={realGridInit} style={{marginLeft : '5px'}}>Load Data!</Button>
+        <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Save Data!</Button>
+        </div>
+        <div id='realgrid'></div>
+      </div>
+    </Fragment>
+  );
+}

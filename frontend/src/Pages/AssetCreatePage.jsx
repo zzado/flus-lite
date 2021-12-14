@@ -2,43 +2,118 @@ import { useEffect, Fragment, useContext, useState } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
+import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
-import { getUserListReq, getComplianceListReq, payloadEmptyCheck, createProjectReq } from '../utils'
-
+import { payloadEmptyCheck, getAssetListByAreaAliasReq, getPlatformListReq, createAssetReq } from '../utils'
+import { WorkSpaceContext } from '../Context/WorkSpaceContext';
+import { AppContext } from '../Context/AppContext';
 
 export default function AssetCreatePage(){
+  const { WorkSpaceContextState, WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
+  const { assetList } = WorkSpaceContextState;
+
+  const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { projectList, currentProject, currentArea } = appContextState;
+
   const { projectId, areaAlias } = useParams();
   const navigate = useNavigate();
 
-  const assetNameForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetCodeForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetAssessorsForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetNoteForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetHostnameForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetSwitchBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetExternalBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetPWDCycleForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetURLForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetIsFinancialBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetIsHttpsBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetVersionForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
+  const [platformList, setPlatformList] = useState([]);
+  const [newAssetCode, setNewAssetCode] = useState(1);
+  const [isSwitch, setIsSwitch] = useState({value:true, label:'스위치'});
+  const [isExternal, setIsExternal] = useState({value:false, label:'대내연결'});
+  const [isFinancial, setIsFinancial] = useState({value:false, label:'비전자금융서비스'});
+  const [isHttps, setIsHttps] = useState({value:false, label:'HTTP'});
+  const [isTest, setIsTest] = useState({value:false, label:'운영'});
+  const [isServer, setIsServer] = useState({value:true, label:'서버측 점검'});
+  const [isNew, setIsNew] = useState({value:true, label:'신규'});
+  const [assetValue, setAssetValue] = useState({value:5, label:5});
+  const [assetPlatform, setAssetPlatform] = useState({});
 
-  const assetPlatformForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  const assetProductModelForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  
-  const assetValueForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  
-  const assetOperatorForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  
+  useEffect(() => {
+    if( projectList.length && currentProject.id !== parseInt(projectId) ) appContextDispatch({ type: 'setProject', value: projectId });
+    if( currentArea !== areaAlias ) appContextDispatch({ type: 'setArea', value: areaAlias });
+  },[projectList]);
+
+  useEffect(() => {
+    if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate('/auth'));
+  },[currentProject]);
+
+  useEffect(() => {
+    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+  },[]);
+
+  useEffect(() => {
+    if(assetList.length) setNewAssetCode( assetList[assetList.length-1].num +1 );
+  },[assetList]);
+
+
+  const assetNameForm = () => <input id="assetNameEID" type="text" style={{width:'100%'}}/>;
+  const assetAssessorsForm = () => <input id="assetAssessorsEID" type="text" style={{width:'100%'}}/>;
+  const assetOperatorForm = () => <input id="assetOperatorEID" type="text" style={{width:'100%'}}/>;
+  const assetHostnameForm = () => <input id="assetHostNameEID" type="text" style={{width:'100%'}}/>;
+  const assetURLForm = () => <input id="assetURLEID" type="text" style={{width:'100%'}}/>;
+  const assetVersionForm = () => <input id="assetVersionEID" type="text" style={{width:'100%'}}/>;
+  const assetProductModelForm = () => <input id="assetProductModelEID" type="text" style={{width:'100%'}}/>;
+
+  const assetPlatformForm = () => <CreatableSelect onChange={e=>setAssetPlatform(e)} options={ platformList } />
+
+  const assetSwitchBoolForm = () => <Select onChange={e=>setIsSwitch(e)} value={isSwitch} options={ [ {value:true, label:'스위치'}, {value:false, label:'라우터'} ] }/>;
+  const assetExternalBoolForm = () => <Select onChange={e=>setIsExternal(e)} value={isExternal} options={ [ {value:true, label:'대외연결'}, {value:false, label:'대내연결'} ] }/>;
+  const assetIsFinancialBoolForm = () => <Select onChange={e=>setIsFinancial(e)} value={isFinancial} options={ [ {value:true, label:'전자금융서비스'}, {value:false, label:'비전자금융서비스'} ] }/>;
+  const assetIsHttpsBoolForm = () => <Select onChange={e=>setIsHttps(e)} value={isHttps} options={ [ {value:true, label:'HTTPS'}, {value:false, label:'HTTP'} ] }/>;
+  const assetIsTestBoolForm = () => <Select onChange={e=>setIsTest(e)} value={isTest} options={ [ {value:true, label:'테스트'}, {value:false, label:'운영'} ] }/>;
+  const assetIsServerBoolForm = () => <Select onChange={e=>setIsServer(e)} value={isServer} options={ [ {value:true, label:'서버측 점검'}, {value:false, label:'서버측 미점검'} ] }/>;
+  const assetIsNewBoolForm = () => <Select onChange={e=>setIsNew(e)} value={isNew} options={ [ {value:true, label:'신규'}, {value:false, label:'기존'} ] }/>;
+  const assetValueForm = () => <Select onChange={e=>setAssetValue(e)} value={assetValue} options={ [5, 4, 3, 2, 1].map(e => { return { value:e, label: e } } ) }/>;
+
+  const assetCodeForm = () => <div key={newAssetCode}><input id="assetCodeEID" type="number" min="1" defaultValue={newAssetCode} style={{width:'100%'}}/></div>;
+  const assetPWDCycleForm = () => <input id="assetPWDCycleEID" type="number" min="0"  defaultValue="0" style={{width:'100%'}}/>;
+  const assetBackUpCycleForm = () => <input id="assetBackUpCycleEID" type="number" min="0" defaultValue="0" style={{width:'100%'}}/>;
+
+  const assetNoteForm = () => <textarea id="assetNoteEID" style={{width:'100%', height:'80px'}}/>;
+
   const assetAnalysisDoneBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
   
-  const assetIsTestBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
+  const createAsset = () => {
+    const payload = {
+      area_alias: areaAlias,
+      project: parseInt(projectId),
+      num : document.getElementById('assetCodeEID').value,
+      name: document.getElementById('assetNameEID').value,
+      assessors: document.getElementById('assetOperatorEID').value,
+      operator: document.getElementById('assetAssessorsEID').value,
+      is_new: isNew.value ? isNew.value : true,
+      note: document.getElementById('assetNoteEID').value,
+      hostname: document.getElementById('assetHostNameEID') ? document.getElementById('assetHostNameEID').value : '',
+      ip_url: document.getElementById('assetURLEID') ? document.getElementById('assetURLEID').value : '',
+      version: document.getElementById('assetVersionEID') ? document.getElementById('assetVersionEID').value : '',
+      product_model: document.getElementById('assetProductModelEID') ? document.getElementById('assetProductModelEID').value : '',
+      platform: assetPlatform.value ? ((assetPlatform.__isNew__)? '[[OTHER]]': assetPlatform.value) : 'NONE',
+      platform_t : assetPlatform.__isNew__ ? assetPlatform.value : '',
+      is_switch: isSwitch.value ? isSwitch.value : true,
+      is_external: isExternal.value ? isExternal.value : false,
+      is_financial: isFinancial.value ? isFinancial.value : false,
+      is_https: isHttps.value ? isHttps.value: false,
+      is_test: isTest.value ? isTest.value : false,
+      is_server: isServer.value ? isServer.value : false,
+      asset_value: assetValue.value ? assetValue.value : 5,
+      pwd_change_cycle: document.getElementById('assetPWDCycleEID') ? document.getElementById('assetPWDCycleEID').value : 0,
+      backup_cycle: document.getElementById('assetBackUpCycleEID') ? document.getElementById('assetBackUpCycleEID').value : 0,
+    };
+    console.log(payload.platform);
+    if( ['SRV', 'DBM', 'MOB', 'ISS', 'NET'].includes(areaAlias) && payload.platform === 'NONE') payload.platform = '';
   
-  const assetIsServerBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  
-  const assetIsNewBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
-  
-  
+    const [validResult, value] = payloadEmptyCheck(payload, global.config.ASSET_VALID_CHECK_FIELDS);
+    if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
+
+    createAssetReq(payload).then( ([result, jsonData]) => {
+      if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate(`/w/${projectId}/${areaAlias}/`); }else{ navigate('/auth');}
+    });
+  };
+
+
+
   return (
     <Fragment>
       <div className="container-fluid" style={{width: '95%'}}>
@@ -61,7 +136,7 @@ export default function AssetCreatePage(){
             assetIsFinancialBool = {assetIsFinancialBoolForm}
             assetIsHttpsBool = {assetIsHttpsBoolForm}
             assetVersion = {assetVersionForm}
-
+            assetBackUpCycle = {assetBackUpCycleForm}
             assetAssessors = {assetAssessorsForm}
             assetPlatform = {assetPlatformForm}
             assetProductModel = {assetProductModelForm}
@@ -71,10 +146,10 @@ export default function AssetCreatePage(){
             assetIsTestBool = {assetIsTestBoolForm}
             assetIsServerBool = {assetIsServerBoolForm}
             assetIsNewBool = {assetIsNewBoolForm}
-            />
+          />
           <div className="form-actions">
-            <Button>편집</Button>
-            <Button>취소</Button>
+            <Button size="sm" onClick={createAsset} style={{marginLeft : '5px'}}>저장</Button>
+            <Button as={Link} to={`/w/${projectId}/${areaAlias}/step1`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
           </div>
         </div>
       </div>
@@ -82,33 +157,3 @@ export default function AssetCreatePage(){
     </Fragment>
   );
 }
-
-// {
-//   "id": 1,
-//   "num": 1,
-//   "area_alias": "SRV",
-//   "code": "S01",
-//   "name": "ㅋㅋㄹㄴ",
-//   "assessors": "김개똥",
-//   "note": "",
-//   "hostname": "test-host",
-//   "is_switch": true,
-//   "is_external": false,
-//   "backup_cycle": 0,
-//   "pwd_change_cycle": 0,
-//   "ip_url": "1",
-//   "is_financial": false,
-//   "is_https": false,
-//   "version": "",
-//   "platform": "WINDOWS",
-//   "platform_t": "ㄹ",
-//   "product_model": "",
-//   "asset_value": 5,
-//   "operator": "",
-//   "progress": 1,
-//   "is_test": false,
-//   "is_server": false,
-//   "is_new": false,
-//   "manual_done": false,
-//   "project": 25
-// }

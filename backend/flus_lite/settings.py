@@ -142,4 +142,5 @@ AUTH_USER_MODEL = 'auth.User'
 G_PLATFORM_INFO = {}
 COMMON_ERROR_MESSAGE = {'error':'error'}
 
+AREA_SIGNATURE = {"FISM": "M", "SRV": "S", "DBM": "D", "INF": "I", "NET": "N", "ISS": "P", "WEB": "W", "MOB": "V", "HTS": "H", "PEN": "PT", "CSP": "CSP", "SBO": "SBO"}
 CORS_ORIGIN_ALLOW_ALL = True

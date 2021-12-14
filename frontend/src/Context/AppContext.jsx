@@ -23,6 +23,15 @@ const contextReducer = (state, action) => {
     case 'setProject':
       const projectObj = newState.projectList.find( (e) => e.id === parseInt(action.value));
       newState.currentProject = projectObj;
+      let sortedArea = [];
+      for(let element of global.config.EFI_PROJECT_AREALIST){
+        for(let _ of newState.currentProject.area){
+          if(element.value === _.split('-').pop()){
+            sortedArea.push(_);
+          }
+        }
+      }
+      newState.currentProject.area = sortedArea;
       return (projectObj)? newState : state;
     case 'setUser':
       newState.currentUser = action.value;
