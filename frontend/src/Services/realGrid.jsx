@@ -4,7 +4,7 @@ import { assetColunms, assetFields, data, temp } from './data';
 import { saveAssetGridDataReq } from '../utils'
 
 
-export function loadGridData(gridView, dataProvider, assetList){
+export function loadGridData(gridView, dataProvider, assetList, areaAlias){
   gridView.setDataSource(dataProvider);
 
   let colums = assetColunms;
@@ -50,8 +50,7 @@ export function saveGridData(gridView, dataProvider, projectId, areaAlias){
   //for(let _ of updatedRowList['deleted']) deletedRow.push(dataProvider.getJsonRow(_));
   
 
-  
-  if(createdRow.length || updatedRow.length || deletedRow.lenfth){
+  if(createdRow.length || updatedRow.length || deletedRow.length){
     let gridData = {
       'createdRow' : createdRow,
       'updatedRow' : updatedRow,
@@ -61,9 +60,25 @@ export function saveGridData(gridView, dataProvider, projectId, areaAlias){
     saveAssetGridDataReq(gridData, projectId, areaAlias).then( ([result, jsonData]) => {
       if(result) { gridView.hideToast(); dataProvider.clearRowStates(true,false); console.log(jsonData)} else {console.log(jsonData)}
     });
+    return true;
   }else{
     alert('변경사항이 없습니다');
+    return false;
   }
+}
+
+export function exportXlsx(gridView){
+  gridView.exportGrid({
+    type: "excel",
+    target: "local",
+    fileName: "gridExportSample.xlsx", 
+    showProgress: true,
+    progressMessage: "엑셀 Export중입니다.",
+    indicator: 'hidden',
+    header: 'default',
+    footer: 'hidden',
+    compatibility: true,
+  });
 }
 
 function setDataProviderConfig(dataProvider){
@@ -129,7 +144,6 @@ function setGridViewConfig(gridView){
     {label: '행 삭제', tag: 'deleteRow'},
     {label: '아래에 행 삽입', tag: 'insertRow'},
     {label: '-'},
-    {label: 'ExcelExport', tag: 'exportXlsx'},
   ]);
 
   gridView.onContextMenuPopup = function(grid, x, y, elementName){
@@ -141,21 +155,6 @@ function setGridViewConfig(gridView){
       gridView.deleteSelection(true);
     }else if(menu.tag == 'insertRow'){
       gridView.beginInsertRow(data.itemIndex, true);
-    }else if(menu.tag == 'exportXlsx'){
-      gridView.exportGrid({
-        type: "excel",
-        target: "local",
-        fileName: "gridExportSample.xlsx", 
-        showProgress: true,
-        progressMessage: "엑셀 Export중입니다.",
-        indicator: 'hidden',
-        header: 'default',
-        footer: 'hidden',
-        compatibility: true,
-        done: function () {  //내보내기 완료 후 실행되는 함수
-            alert("done excel export")
-        }
-      });
     }
   };
 

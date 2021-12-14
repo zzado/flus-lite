@@ -19,7 +19,7 @@ export default function ProjectDetailPage(){
   const projectEndDate = () => currentProject.end_date || '';
   const projectAgency = () => currentProject.assessment_company || '';
   const projectNote = () => currentProject.note || '';
-  const projectAreaList = () => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/p/${projectId}/${areaAlias.split('-').pop()}`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>));
+  const projectAreaList = () => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${projectId}/${areaAlias.split('-').pop()}`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>));
   const projectAssessors = () => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)) || '';
 
 
@@ -51,7 +51,7 @@ export default function ProjectDetailPage(){
           />
           <div className="form-actions">
             <Button size="sm" as={Link} to={`/p/${projectId}/edit`} style={{marginLeft : '5px'}}>편집</Button>
-            <Button size="sm" onClick={()=>{ (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate('/p/') : navigate('/auth')): console.log('deleted cancel'); }}>삭제</Button>;
+            <Button size="sm" onClick={()=>{ (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate('/p/') : navigate('/auth')): console.log('deleted cancel'); }}>삭제</Button>
 
           </div>
         </div>

@@ -22,13 +22,14 @@ import WorkSpaceStep1 from './Pages/WorkSpaceStep1';
 import { AppContextProvider } from './Context/AppContext';
 import { WorkSpaceContextProvider } from './Context/WorkSpaceContext';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-
+import JSZip from 'jszip/dist/jszip';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'realgrid/dist/realgrid-style.css'
 import './Assets/css/flus.css';
 import './config';
 
 export default function App (){
+  console.log(JSZip);
   return (
     <BrowserRouter>
       <Routes>

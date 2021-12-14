@@ -37,7 +37,7 @@ export default function AssetDetailPage(){
             projectId = {projectId}
             areaAlias = {areaAlias}
             assetName={()=>assetObj.name}
-            assetCode = {()=>assetObj.code}
+            assetNum = {()=>assetObj.code}
             assetNote = {()=>assetObj.note}
             assetHostname = {()=>assetObj.hostname}
             assetSwitchBool = {()=>assetObj.is_switch? 'true': 'false'}

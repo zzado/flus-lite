@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
@@ -21,8 +21,6 @@ export default function AssetEditPage(){
   
   const [platformList, setPlatformList] = useState([]);
 
-  const [newAssetCode, setNewAssetCode] = useState(1);
-
   const [isSwitch, setIsSwitch] = useState({});
   const [isExternal, setIsExternal] = useState({});
   const [isFinancial, setIsFinancial] = useState({});
@@ -33,6 +31,18 @@ export default function AssetEditPage(){
   const [assetValue, setAssetValue] = useState({});
   const [assetPlatform, setAssetPlatform] = useState({});
 
+  const assetNameRef = useRef(null);
+  const assetNumRef = useRef(null);
+  const assetAssessorsRef = useRef(null);
+  const assetOperatorRef = useRef(null);
+  const assetHostnameRef = useRef(null);
+  const assetURLRef = useRef(null);
+  const assetVersionRef = useRef(null);
+  const assetProductModelRef = useRef(null);
+  const assetPWDCycleRef = useRef(null);
+  const assetBackUpCycleRef = useRef(null);
+  const assetNoteRef = useRef(null);
+  const assetAnalysisDoneRef = useRef(null);
 
   useEffect(() => {
     if( projectList.length && currentProject.id !== parseInt(projectId)) appContextDispatch({ type: 'setProject', value: projectId });
@@ -62,13 +72,13 @@ export default function AssetEditPage(){
   },[assetObj]);
 
 
-  const assetNameForm = () => <input id="assetNameEID" type="text" defaultValue={assetObj.name} style={{width:'100%'}} required/>;
-  const assetAssessorsForm = () => <input id="assetAssessorsEID" defaultValue={assetObj.assessors} type="text" style={{width:'100%'}}/>;
-  const assetOperatorForm = () => <input id="assetOperatorEID" defaultValue={assetObj.operator} type="text" style={{width:'100%'}}/>;
-  const assetHostnameForm = () => <input id="assetHostNameEID" defaultValue={assetObj.hostname} type="text" style={{width:'100%'}}/>;
-  const assetURLForm = () => <input id="assetURLEID" type="text" defaultValue={assetObj.ip_url} style={{width:'100%'}}/>;
-  const assetVersionForm = () => <input id="assetVersionEID" type="text" defaultValue={assetObj.version} style={{width:'100%'}}/>;
-  const assetProductModelForm = () => <input id="assetProductModelEID" type="text" defaultValue={assetObj.product_model} style={{width:'100%'}}/>;
+  const assetNameForm = () => <input ref={assetNameRef} type="text" defaultValue={assetObj.name} style={{width:'100%'}}/>;
+  const assetAssessorsForm = () => <input ref={assetAssessorsRef} defaultValue={assetObj.assessors} type="text" style={{width:'100%'}}/>;
+  const assetOperatorForm = () => <input ref={assetOperatorRef} defaultValue={assetObj.operator} type="text" style={{width:'100%'}}/>;
+  const assetHostnameForm = () => <input ref={assetHostnameRef} defaultValue={assetObj.hostname} type="text" style={{width:'100%'}}/>;
+  const assetURLForm = () => <input ref={assetURLRef} type="text" defaultValue={assetObj.ip_url} style={{width:'100%'}}/>;
+  const assetVersionForm = () => <input ref={assetVersionRef} type="text" defaultValue={assetObj.version} style={{width:'100%'}}/>;
+  const assetProductModelForm = () => <input ref={assetProductModelRef} type="text" defaultValue={assetObj.product_model} style={{width:'100%'}}/>;
 
   const assetPlatformForm = () => <CreatableSelect onChange={e=>setAssetPlatform(e)} value={ assetPlatform } options={ platformList } />
   const assetSwitchBoolForm = () => <Select onChange={e=>setIsSwitch(e)} value={isSwitch} options={ [ {value:true, label:'스위치'}, {value:false, label:'라우터'} ] }/>;
@@ -80,30 +90,32 @@ export default function AssetEditPage(){
   const assetIsNewBoolForm = () => <Select onChange={e=>setIsNew(e)} value={isNew} options={ [ {value:true, label:'신규'}, {value:false, label:'기존'} ] }/>;
   const assetValueForm = () => <Select onChange={e=>setAssetValue(e)} value={assetValue} options={ [5, 4, 3, 2, 1].map(e => { return { value:e, label: e } } ) }/>;
 
-  const assetCodeForm = () => <div key={newAssetCode}><input id="assetCodeEID" type="number" min="1" defaultValue={assetObj.num} style={{width:'100%'}}/></div>;
-  const assetPWDCycleForm = () => <input id="assetPWDCycleEID" type="number" min="0"  defaultValue={assetObj.pwd_change_cycle} style={{width:'100%'}}/>;
-  const assetBackUpCycleForm = () => <input id="assetBackUpCycleEID" type="number" min="0" defaultValue={assetObj.backup_cycle} style={{width:'100%'}}/>;
+  const assetNumForm = () => <input ref={assetNumRef} type="number" min="1" defaultValue={assetObj.num} style={{width:'100%'}}/>;
+  const assetPWDCycleForm = () => <input ref={assetPWDCycleRef} type="number" min="0"  defaultValue={assetObj.pwd_change_cycle} style={{width:'100%'}}/>;
+  const assetBackUpCycleForm = () => <input ref={assetBackUpCycleRef} type="number" min="0" defaultValue={assetObj.backup_cycle} style={{width:'100%'}}/>;
 
-  const assetNoteForm = () => <textarea id="assetNoteEID" defaultValue={assetObj.note} style={{width:'100%', height:'80px'}}/>;
+  const assetNoteForm = () => <textarea ref={assetNoteRef} defaultValue={assetObj.note} style={{width:'100%', height:'80px'}}/>;
 
-  const assetAnalysisDoneBoolForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
+  const assetAnalysisDoneBoolForm = () => <input ref={assetAnalysisDoneRef} type="text" style={{width:'100%'}}/>;
   
   const createAsset = () => {
     const payload = {
       area_alias: areaAlias,
       project: parseInt(projectId),
-      num : document.getElementById('assetCodeEID').value,
-      name: document.getElementById('assetNameEID').value,
-      assessors: document.getElementById('assetOperatorEID').value,
-      operator: document.getElementById('assetAssessorsEID').value,
-      is_new: isNew.value ? isNew.value : true,
-      note: document.getElementById('assetNoteEID').value,
-      hostname: document.getElementById('assetHostNameEID') ? document.getElementById('assetHostNameEID').value : '',
-      ip_url: document.getElementById('assetURLEID') ? document.getElementById('assetURLEID').value : '',
-      version: document.getElementById('assetVersionEID') ? document.getElementById('assetVersionEID').value : '',
-      product_model: document.getElementById('assetProductModelEID') ? document.getElementById('assetProductModelEID').value : '',
+      num : assetNumRef.current ? assetNumRef.current.value : 0,
+      name: assetNameRef.current ? assetNameRef.current.value : '',
+      assessors: assetAssessorsRef.current ? assetAssessorsRef.current.value : '',
+      operator: assetOperatorRef.current ? assetOperatorRef.current.value : '',
+      note: assetNoteRef.current ? assetNoteRef.current.value : '',
+      hostname: assetHostnameRef.current ? assetHostnameRef.current.value : '',
+      ip_url: assetURLRef.current ? assetURLRef.current.value : '',
+      version: assetVersionRef.current ? assetVersionRef.current.value : '',
+      product_model: assetProductModelRef.current ? assetProductModelRef.current.value : '',
+
       platform: assetPlatform.value ? ((assetPlatform.__isNew__)? '[[OTHER]]': assetPlatform.value) : 'NONE',
       platform_t : assetPlatform.__isNew__ ? assetPlatform.value : '',
+
+      is_new: isNew.value ? isNew.value : true,
       is_switch: isSwitch.value ? isSwitch.value : true,
       is_external: isExternal.value ? isExternal.value : false,
       is_financial: isFinancial.value ? isFinancial.value : false,
@@ -111,8 +123,8 @@ export default function AssetEditPage(){
       is_test: isTest.value ? isTest.value : false,
       is_server: isServer.value ? isServer.value : false,
       asset_value: assetValue.value ? assetValue.value : 5,
-      pwd_change_cycle: document.getElementById('assetPWDCycleEID') ? document.getElementById('assetPWDCycleEID').value : 0,
-      backup_cycle: document.getElementById('assetBackUpCycleEID') ? document.getElementById('assetBackUpCycleEID').value : 0,
+      pwd_change_cycle: assetPWDCycleRef.current ? assetPWDCycleRef.current.value : 0,
+      backup_cycle: assetBackUpCycleRef.current ? assetBackUpCycleRef.current.value : 0,
     };
     console.log(payload);
     if( ['SRV', 'DBM', 'MOB', 'ISS', 'NET'].includes(areaAlias) && payload.platform === 'NONE') payload.platform = '';
@@ -137,7 +149,7 @@ export default function AssetEditPage(){
             projectId = {projectId}
             areaAlias = {areaAlias}
             assetName={assetNameForm}
-            assetCode = {assetCodeForm}
+            assetNum = {assetNumForm}
             assetNote = {assetNoteForm}
             assetHostname = {assetHostnameForm}
             assetSwitchBool = {assetSwitchBoolForm}

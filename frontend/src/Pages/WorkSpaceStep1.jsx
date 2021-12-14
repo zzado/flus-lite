@@ -4,9 +4,9 @@ import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import { WorkSpaceContext } from '../Context/WorkSpaceContext';
 import { getAssetListByAreaAliasReq } from '../utils'
-import exportXlsx from '../Services/exportXlsx';
-import { loadGridData, saveGridData } from '../Services/realGrid';
+import { loadGridData, saveGridData, exportXlsx } from '../Services/realGrid';
 import { GridView, LocalDataProvider } from 'realgrid';
+import { FileUploader } from "react-drag-drop-files";
 
 export default function WorkSpaceStep1(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
@@ -17,43 +17,71 @@ export default function WorkSpaceStep1(){
   const navigate = useNavigate();
 
   const [isGridView, setIsGridView] = useState(false);
+  const [maxGridVeiw, setMaxGridVeiw] = useState(false);
+
   const [gridView, setGridView] = useState(null);
   const [dataProvider, setDataProvider] = useState(null);
 
   useEffect(() => {
-    if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
-    if( areaAlias !== currentArea ){
-      appContextDispatch({ type: 'setArea', value: areaAlias });
-      getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
-    }
-    },[projectList, projectId, areaAlias]);
+    if( projectList.length )appContextDispatch({ type: 'setProject', value: projectId });
+    if( areaAlias !== currentArea ) appContextDispatch({ type: 'setArea', value: areaAlias });
+    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+  },[projectList, projectId, areaAlias]);
 
   const realGridInit = () => {
-    setIsGridView(!isGridView);
-    const tempObj1 = new GridView(document.getElementById('realgrid'));
-    const tempObj2 = new LocalDataProvider(false);
-    if(gridView === null) setGridView(tempObj1);
-    if(dataProvider === null) setDataProvider(tempObj2);
-    loadGridData(tempObj1, tempObj2, assetList, areaAlias);
+    if(gridView === null && dataProvider === null){
+      const tempObj1 = new GridView(document.getElementById('realgrid'));
+      const tempObj2 = new LocalDataProvider(false);
+      setGridView(tempObj1);
+      setDataProvider(tempObj2);
+      loadGridData(tempObj1, tempObj2, assetList, areaAlias);
+    }else{
+      loadGridData(gridView, dataProvider, assetList, areaAlias);
+    }
   };
 
   const saveRealGrid = () => {
-    if(gridView && dataProvider) saveGridData(gridView, dataProvider, projectId, areaAlias);
+    if(gridView && dataProvider){
+      saveGridData(gridView, dataProvider, projectId, areaAlias) ? WorkSpaceContextDispatch({ type:'resetAsset' }) : console.log('save canceld');
+    }
   };
 
+
+
   const SubMenuBox = () => {
-    return (
+    const fileTypes = ["JPG", "PNG", "GIF"];
+
+    const [file, setFile] = useState(null);
+    const handleChange = (file) => {
+      setFile(file);
+    };
+
+    return (isGridView) ? (
+      <Fragment>
+      <div className="card-header py-3">
+        <Button size="sm" onClick={()=> loadGridData(gridView, dataProvider, assetList, areaAlias)} style={{marginLeft : '5px'}}>Reload</Button>
+        <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Save</Button>
+        <Button size="sm" onClick={()=> exportXlsx(gridView)} style={{marginLeft : '5px'}}>Export</Button>
+        <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Import</Button>
+        <Button size="sm" onClick={()=> setIsGridView(!isGridView)} style={{marginLeft : '5px'}}>뒤로</Button>
+      </div>
+      <div>
+        <FileUploader label={'ClickMe hi'} handleChange={handleChange} name="file" types={fileTypes} />
+      </div>
+      </Fragment>
+    ) : 
+     (
       <div className="card-header py-3">
         <Button size="sm" as={Link} to={`/a/${projectId}/${areaAlias}/create`} style={{marginLeft : '5px'}}>자산 등록</Button>
-        <Button size="sm" onClick={() => exportXlsx(assetList)} style={{marginLeft : '5px'}}>일괄 등록</Button>
+        <Button size="sm" onClick={() => { setIsGridView(!isGridView); realGridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
       </div>
     )
   };
-  //()=>{ return (isGridView) ? {display: 'none'}: null }
+
   return (
     <Fragment>
       <div className="card shadow mb-4">
-        <SubMenuBox/>
+        <SubMenuBox />
         <div className="card-body" style={ {display : (isGridView)? 'none' : ''} }>
         <Table responsive="md" hover >
           <thead>
@@ -81,11 +109,8 @@ export default function WorkSpaceStep1(){
             ))}
           </tbody>
         </Table>
-        
-        <Button size="sm" onClick={realGridInit} style={{marginLeft : '5px'}}>Load Data!</Button>
-        <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Save Data!</Button>
         </div>
-        <div id='realgrid'></div>
+        <div id='realgrid' style={{display : (isGridView)? '' : 'none'}}></div>
       </div>
     </Fragment>
   );

@@ -3,7 +3,7 @@ import { Table } from "react-bootstrap";
 
 export default function AssetInfoTable(props){
   
-  const { areaAlias, assetName, assetCode, assetNote, assetHostname, assetSwitchBool, assetExternalBool, assetPWDCycle, assetURL, assetIsFinancialBool, assetIsHttpsBool, assetVersion, assetAssessors, assetPlatform, assetProductModel, assetValue, assetOperator, assetIsTestBool, assetIsServerBool, assetIsNewBool, assetBackUpCycle } = props;
+  const { areaAlias, assetName, assetNum, assetNote, assetHostname, assetSwitchBool, assetExternalBool, assetPWDCycle, assetURL, assetIsFinancialBool, assetIsHttpsBool, assetVersion, assetAssessors, assetPlatform, assetProductModel, assetValue, assetOperator, assetIsTestBool, assetIsServerBool, assetIsNewBool, assetBackUpCycle } = props;
   
   const tableRowsByAreaAlias = () => {
     let fragment = null;
@@ -110,7 +110,7 @@ export default function AssetInfoTable(props){
       <Fragment>
         <tr>
         <th colSpan={2} rowSpan={2}>자산번호</th>
-        <td colSpan={2} rowSpan={2}>{assetCode()}</td>
+        <td colSpan={2} rowSpan={2}>{assetNum()}</td>
         <th colSpan={2}>자산명</th>
         <td colSpan={8}>{assetName()}</td>
         <th colSpan={2}>담당자</th>

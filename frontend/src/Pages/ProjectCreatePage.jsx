@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -18,6 +18,12 @@ export default function ProjectCreatePage(){
   const [ projectCompliance, setProjectCompliance ] = useState({});
   const [ projectUserList, setProjectUserList ] = useState([]);
   const [ projectAreaList, setProjectAreaList ] = useState([]);
+  const projectNameRef = useRef(null);
+  const projectStartDateRef = useRef(null);
+  const projectClientRef = useRef(null);
+  const projectEndDateRef = useRef(null);
+  const projectAgencyRef = useRef(null);
+  const projectNoteRef = useRef(null);
 
   const [ allUserList, setAllUserList ] = useState([]);
   const [ allComplianceList, setAllComplianceList ] = useState([]);
@@ -32,14 +38,14 @@ export default function ProjectCreatePage(){
     });
   },[]);
 
-  const projectNameForm = () => <input id="projectNameEID" type="text" style={{width:'100%'}}/>;
+  const projectNameForm = () => <input ref={projectNameRef} type="text" style={{width:'100%'}}/>;
   const projectCategoryForm = () => <Select onChange={e=>setProjectCategory(e)} options={ [ {value:'공개용', label:'공개용'}, {value:'종합', label:'종합'} ]}/>;
   const projectComplianceForm = () => <Select onChange={e=>setProjectCompliance(e)} isDisabled={(Object.keys(projectCategory).length)? false :true} options={ allComplianceList }/>;
-  const projectStartDateForm = () => <input id="projectStartDateEID" type="date" style={{width:'100%'}}/>;
-  const projectClientForm = () => <input id="projectClientEID" style={{width:'100%'}}/>;
-  const projectEndDateForm = () => <input id="projectEndDateEID" type="date" style={{width:'100%'}} />;
-  const projectAgencyForm = () => <input id="projectAgencyEID" style={{width:'100%'}} />;
-  const projectNoteForm = () => <textarea id="projectNoteEID" style={{width:'100%', height:'80px'}}/>;
+  const projectStartDateForm = () => <input ref={projectStartDateRef} type="date" style={{width:'100%'}}/>;
+  const projectClientForm = () => <input ref={projectClientRef} style={{width:'100%'}}/>;
+  const projectEndDateForm = () => <input ref={projectEndDateRef} type="date" style={{width:'100%'}} />;
+  const projectAgencyForm = () => <input ref={projectAgencyRef} style={{width:'100%'}} />;
+  const projectNoteForm = () => <textarea ref={projectNoteRef} style={{width:'100%', height:'80px'}}/>;
 
   const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false}  onChange={e=>setProjectAreaList(e)} isDisabled={(Object.keys(projectCompliance).length)? false :true} options={ (Object.keys(projectCategory).length)? (projectCategory.value === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST : []} />
 
@@ -47,17 +53,18 @@ export default function ProjectCreatePage(){
   
   const createProject = () =>{
     const payload = {
-      "name": document.getElementById('projectNameEID').value,
-      "compliance": projectCompliance.value || '',
-      "area": projectAreaList.map( (e) => `${projectCompliance.value}-${e.value}`) || [],
-      "category": projectCategory.value || '',
-      "start_date": document.getElementById('projectStartDateEID').value,
-      "end_date": document.getElementById('projectEndDateEID').value,
-      "client_company": document.getElementById('projectClientEID').value,
-      "assessment_company": document.getElementById('projectAgencyEID').value,
-      "note": document.getElementById('projectNoteEID').value,
-      "assessors": projectUserList.map( (e) => e.value) || []
+      name: projectNameRef.current.value || '',
+      compliance: projectCompliance.value || '',
+      area: projectAreaList.map( (e) => `${projectCompliance.value}-${e.value}`),
+      category: projectCategory.value || '',
+      start_date: projectStartDateRef.current.value || '',
+      end_date: projectEndDateRef.current.value || '',
+      client_company: projectClientRef.current.value || '',
+      assessment_company: projectAgencyRef.current.value || '',
+      note: projectNoteRef.current.value || '',
+      assessors: projectUserList.map( (e) => e.value) || []
     };
+    console.log(payload);
     
     const [validResult, value] = payloadEmptyCheck(payload, global.config.PROJECT_VALID_CHECK_FIELDS);
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}

@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -13,6 +13,15 @@ export default function ProjectEditPage(){
   const [ areaAliasList, setAreaAliasList ] = useState([]);
   const [ allUserList, setAllUserList ] = useState([]);
   const { projectId } = useParams();
+  
+  const projectNameRef = useRef(null);
+  const projectStartDateRef = useRef(null);
+  const projectClientRef = useRef(null);
+  const projectEndDateRef = useRef(null);
+  const projectAgencyRef = useRef(null);
+  const projectNoteRef = useRef(null);
+
+
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -38,30 +47,30 @@ export default function ProjectEditPage(){
   },[allUserList]);
 
 
-  const projectNameForm = () => <input id="projectNameEID" defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>;
+  const projectNameForm = () => <input ref={projectNameRef} defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>;
   const projectCategoryForm = () => currentProject.category || '';
   const projectComplianceForm = () => currentProject.compliance || '';
-  const projectStartDateForm = () => <input id="projectStartDateEID" type="date" style={{width:'100%'}} defaultValue={currentProject.start_date || ''}/>;
-  const projectClientForm = () => <input id="projectClientEID" defaultValue={currentProject.client_company || ''} type="text" style={{width:'100%'}}/>;
-  const projectEndDateForm = () => <input id="projectEndDateEID" type="date" style={{width:'100%'}} defaultValue={currentProject.end_date || ''}/>;
-  const projectAgencyForm = () => <input id="projectAgencyEID" defaultValue={currentProject.assessment_company || ''} type="text" style={{width:'100%'}}/>;
-  const projectNoteForm = () => <textarea id="projectNoteEID" defaultValue={currentProject.note || ''} style={{width:'100%', height:'80px'}}/>;
+  const projectStartDateForm = () => <input ref={projectStartDateRef} type="date" style={{width:'100%'}} defaultValue={currentProject.start_date || ''}/>;
+  const projectClientForm = () => <input ref={projectClientRef} defaultValue={currentProject.client_company || ''} type="text" style={{width:'100%'}}/>;
+  const projectEndDateForm = () => <input ref={projectEndDateRef} type="date" style={{width:'100%'}} defaultValue={currentProject.end_date || ''}/>;
+  const projectAgencyForm = () => <input ref={projectAgencyRef} defaultValue={currentProject.assessment_company || ''} type="text" style={{width:'100%'}}/>;
+  const projectNoteForm = () => <textarea ref={projectNoteRef} defaultValue={currentProject.note || ''} style={{width:'100%', height:'80px'}}/>;
   const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setAreaAliasList(e)} value={ areaAliasList } options={ (currentProject.category === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST} />;
   const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>;
   
   const editProject = () => {
     const payload = {
-      "id": projectId,
-      "name": document.getElementById('projectNameEID').value,
-      "category": currentProject.category,
-      "start_date": document.getElementById('projectStartDateEID').value,
-      "end_date": document.getElementById('projectEndDateEID').value,
-      "client_company": document.getElementById('projectClientEID').value,
-      "assessment_company": document.getElementById('projectAgencyEID').value,
-      "note": document.getElementById('projectNoteEID').value,
-      "compliance": currentProject.compliance,
-      "area": areaAliasList.map( (e) => `${currentProject.compliance}-${e.value}`),
-      "assessors": projectUserList.map( (e) => e.value)
+      id: projectId,
+      name: projectNameRef.current.value || '',
+      compliance: currentProject.compliance,
+      area: areaAliasList.map( (e) => `${currentProject.compliance}-${e.value}`),
+      category: currentProject.category,
+      start_date: projectStartDateRef.current.value || '',
+      end_date: projectEndDateRef.current.value || '',
+      client_company: projectClientRef.current.value || '',
+      assessment_company: projectAgencyRef.current.value || '',
+      note: projectNoteRef.current.value || '',
+      assessors: projectUserList.map( (e) => e.value) || []
     };
 
     const [validResult, value] = payloadEmptyCheck(payload, global.config.PROJECT_VALID_CHECK_FIELDS);

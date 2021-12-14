@@ -118,7 +118,7 @@ export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
 export const payloadEmptyCheck = (payload, fields) =>{
   for(let _ in payload){
     if(fields.hasOwnProperty(_)){
-      if(payload[_] === '' || payload[_] === null || payload[_] === undefined)
+      if(payload[_] === '' || payload[_] === null || payload[_] === undefined || payload[_].length === 0)
         return [false, fields[_]];
     }
   }
