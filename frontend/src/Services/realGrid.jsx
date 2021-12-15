@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
-import { GridView, LocalDataProvider } from 'realgrid';
-import { assetColunms, assetFields, data, temp } from './data';
+import { assetColunms, assetFields, } from './data';
 import { saveAssetGridDataReq } from '../utils'
-
+import XLSX from 'xlsx'
 
 export function loadGridData(gridView, dataProvider, assetList, areaAlias){
   gridView.setDataSource(dataProvider);
@@ -12,14 +10,15 @@ export function loadGridData(gridView, dataProvider, assetList, areaAlias){
 
   console.log(colums);
   console.log(fields);
-
+  console.log(assetList);
+  
   dataProvider.setFields(fields);
   gridView.setColumns(colums);
 
   dataProvider.setRows(assetList);
-  console.log(assetList);
-  setGridViewConfig(gridView);
-  setDataProviderConfig(dataProvider);
+  setGridViewCommonConfig(gridView);
+  setGridViewAssetValidator(gridView);
+  setDataProviderCommonConfig(dataProvider);
 
 }
 
@@ -81,7 +80,18 @@ export function exportXlsx(gridView){
   });
 }
 
-function setDataProviderConfig(dataProvider){
+export async function importXlsx(gridView, dataProvider, fileObj) {
+  const data = await fileObj.arrayBuffer();
+  const workBook = XLSX.read(data);
+  const workSheet = workBook.Sheets['Sheet1'];
+  const sheetData = XLSX.utils.sheet_to_json(workSheet)
+  console.log(sheetData);
+  dataProvider.fillJsonData(sheetData);
+}
+
+
+
+function setDataProviderCommonConfig(dataProvider){
   dataProvider.setOptions({
     softDeleting: true,
     restoreMode:'explicit',
@@ -94,7 +104,7 @@ function setDataProviderConfig(dataProvider){
   };
 }
 
-function setGridViewConfig(gridView){
+function setGridViewCommonConfig(gridView){
   gridView.setOptions({
     undoable: true, 
   });
@@ -147,16 +157,23 @@ function setGridViewConfig(gridView){
   ]);
 
   gridView.onContextMenuPopup = function(grid, x, y, elementName){
-    return elementName.cellType != "header";
+    return elementName.cellType !== "header";
   };
 
   gridView.onContextMenuItemClicked = function(grid, menu, data) {
-    if (menu.tag == 'deleteRow') {
+    if (menu.tag === 'deleteRow') {
       gridView.deleteSelection(true);
-    }else if(menu.tag == 'insertRow'){
+    }else if(menu.tag === 'insertRow'){
       gridView.beginInsertRow(data.itemIndex, true);
     }
   };
+  gridView.onCurrentRowChanged =  function (grid, oldRow, newRow) {
+    let curr = grid.getCurrent();
+    if (newRow === -1 && curr.itemIndex > -1) {grid.commit(true)}
+  };
+}
+
+function setGridViewAssetValidator(gridView){
 
   gridView.onValidateColumn = function(grid, column, inserting, value) {
     let error = {level:'error', message: ''};
@@ -175,8 +192,4 @@ function setGridViewConfig(gridView){
     }
   }
 
-  gridView.onCurrentRowChanged =  function (grid, oldRow, newRow) {
-    let curr = grid.getCurrent();
-    if (newRow == -1 && curr.itemIndex > -1) {grid.commit(true)}
-  };
 }

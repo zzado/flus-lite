@@ -1,10 +1,10 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
+import { Dropdown, DropdownButton, Table, Button,  } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import { WorkSpaceContext } from '../Context/WorkSpaceContext';
 import { getAssetListByAreaAliasReq } from '../utils'
-import { loadGridData, saveGridData, exportXlsx } from '../Services/realGrid';
+import { loadGridData, saveGridData, exportXlsx, importXlsx } from '../Services/realGrid';
 import { GridView, LocalDataProvider } from 'realgrid';
 import { FileUploader } from "react-drag-drop-files";
 
@@ -18,6 +18,7 @@ export default function WorkSpaceStep1(){
 
   const [isGridView, setIsGridView] = useState(false);
   const [maxGridVeiw, setMaxGridVeiw] = useState(false);
+  const isFileUploadRef = useRef(false);
 
   const [gridView, setGridView] = useState(null);
   const [dataProvider, setDataProvider] = useState(null);
@@ -62,8 +63,9 @@ export default function WorkSpaceStep1(){
         <Button size="sm" onClick={()=> loadGridData(gridView, dataProvider, assetList, areaAlias)} style={{marginLeft : '5px'}}>Reload</Button>
         <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Save</Button>
         <Button size="sm" onClick={()=> exportXlsx(gridView)} style={{marginLeft : '5px'}}>Export</Button>
-        <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Import</Button>
+        <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
         <Button size="sm" onClick={()=> setIsGridView(!isGridView)} style={{marginLeft : '5px'}}>뒤로</Button>
+        <input type="file" onChange={(e)=> importXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
       </div>
       <div>
         <FileUploader label={'ClickMe hi'} handleChange={handleChange} name="file" types={fileTypes} />
