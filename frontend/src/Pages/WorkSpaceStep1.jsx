@@ -27,6 +27,7 @@ export default function WorkSpaceStep1(){
     if( projectList.length )appContextDispatch({ type: 'setProject', value: projectId });
     if( areaAlias !== currentArea ) appContextDispatch({ type: 'setArea', value: areaAlias });
     getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+    setIsGridView(false);
   },[projectList, projectId, areaAlias]);
 
   const realGridInit = () => {
@@ -43,20 +44,17 @@ export default function WorkSpaceStep1(){
 
   const saveRealGrid = () => {
     if(gridView && dataProvider){
-      saveGridData(gridView, dataProvider, projectId, areaAlias) ? WorkSpaceContextDispatch({ type:'resetAsset' }) : console.log('save canceld');
+      if(saveGridData(gridView, dataProvider, projectId, areaAlias)){
+        WorkSpaceContextDispatch({ type:'resetAsset' });
+        setIsGridView(false);
+      }
     }
   };
 
 
 
   const SubMenuBox = () => {
-    const fileTypes = ["JPG", "PNG", "GIF"];
-
-    const [file, setFile] = useState(null);
-    const handleChange = (file) => {
-      setFile(file);
-    };
-
+    
     return (isGridView) ? (
       <Fragment>
       <div className="card-header py-3">
@@ -66,9 +64,6 @@ export default function WorkSpaceStep1(){
         <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
         <Button size="sm" onClick={()=> setIsGridView(!isGridView)} style={{marginLeft : '5px'}}>뒤로</Button>
         <input type="file" onChange={(e)=> importXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
-      </div>
-      <div>
-        <FileUploader label={'ClickMe hi'} handleChange={handleChange} name="file" types={fileTypes} />
       </div>
       </Fragment>
     ) : 

@@ -5,15 +5,19 @@ import XLSX from 'xlsx'
 export function loadGridData(gridView, dataProvider, assetList, areaAlias){
   gridView.setDataSource(dataProvider);
 
-  let colums = assetColunms;
+  let columns = [];
   let fields = assetFields;
 
-  console.log(colums);
+  for(let field of global.config.ASSET_FIELD[areaAlias]){
+    columns.push(assetColunms.find(e=>e.name === field));
+  }
+
+  console.log(columns);
   console.log(fields);
   console.log(assetList);
   
   dataProvider.setFields(fields);
-  gridView.setColumns(colums);
+  gridView.setColumns(columns);
 
   dataProvider.setRows(assetList);
   setGridViewCommonConfig(gridView);
@@ -44,10 +48,9 @@ export function saveGridData(gridView, dataProvider, projectId, areaAlias){
     const idx = dataProvider.getJsonRow(_['__rowId'])['id'];
     updatedRow.push({ 'id'  : idx, 'data' : _['updatedCells'] });
   }
-
+  
   for(let _ of updatedRowList['deleted']) deletedRow.push(dataProvider.getJsonRows(_)[0]['id']);
   //for(let _ of updatedRowList['deleted']) deletedRow.push(dataProvider.getJsonRow(_));
-  
 
   if(createdRow.length || updatedRow.length || deletedRow.length){
     let gridData = {
@@ -84,11 +87,27 @@ export async function importXlsx(gridView, dataProvider, fileObj) {
   const data = await fileObj.arrayBuffer();
   const workBook = XLSX.read(data);
   const workSheet = workBook.Sheets['Sheet1'];
-  const sheetData = XLSX.utils.sheet_to_json(workSheet)
+  let sheetData = XLSX.utils.sheet_to_json(workSheet)
+  sheetData = convertAssetSheetData(sheetData);
   console.log(sheetData);
-  dataProvider.fillJsonData(sheetData);
+  console.log(dataProvider.getJsonRows(0,-1,true));
+  //dataProvider.fillJsonData(sheetData);
 }
 
+
+function convertAssetSheetData(sheetData) {
+  console.log(assetColunms);
+  let convertedSheetData = [];
+  for(let rowData of sheetData){
+    let tempRowData = {};
+    for(let _ in rowData){
+      const columData = assetColunms.find(e=>e.header.text === _);
+      tempRowData[columData.name] = rowData[_];
+    }
+    convertedSheetData.push(tempRowData)
+  }
+  return convertedSheetData;
+}
 
 
 function setDataProviderCommonConfig(dataProvider){

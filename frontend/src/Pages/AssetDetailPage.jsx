@@ -49,7 +49,7 @@ export default function AssetDetailPage(){
             assetIsHttpsBool = {()=>assetObj.is_https? 'true': 'false'}
             assetVersion = {()=>assetObj.version}
             assetAssessors = {()=>assetObj.assessors}
-            assetPlatform = {()=>assetObj.platform}
+            assetPlatform = {()=>assetObj.platform === '[[OTHER]]' ? `기타 (${assetObj.platform_t})` : assetObj.platform }
             assetProductModel = {()=>assetObj.product_model}
             assetValue = {()=>assetObj.asset_value}
             assetOperator = {()=>assetObj.operator}

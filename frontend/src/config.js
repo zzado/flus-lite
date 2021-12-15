@@ -51,9 +51,19 @@ module.exports = global.config = {
         'DBM',
         'NET',
         'ISS',
-    ]
-
-
+    ],
+    
+    ASSET_FIELD : { 
+        FISM : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note"],
+        INF : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note"],
+        SRV : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform",],
+        DBM : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform",],
+        NET : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform", "product_model", "is_external", "is_switch", "backup_cycle", "pwd_change_cycle"],
+        ISS : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform", "product_model"],
+        MOB : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","is_test","platform", "is_financial"],
+        WEB : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "ip_url", "is_financial", "is_https", "is_test"],
+        HTS : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_financial", "is_test"],
+    }
 };
 
 // 공통

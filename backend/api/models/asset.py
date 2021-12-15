@@ -49,7 +49,7 @@ class Asset(AssetAbstractModel, HardwareAssetModel, ApplicationAssetModel):
     operator = models.CharField('담당자',max_length=50,blank=True,null=True,default='')
     progress = models.PositiveSmallIntegerField('진행단계', choices=((1, '초기단계(1)'),(2, '스캔준비(2)'),(3, '스캔완료(3)'),(4, '확인점검(4)'),(5, '점검완료(5)'),),default=1, null=True)
     is_test = models.BooleanField('테스트환경 여부', default=False, choices=((False, '아니오'),(True, '예')))
-    is_server = models.BooleanField('서버측 점검 여부',default=False, choices=((False, '아니오'),(True, '예')))
+    is_server = models.BooleanField('서버측 점검 여부',default=True, choices=((False, '아니오'),(True, '예')))
     is_new = models.BooleanField('신규 여부', default=True, choices=((False, '아니오'),(True, '예')))
     manual_done = models.BooleanField('평가완료 여부', default=False)
 

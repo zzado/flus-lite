@@ -26,7 +26,6 @@ class ProjectDetailUpdateDeleteAPI(mixins.RetrieveModelMixin, mixins.UpdateModel
         return self.update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        print('!!')
         instance = self.get_object()
         self.perform_destroy(instance)
         return response.Response({'result':True}, status=status.HTTP_200_OK)

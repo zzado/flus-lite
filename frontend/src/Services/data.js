@@ -11,6 +11,17 @@ export const assetColunms = [
         "readOnly": true
     },
     {
+        "name": "num",
+        "fieldName": "num",
+        "type": "data",
+        "width": 40,
+        "visible": false,
+        "header": {
+            "text": "자산번호"
+        },
+        "readOnly": true
+    },
+    {
         "name": "code",
         "fieldName": "code",
         "type": "data",
