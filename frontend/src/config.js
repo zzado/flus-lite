@@ -54,15 +54,15 @@ module.exports = global.config = {
     ],
     
     ASSET_FIELD : { 
-        FISM : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note"],
-        INF : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note"],
-        SRV : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform",],
-        DBM : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform",],
-        NET : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform", "product_model", "is_external", "is_switch", "backup_cycle", "pwd_change_cycle"],
-        ISS : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","hostname","ip_url","version","platform", "product_model"],
-        MOB : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_test","is_test","platform", "is_financial"],
-        WEB : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "ip_url", "is_financial", "is_https", "is_test"],
-        HTS : ["id", "num", "code",  "name", "asset_value", "is_new", "manual_done", "operator", "assessors", "note", "is_financial", "is_test"],
+        FISM : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "manual_done",  "note"],
+        INF : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "manual_done",  "note"],
+        SRV : ["id", "num", "code",  "name", "asset_value", "platform", "version", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
+        DBM : ["id", "num", "code",  "name", "asset_value", "platform", "version", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
+        NET : ["id", "num", "code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",   "operator", "assessors", "is_new", "is_test", "is_switch", "is_external", "backup_cycle", "pwd_change_cycle", "manual_done", "note",],
+        ISS : ["id", "num", "code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
+        MOB : ["id", "num", "code",  "name", "asset_value", "platform", "operator", "assessors", "is_new", "is_test", "is_financial", "manual_done", "note"],
+        WEB : ["id", "num", "code",  "name", "asset_value", "ip_url", "operator", "assessors", "is_new", "is_test", "is_financial", "is_https", "manual_done", "note"],
+        HTS : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", , "is_test", "is_financial", "manual_done",  "note"],
     }
 };
 

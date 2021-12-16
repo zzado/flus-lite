@@ -393,8 +393,9 @@ export const assetColunms = [
 export const assetFields =[
     {
         "fieldName": "id",
-        "dataType": "number",
-        "subType": "uint"
+        "dataType": "number"
+        //"dataType": "number",
+        //"subType": "uint"
     },
     {
         "fieldName": "code",
@@ -497,8 +498,7 @@ export const assetFields =[
     }
 ]
 
-export const temp = [{
-    "id": 11,
+export const initData = [{
     "code": "V123",
     "name": "전자금융기반시설 프로젝트2",
     "assessors": "김개똥",
@@ -521,4 +521,5 @@ export const temp = [{
     "is_server": false,
     "is_new": false,
     "manual_done": false,
+    "__rowState" : "created",
 }]

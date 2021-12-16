@@ -1,4 +1,4 @@
-import { assetColunms, assetFields, } from './data';
+import { assetColunms, assetFields, initData } from './data';
 import { saveAssetGridDataReq } from '../utils'
 import XLSX from 'xlsx'
 
@@ -19,7 +19,9 @@ export function loadGridData(gridView, dataProvider, assetList, areaAlias){
   dataProvider.setFields(fields);
   gridView.setColumns(columns);
 
-  dataProvider.setRows(assetList);
+  if(assetList.length) dataProvider.setRows(assetList);
+  else dataProvider.setRows(initData);
+  console.log(initData);
   setGridViewCommonConfig(gridView);
   setGridViewAssetValidator(gridView);
   setDataProviderCommonConfig(dataProvider);
@@ -42,7 +44,11 @@ export function saveGridData(gridView, dataProvider, projectId, areaAlias){
   let deletedRow = [];
   
   let updatedRowList = dataProvider.getAllStateRows();
-  for(let _ of updatedRowList['created']) createdRow.push(dataProvider.getJsonRow(_));
+  for(let _ of updatedRowList['created']) {
+    console.log(dataProvider.getJsonRow(_));
+    console.log(dataProvider.getJsonRows(0,-1,true));
+    createdRow.push(dataProvider.getJsonRow(_));
+  }
 
   for(let _ of dataProvider.getUpdatedCells(null)){
     const idx = dataProvider.getJsonRow(_['__rowId'])['id'];
@@ -80,18 +86,20 @@ export function exportXlsx(gridView){
     header: 'default',
     footer: 'hidden',
     compatibility: true,
+    allColumns : true,
+    sheetName : 'halo'
   });
 }
 
 export async function importXlsx(gridView, dataProvider, fileObj) {
   const data = await fileObj.arrayBuffer();
   const workBook = XLSX.read(data);
-  const workSheet = workBook.Sheets['Sheet1'];
+  const workSheet = workBook.Sheets['halo'];
   let sheetData = XLSX.utils.sheet_to_json(workSheet)
   sheetData = convertAssetSheetData(sheetData);
   console.log(sheetData);
-  console.log(dataProvider.getJsonRows(0,-1,true));
-  //dataProvider.fillJsonData(sheetData);
+  let rowsData = dataProvider.getJsonRows(0,-1,true);
+  
 }
 
 
