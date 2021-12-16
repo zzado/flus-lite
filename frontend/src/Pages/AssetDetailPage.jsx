@@ -36,27 +36,27 @@ export default function AssetDetailPage(){
           <AssetInfoTable
             projectId = {projectId}
             areaAlias = {areaAlias}
-            assetName={()=>assetObj.name}
-            assetNum = {()=>assetObj.code}
-            assetNote = {()=>assetObj.note}
-            assetHostname = {()=>assetObj.hostname}
-            assetSwitchBool = {()=>assetObj.is_switch? 'true': 'false'}
-            assetExternalBool = {()=>assetObj.is_external? 'true': 'false'}
-            assetBackUpCycle = {()=>assetObj.backup_cycle}
-            assetPWDCycle = {()=>assetObj.pwd_change_cycle}
-            assetURL = {()=>assetObj.ip_url}
-            assetIsFinancialBool = {()=>assetObj.is_financial? 'true': 'false'}
-            assetIsHttpsBool = {()=>assetObj.is_https? 'true': 'false'}
-            assetVersion = {()=>assetObj.version}
-            assetAssessors = {()=>assetObj.assessors}
-            assetPlatform = {()=>assetObj.platform === '[[OTHER]]' ? `기타 (${assetObj.platform_t})` : assetObj.platform }
-            assetProductModel = {()=>assetObj.product_model}
-            assetValue = {()=>assetObj.asset_value}
-            assetOperator = {()=>assetObj.operator}
-            assetAnalysisDoneBool = {()=>assetObj.manual_done? 'true': 'false'}
-            assetIsTestBool = {()=> assetObj.is_test? 'true': 'false'}
-            assetIsServerBool = {()=>assetObj.is_server? 'true': 'false'}
-            assetIsNewBool = {()=>assetObj.is_new? 'true': 'false'}/>
+            assetName={assetObj.name}
+            assetNum = {assetObj.code}
+            assetNote = {assetObj.note}
+            assetHostname = {assetObj.hostname}
+            assetSwitchBool = {assetObj.is_switch? 'true': 'false'}
+            assetExternalBool = {assetObj.is_external? 'true': 'false'}
+            assetBackUpCycle = {assetObj.backup_cycle}
+            assetPWDCycle = {assetObj.pwd_change_cycle}
+            assetURL = {assetObj.ip_url}
+            assetIsFinancialBool = {assetObj.is_financial? 'true': 'false'}
+            assetIsHttpsBool = {assetObj.is_https? 'true': 'false'}
+            assetVersion = {assetObj.version}
+            assetAssessors = {assetObj.assessors}
+            assetPlatform = {assetObj.platform === '[[OTHER]]' ? `기타 (${assetObj.platform_t})` : assetObj.platform }
+            assetProductModel = {assetObj.product_model}
+            assetValue = {assetObj.asset_value}
+            assetOperator = {assetObj.operator}
+            assetAnalysisDoneBool = {assetObj.manual_done? 'true': 'false'}
+            assetIsTestBool = { assetObj.is_test? 'true': 'false'}
+            assetIsServerBool = {assetObj.is_server? 'true': 'false'}
+            assetIsNewBool = {assetObj.is_new? 'true': 'false'}/>
           <div className="form-actions">
           <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetId}/edit`} size="sm" style={{marginLeft : '5px'}}>편집</Button>
           <Button as={Link} to={`/w/${projectId}/${areaAlias}/`} size="sm" style={{marginLeft : '5px'}}>취소</Button>

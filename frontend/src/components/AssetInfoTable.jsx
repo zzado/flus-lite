@@ -12,11 +12,11 @@ export default function AssetInfoTable(props){
         <Fragment>
         <tr>
           <th colSpan={2} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>자산종류</th>
-          <td colSpan={4} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>{assetPlatform()}</td>
+          <td colSpan={4} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>{assetPlatform}</td>
           <th colSpan={2}>호스트명</th>
-          <td colSpan={6}>{assetHostname()}</td>
+          <td colSpan={6}>{assetHostname}</td>
           <th colSpan={2}>버전</th>
-          <td colSpan={4}>{assetVersion()}</td>
+          <td colSpan={4}>{assetVersion}</td>
         </tr>
         </Fragment>
       )
@@ -26,9 +26,9 @@ export default function AssetInfoTable(props){
           {fragment}
           <tr>
             <th colSpan={2}>URL</th>
-            <td colSpan={6}>{assetURL()}</td>
+            <td colSpan={6}>{assetURL}</td>
             <th colSpan={3}>테스트/운영</th>
-            <td colSpan={3}>{assetIsTestBool()}</td>
+            <td colSpan={3}>{assetIsTestBool}</td>
           </tr>
           </Fragment>
         )
@@ -38,11 +38,11 @@ export default function AssetInfoTable(props){
           {fragment}
           <tr>
             <th colSpan={2}>URL</th>
-            <td colSpan={2}>{assetURL()}</td>
+            <td colSpan={2}>{assetURL}</td>
             <th colSpan={2}>제조사</th>
-            <td colSpan={4}>{assetProductModel()}</td>
+            <td colSpan={4}>{assetProductModel}</td>
             <th colSpan={2}>테스트/운영</th>
-            <td colSpan={2}>{assetIsTestBool()}</td>
+            <td colSpan={2}>{assetIsTestBool}</td>
           </tr>
           </Fragment>
         )
@@ -52,13 +52,13 @@ export default function AssetInfoTable(props){
             {fragment}
             <tr>
             <th colSpan={2}>스위치 여부</th>
-            <td colSpan={2}>{assetSwitchBool()}</td>
+            <td colSpan={2}>{assetSwitchBool}</td>
             <th colSpan={2}>연결여부(대외)</th>
-            <td colSpan={2}>{assetExternalBool()}</td>
+            <td colSpan={2}>{assetExternalBool}</td>
             <th colSpan={2}>백업주기</th>
-            <td colSpan={1}>{assetBackUpCycle()}</td>
+            <td colSpan={1}>{assetBackUpCycle}</td>
             <th colSpan={2}>PWD 변경주기</th>
-            <td colSpan={1}>{assetPWDCycle()}</td>
+            <td colSpan={1}>{assetPWDCycle}</td>
           </tr>
             </Fragment>
           )
@@ -69,13 +69,13 @@ export default function AssetInfoTable(props){
         <Fragment>
         <tr>
           <th colSpan={2}>URL</th>
-          <td colSpan={6}>{assetURL()}</td>
+          <td colSpan={6}>{assetURL}</td>
           <th colSpan={2}>전자금융여부</th>
-          <td colSpan={2}>{assetIsFinancialBool()}</td>
+          <td colSpan={2}>{assetIsFinancialBool}</td>
           <th colSpan={2}>https여부</th>
-          <td colSpan={2}>{assetIsHttpsBool()}</td>
+          <td colSpan={2}>{assetIsHttpsBool}</td>
           <th colSpan={2}>테스트/운영</th>
-          <td colSpan={2}>{assetIsTestBool()}</td>
+          <td colSpan={2}>{assetIsTestBool}</td>
         </tr>
         </Fragment>
       )
@@ -84,13 +84,13 @@ export default function AssetInfoTable(props){
         <Fragment>
         <tr>
           <th colSpan={2}>자산종류</th>
-          <td colSpan={4}>{assetPlatform()}</td>
+          <td colSpan={4}>{assetPlatform}</td>
           <th colSpan={2}>전자금융여부</th>
-          <td colSpan={3}>{assetIsFinancialBool()}</td>
+          <td colSpan={3}>{assetIsFinancialBool}</td>
           <th colSpan={2}>서버측 여부</th>
-          <td colSpan={3}>{assetIsServerBool()}</td>
+          <td colSpan={3}>{assetIsServerBool}</td>
           <th colSpan={2}>테스트/운영</th>
-          <td colSpan={2}>{assetIsTestBool()}</td>
+          <td colSpan={2}>{assetIsTestBool}</td>
         </tr>
         </Fragment>
       )
@@ -99,9 +99,9 @@ export default function AssetInfoTable(props){
         <Fragment>
         <tr>
           <th colSpan={2}>전자금융여부</th>
-          <td colSpan={3}>{assetIsFinancialBool()}</td>
+          <td colSpan={3}>{assetIsFinancialBool}</td>
           <th colSpan={2}>테스트/운영</th>
-          <td colSpan={2}>{assetIsTestBool()}</td>
+          <td colSpan={2}>{assetIsTestBool}</td>
         </tr>
         </Fragment>
       )
@@ -110,25 +110,25 @@ export default function AssetInfoTable(props){
       <Fragment>
         <tr>
         <th colSpan={2} rowSpan={2}>자산번호</th>
-        <td colSpan={2} rowSpan={2}>{assetNum()}</td>
+        <td colSpan={2} rowSpan={2}>{assetNum}</td>
         <th colSpan={2}>자산명</th>
-        <td colSpan={8}>{assetName()}</td>
+        <td colSpan={8}>{assetName}</td>
         <th colSpan={2}>담당자</th>
-        <td colSpan={4}>{assetOperator()}</td>
+        <td colSpan={4}>{assetOperator}</td>
       </tr>
 
       <tr>
         <th colSpan={2}>신규여부</th>
-        <td colSpan={3}>{assetIsNewBool()}</td>
+        <td colSpan={3}>{assetIsNewBool}</td>
         <th colSpan={2}>자산가치</th>
-        <td colSpan={3}>{assetValue()}</td>
+        <td colSpan={3}>{assetValue}</td>
         <th colSpan={2}>평가자</th>
-        <td colSpan={4}>{assetAssessors()}</td>
+        <td colSpan={4}>{assetAssessors}</td>
       </tr>
         {fragment}
       <tr>
         <th colSpan={2}>비고</th>
-        <td colSpan={18}>{assetNote()}</td>
+        <td colSpan={18}>{assetNote}</td>
       </tr>
       </Fragment>
     );

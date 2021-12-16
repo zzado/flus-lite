@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState, useRef } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
@@ -62,34 +62,32 @@ export default function AssetCreatePage(){
     if(assetList.length) setAssetNum( assetList[assetList.length-1].num +1 );
   },[assetList]);
 
-  const assetNameForm = () => <input ref={assetNameRef} type="text" style={{width:'100%'}}/>;
-  const assetAssessorsForm = () => <input ref={assetAssessorsRef} type="text" style={{width:'100%'}}/>;
-  const assetOperatorForm = () => <input ref={assetOperatorRef} type="text" style={{width:'100%'}}/>;
-  const assetHostnameForm = () => <input ref={assetHostnameRef} type="text" style={{width:'100%'}}/>;
-  const assetURLForm = () => <input ref={assetURLRef} style={{width:'100%'}}/>;
-  const assetVersionForm = () => <input ref={assetVersionRef} style={{width:'100%'}}/>;
-  const assetProductModelForm = () => <input ref={assetProductModelRef} style={{width:'100%'}}/>;
-  const assetPlatformForm = () => <CreatableSelect onChange={e=>setAssetPlatform(e)} options={ platformList } />
-  const assetSwitchBoolForm = () => <Select onChange={e=>setIsSwitch(e)} value={isSwitch} options={ [ {value:true, label:'스위치'}, {value:false, label:'라우터'} ] }/>;
-  const assetExternalBoolForm = () => <Select onChange={e=>setIsExternal(e)} value={isExternal} options={ [ {value:true, label:'대외연결'}, {value:false, label:'대내연결'} ] }/>;
-  const assetIsFinancialBoolForm = () => <Select onChange={e=>setIsFinancial(e)} value={isFinancial} options={ [ {value:true, label:'전자금융서비스'}, {value:false, label:'비전자금융서비스'} ] }/>;
-  const assetIsHttpsBoolForm = () => <Select onChange={e=>setIsHttps(e)} value={isHttps} options={ [ {value:true, label:'HTTPS'}, {value:false, label:'HTTP'} ] }/>;
-  const assetIsTestBoolForm = () => <Select onChange={e=>setIsTest(e)} value={isTest} options={ [ {value:true, label:'테스트'}, {value:false, label:'운영'} ] }/>;
-  const assetIsServerBoolForm = () => <Select onChange={e=>setIsServer(e)} value={isServer} options={ [ {value:true, label:'서버측 점검'}, {value:false, label:'서버측 미점검'} ] }/>;
-  const assetIsNewBoolForm = () => <Select onChange={e=>setIsNew(e)} value={isNew} options={ [ {value:true, label:'신규'}, {value:false, label:'기존'} ] }/>;
-  const assetValueForm = () => <Select onChange={e=>setAssetValue(e)} value={assetValue} options={ [5, 4, 3, 2, 1].map(e => { return { value:e, label: e } } ) }/>;
+  const assetNameForm = useMemo(() => <input ref={assetNameRef} type="text" style={{width:'100%'}}/>, []);
+  const assetAssessorsForm = useMemo(() => <input ref={assetAssessorsRef} type="text" style={{width:'100%'}}/>, []);
+  const assetOperatorForm = useMemo(() => <input ref={assetOperatorRef} type="text" style={{width:'100%'}}/>, []);
+  const assetHostnameForm = useMemo(() => <input ref={assetHostnameRef} type="text" style={{width:'100%'}}/>, []);
+  const assetURLForm = useMemo(() => <input ref={assetURLRef} style={{width:'100%'}}/>, []);
+  const assetVersionForm = useMemo(() => <input ref={assetVersionRef} style={{width:'100%'}}/>, []);
+  const assetProductModelForm = useMemo(() => <input ref={assetProductModelRef} style={{width:'100%'}}/>, []);
+  const assetPlatformForm = useMemo(() => <CreatableSelect onChange={e=>setAssetPlatform(e)} options={ platformList } />, [platformList]);
+  const assetSwitchBoolForm = useMemo(() => <Select onChange={e=>setIsSwitch(e)} value={isSwitch} options={ [ {value:true, label:'스위치'}, {value:false, label:'라우터'} ] }/>, [isSwitch]);
+  const assetExternalBoolForm = useMemo(() => <Select onChange={e=>setIsExternal(e)} value={isExternal} options={ [ {value:true, label:'대외연결'}, {value:false, label:'대내연결'} ] }/>, [isExternal]);;
+  const assetIsFinancialBoolForm = useMemo(() => <Select onChange={e=>setIsFinancial(e)} value={isFinancial} options={ [ {value:true, label:'전자금융서비스'}, {value:false, label:'비전자금융서비스'} ] }/>, [isFinancial]);
+  const assetIsHttpsBoolForm = useMemo(() => <Select onChange={e=>setIsHttps(e)} value={isHttps} options={ [ {value:true, label:'HTTPS'}, {value:false, label:'HTTP'} ] }/>, [isHttps]);
+  const assetIsTestBoolForm = useMemo(() => <Select onChange={e=>setIsTest(e)} value={isTest} options={ [ {value:true, label:'테스트'}, {value:false, label:'운영'} ] }/>, [isTest]);
+  const assetIsServerBoolForm = useMemo(() => <Select onChange={e=>setIsServer(e)} value={isServer} options={ [ {value:true, label:'서버측 점검'}, {value:false, label:'서버측 미점검'} ] }/>, [isServer]);
+  const assetIsNewBoolForm = useMemo(() => <Select onChange={e=>setIsNew(e)} value={isNew} options={ [ {value:true, label:'신규'}, {value:false, label:'기존'} ] }/>, [isNew]);
+  const assetValueForm = useMemo(() => <Select onChange={e=>setAssetValue(e)} value={assetValue} options={ [5, 4, 3, 2, 1].map(e => { return { value:e, label: e } } ) }/>, [assetValue]);
 
-  const assetNumForm = () => <input type="number" onChange={e=>setAssetNum(e)} min="1" value={assetNum} style={{width:'100%'}}/>;
-  const assetPWDCycleForm = () => <input ref={assetPWDCycleRef} type="number" min="0"  defaultValue="0" style={{width:'100%'}}/>;
-  const assetBackUpCycleForm = () => <input ref={assetBackUpCycleRef} type="number" min="0" defaultValue="0" style={{width:'100%'}}/>;
-  const assetNoteForm = () => <textarea ref={assetNoteRef} style={{width:'100%', height:'80px'}}/>;
+  const assetNumForm = useMemo(() => <input type="number" onChange={e=>setAssetNum(e)} min="1" value={assetNum} style={{width:'100%'}}/>, [assetNum]);
+  const assetPWDCycleForm = useMemo(() => <input ref={assetPWDCycleRef} type="number" min="0"  defaultValue="0" style={{width:'100%'}}/>, []);
+  const assetBackUpCycleForm = useMemo(() => <input ref={assetBackUpCycleRef} type="number" min="0" defaultValue="0" style={{width:'100%'}}/>, []);
+  const assetNoteForm = useMemo(() => <textarea ref={assetNoteRef} style={{width:'100%', height:'80px'}}/>, []);
 
   // 나중에 쓰자..
-  const assetAnalysisDoneBoolForm = () => <input ref={assetAnalysisDoneRef} type="text" style={{width:'100%'}}/>;
+  const assetAnalysisDoneBoolForm = useMemo(() => <input ref={assetAnalysisDoneRef} type="text" style={{width:'100%'}}/>, []);
   
   const createAsset = () => {
-    console.log(assetNameRef.current.value);
-
     const payload = {
       area_alias: areaAlias,
       project: parseInt(projectId),

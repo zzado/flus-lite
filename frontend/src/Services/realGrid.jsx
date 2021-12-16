@@ -11,17 +11,18 @@ export function loadGridData(gridView, dataProvider, assetList, areaAlias){
   for(let field of global.config.ASSET_FIELD[areaAlias]){
     columns.push(assetColunms.find(e=>e.name === field));
   }
-
-  console.log(columns);
-  console.log(fields);
-  console.log(assetList);
   
   dataProvider.setFields(fields);
   gridView.setColumns(columns);
 
-  if(assetList.length) dataProvider.setRows(assetList);
-  else dataProvider.setRows(initData);
-  console.log(initData);
+  if(assetList.length){
+    dataProvider.setRows(assetList);
+  }else {
+    initData[0]['code'] = `${global.config.AREA_SIGNATURE[areaAlias]}01`;
+    dataProvider.setRows(initData);
+    dataProvider.setRowState(0, 'created', true);
+  }
+
   setGridViewCommonConfig(gridView);
   setGridViewAssetValidator(gridView);
   setDataProviderCommonConfig(dataProvider);
@@ -45,8 +46,6 @@ export function saveGridData(gridView, dataProvider, projectId, areaAlias){
   
   let updatedRowList = dataProvider.getAllStateRows();
   for(let _ of updatedRowList['created']) {
-    console.log(dataProvider.getJsonRow(_));
-    console.log(dataProvider.getJsonRows(0,-1,true));
     createdRow.push(dataProvider.getJsonRow(_));
   }
 
@@ -86,7 +85,7 @@ export function exportXlsx(gridView){
     header: 'default',
     footer: 'hidden',
     compatibility: true,
-    allColumns : true,
+    //allColumns : true,
     sheetName : 'halo'
   });
 }
@@ -99,12 +98,27 @@ export async function importXlsx(gridView, dataProvider, fileObj) {
   sheetData = convertAssetSheetData(sheetData);
   console.log(sheetData);
   let rowsData = dataProvider.getJsonRows(0,-1,true);
-  
+  console.log(dataProvider.getRows());
+  console.log(rowsData);
+  for(let sheetRow of sheetData){
+
+    const oldRowIdx = rowsData.findIndex( (e)=> (parseInt(e.code.slice(1)) === parseInt(sheetRow.code.slice(1))) ? e : false);
+    
+    if(oldRowIdx === -1){
+      console.log('신규');
+      console.log(sheetRow);
+      dataProvider.addRow(sheetRow);
+    }else{
+      console.log('기존');
+      let a = dataProvider.getJsonRow(oldRowIdx);
+      dataProvider.updateRow(oldRowIdx, sheetRow);
+    }
+  }
+
 }
 
 
 function convertAssetSheetData(sheetData) {
-  console.log(assetColunms);
   let convertedSheetData = [];
   for(let rowData of sheetData){
     let tempRowData = {};
@@ -175,6 +189,8 @@ function setGridViewCommonConfig(gridView){
   gridView.setDisplayOptions({
     rowResizable: true,
     eachRowResizable: true,
+    selectionStyle : "rows",
+
   });
 
   gridView.setContextMenu([

@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext } from 'react';
+import { useEffect, Fragment, useContext, useMemo } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button, Badge } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -11,16 +11,16 @@ export default function ProjectDetailPage(){
   const { projectId } = useParams();
   const navigate = useNavigate();
   
-  const projectName = () => currentProject.name || '';
-  const projectCategory = () => currentProject.category || '';
-  const projectCompliance = () => currentProject.compliance || '';
-  const projectStartDate = () => currentProject.start_date || '';
-  const projectClient = () => currentProject.client_company || '';
-  const projectEndDate = () => currentProject.end_date || '';
-  const projectAgency = () => currentProject.assessment_company || '';
-  const projectNote = () => currentProject.note || '';
-  const projectAreaList = () => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${projectId}/${areaAlias.split('-').pop()}`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>));
-  const projectAssessors = () => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)) || '';
+  const projectName = useMemo(() => currentProject.name || '',[currentProject]);
+  const projectCategory = useMemo(() => currentProject.category || '',[currentProject]);
+  const projectCompliance = useMemo(() => currentProject.compliance || '',[currentProject]);
+  const projectStartDate = useMemo(() => currentProject.start_date || '',[currentProject]);
+  const projectClient = useMemo(() => currentProject.client_company || '',[currentProject]);
+  const projectEndDate = useMemo(() => currentProject.end_date || '',[currentProject]);
+  const projectAgency = useMemo(() => currentProject.assessment_company || '',[currentProject]);
+  const projectNote = useMemo(() => currentProject.note || '',[currentProject]);
+  const projectAreaList = useMemo(() => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${projectId}/${areaAlias.split('-').pop()}`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>)),[currentProject]);
+  const projectAssessors = useMemo(() => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)) || '',[currentProject]);
 
 
   // currentProject value set when URL direct access w

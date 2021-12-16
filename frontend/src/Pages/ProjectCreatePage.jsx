@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState, useRef } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -38,18 +38,17 @@ export default function ProjectCreatePage(){
     });
   },[]);
 
-  const projectNameForm = () => <input ref={projectNameRef} type="text" style={{width:'100%'}}/>;
-  const projectCategoryForm = () => <Select onChange={e=>setProjectCategory(e)} options={ [ {value:'공개용', label:'공개용'}, {value:'종합', label:'종합'} ]}/>;
-  const projectComplianceForm = () => <Select onChange={e=>setProjectCompliance(e)} isDisabled={(Object.keys(projectCategory).length)? false :true} options={ allComplianceList }/>;
-  const projectStartDateForm = () => <input ref={projectStartDateRef} type="date" style={{width:'100%'}}/>;
-  const projectClientForm = () => <input ref={projectClientRef} style={{width:'100%'}}/>;
-  const projectEndDateForm = () => <input ref={projectEndDateRef} type="date" style={{width:'100%'}} />;
-  const projectAgencyForm = () => <input ref={projectAgencyRef} style={{width:'100%'}} />;
-  const projectNoteForm = () => <textarea ref={projectNoteRef} style={{width:'100%', height:'80px'}}/>;
+  const projectNameForm = useMemo(() => <input ref={projectNameRef} type="text" style={{width:'100%'}}/>, []);
+  const projectCategoryForm = useMemo(() => <Select onChange={e=>setProjectCategory(e)} options={ [ {value:'공개용', label:'공개용'}, {value:'종합', label:'종합'} ]}/>, []);
 
-  const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false}  onChange={e=>setProjectAreaList(e)} isDisabled={(Object.keys(projectCompliance).length)? false :true} options={ (Object.keys(projectCategory).length)? (projectCategory.value === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST : []} />
-
-  const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} options={ allUserList }/>;
+  const projectComplianceForm = useMemo(() => <Select onChange={e=>setProjectCompliance(e)} isDisabled={(Object.keys(projectCategory).length)? false :true} options={ allComplianceList }/>, [projectCategory, allComplianceList]);
+  const projectStartDateForm = useMemo(() => <input ref={projectStartDateRef} type="date" style={{width:'100%'}}/>, []);
+  const projectClientForm = useMemo(() => <input ref={projectClientRef} style={{width:'100%'}}/>, []);
+  const projectEndDateForm = useMemo(() => <input ref={projectEndDateRef} type="date" style={{width:'100%'}} />, []);
+  const projectAgencyForm = useMemo(() => <input ref={projectAgencyRef} style={{width:'100%'}} />, []);
+  const projectNoteForm = useMemo(() => <textarea ref={projectNoteRef} style={{width:'100%', height:'80px'}}/>, []);
+  const projectAreaListForm = useMemo(() => <Select isMulti closeMenuOnSelect={false}  onChange={e=>setProjectAreaList(e)} isDisabled={(Object.keys(projectCompliance).length)? false :true} options={ (Object.keys(projectCategory).length)? (projectCategory.value === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST : []} />, [projectCompliance, projectCategory]);
+  const projectAssessorsForm = useMemo(() => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} options={ allUserList }/>, [allUserList]);
   
   const createProject = () =>{
     const payload = {
@@ -97,7 +96,7 @@ export default function ProjectCreatePage(){
           />
           <div className="form-actions">
             <Button size="sm" onClick={createProject} style={{marginLeft : '5px'}}>저장</Button>
-            <Button as={Link} to={`/p/${projectId}`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
+            <Button as={Link} to={`/p/`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
           </div>
         </div>
       </div>

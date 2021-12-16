@@ -29,7 +29,6 @@ import './Assets/css/flus.css';
 import './config';
 
 export default function App (){
-  console.log(JSZip);
   return (
     <BrowserRouter>
       <Routes>

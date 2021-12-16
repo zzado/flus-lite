@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState, useRef } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -47,16 +47,19 @@ export default function ProjectEditPage(){
   },[allUserList]);
 
 
-  const projectNameForm = () => <input ref={projectNameRef} defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>;
-  const projectCategoryForm = () => currentProject.category || '';
-  const projectComplianceForm = () => currentProject.compliance || '';
-  const projectStartDateForm = () => <input ref={projectStartDateRef} type="date" style={{width:'100%'}} defaultValue={currentProject.start_date || ''}/>;
-  const projectClientForm = () => <input ref={projectClientRef} defaultValue={currentProject.client_company || ''} type="text" style={{width:'100%'}}/>;
-  const projectEndDateForm = () => <input ref={projectEndDateRef} type="date" style={{width:'100%'}} defaultValue={currentProject.end_date || ''}/>;
-  const projectAgencyForm = () => <input ref={projectAgencyRef} defaultValue={currentProject.assessment_company || ''} type="text" style={{width:'100%'}}/>;
-  const projectNoteForm = () => <textarea ref={projectNoteRef} defaultValue={currentProject.note || ''} style={{width:'100%', height:'80px'}}/>;
-  const projectAreaListForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setAreaAliasList(e)} value={ areaAliasList } options={ (currentProject.category === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST} />;
-  const projectAssessorsForm = () => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>;
+  //const projectNameForm = useCallback( () => { console.log('zz'); return (<input ref={projectNameRef} defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>)}, []);
+
+  const projectNameForm = useMemo(() => <input ref={projectNameRef} defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>, [currentProject]);
+
+  const projectCategoryForm = useMemo(() => currentProject.category || '', [currentProject]);
+  const projectComplianceForm = useMemo(() => currentProject.compliance || '', [currentProject]);
+  const projectStartDateForm = useMemo(() => <input ref={projectStartDateRef} type="date" style={{width:'100%'}} defaultValue={currentProject.start_date || ''}/>, [currentProject]);
+  const projectClientForm = useMemo(() => <input ref={projectClientRef} defaultValue={currentProject.client_company || ''} type="text" style={{width:'100%'}}/>,[currentProject]);
+  const projectEndDateForm = useMemo(() => <input ref={projectEndDateRef} type="date" style={{width:'100%'}} defaultValue={currentProject.end_date || ''}/>, [currentProject]);
+  const projectAgencyForm = useMemo(() => <input ref={projectAgencyRef} defaultValue={currentProject.assessment_company || ''} type="text" style={{width:'100%'}}/>, [currentProject]);
+  const projectNoteForm = useMemo(() => <textarea ref={projectNoteRef} defaultValue={currentProject.note || ''} style={{width:'100%', height:'80px'}}/>, [currentProject]);
+  const projectAreaListForm = useMemo(() => <Select isMulti closeMenuOnSelect={false} onChange={e=>setAreaAliasList(e)} value={ areaAliasList } options={ (currentProject.category === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST} />, [areaAliasList, currentProject]);
+  const projectAssessorsForm = useMemo(() => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>, [projectUserList, allUserList, currentProject]);
   
   const editProject = () => {
     const payload = {

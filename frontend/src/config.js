@@ -1,5 +1,7 @@
 
 module.exports = global.config = {
+    AREA_SIGNATURE : {"FISM": "M", "SRV": "S", "DBM": "D", "INF": "I", "NET": "N", "ISS": "P", "WEB": "W", "MOB": "V", "HTS": "H", "PEN": "PT", "CSP": "CSP", "SBO": "SBO"},
+
     AREA_RNAME : {
         'FISM': '정보보호관리체계',
         'SRV': '서버',

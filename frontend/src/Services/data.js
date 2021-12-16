@@ -499,11 +499,10 @@ export const assetFields =[
 ]
 
 export const initData = [{
-    "code": "V123",
-    "name": "전자금융기반시설 프로젝트2",
-    "assessors": "김개똥",
+    "name": "",
+    "assessors": "",
     "note": "",
-    "hostname": "test-host",
+    "hostname": "",
     "is_switch": true,
     "is_external": false,
     "backup_cycle": 0,
@@ -512,14 +511,13 @@ export const initData = [{
     "is_financial": false,
     "is_https": false,
     "version": "",
-    "platform": "IOS",
+    "platform": "",
     "platform_t": "",
     "product_model": "",
-    "asset_value": 1,
+    "asset_value": 5,
     "operator": "",
     "is_test": false,
-    "is_server": false,
-    "is_new": false,
+    "is_server": true,
+    "is_new": true,
     "manual_done": false,
-    "__rowState" : "created",
 }]
