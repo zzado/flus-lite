@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
@@ -12,10 +12,10 @@ export default function AssetEditPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
   const { projectList, currentProject, currentArea } = appContextState;
 
-  const { WorkSpaceContextState, WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
+  const { WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
 
   const { projectId, areaAlias, assetId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
 
   const [ assetObj, setAssetObj ] = useState({});
   
@@ -50,11 +50,11 @@ export default function AssetEditPage(){
   },[projectList]);
 
   useEffect(() => {
-    if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate('/auth'));
-  },[currentProject]);
+    if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate.current('/auth'));
+  },[currentProject, areaAlias]);
 
   useEffect(() => {
-    getAssetReq(assetId).then( ([result, jsonData]) => { result ? setAssetObj(jsonData) : navigate('/auth');});
+    getAssetReq(assetId).then( ([result, jsonData]) => { result ? setAssetObj(jsonData) : navigate.current('/auth');});
   },[]);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function AssetEditPage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     editAssetReq(assetId, payload).then( ([result, jsonData]) => {
-       if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate(`/a/${projectId}/${areaAlias}/${assetId}`); }else{ navigate('/auth');}
+       if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate.current(`/a/${projectId}/${areaAlias}/${assetId}`); }else{ navigate.current('/auth');}
     });
   };
 

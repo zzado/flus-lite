@@ -8,6 +8,7 @@ import { faCog, faTasks, faWrench, faChartBar, faDownload } from '@fortawesome/f
 export default function SideNavBar(props){
   const { appContextState } = useContext(AppContext);
   const { currentProject } = appContextState;
+
   return (
     <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
       <div className="banner">
@@ -41,7 +42,7 @@ export default function SideNavBar(props){
         <div className="collapse_display">
           <div className="bg-white py-2 collapse-inner rounded">
           { currentProject.area && currentProject.area.map((areaAlias, idx) => (
-            <Link to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}`} key={idx} className="dropdown-item dropdown-item1 flus_url">{global.config.AREA_RNAME[areaAlias.split('-').pop()]}</Link>
+            <Link to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}/step1`} key={idx} className="dropdown-item dropdown-item1 flus_url">{global.config.AREA_RNAME[areaAlias.split('-').pop()]}</Link>
           ))}
           </div>
         </div>

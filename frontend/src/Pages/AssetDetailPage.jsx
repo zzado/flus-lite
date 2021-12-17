@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useState } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
@@ -8,22 +8,22 @@ import { AppContext } from '../Context/AppContext';
 export default function AssetDetailPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
 
-  const { projectList, currentArea, currentProject} = appContextState;
+  const { projectList, currentArea } = appContextState;
   
   const { projectId, areaAlias, assetId } = useParams();
   const [ assetObj, setAssetObj ] = useState({});
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
 
   useEffect(() => {
-    if( projectList.length && currentProject.id !== parseInt(projectId)) appContextDispatch({ type: 'setProject', value: projectId });
+    if( projectList.length) appContextDispatch({ type: 'setProject', value: projectId });
     if( areaAlias !== currentArea ) appContextDispatch({ type: 'setArea', value: areaAlias });
   },[projectList, projectId, assetId]);
 
   useEffect(() => {
     getAssetReq(assetId).then( ([result, jsonData]) => {
-      (result) ? setAssetObj(jsonData) : navigate('/auth');
+      (result) ? setAssetObj(jsonData) : navigate.current('/auth');
     });
-  },[]);
+  },[assetId]);
 
   return (
     <Fragment>
@@ -59,7 +59,7 @@ export default function AssetDetailPage(){
             assetIsNewBool = {assetObj.is_new? 'true': 'false'}/>
           <div className="form-actions">
           <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetId}/edit`} size="sm" style={{marginLeft : '5px'}}>편집</Button>
-          <Button as={Link} to={`/w/${projectId}/${areaAlias}/`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
+          <Button as={Link} to={`/w/${projectId}/${areaAlias}/step1`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
           </div>
         </div>
       </div>

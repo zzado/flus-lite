@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useMemo } from 'react';
+import { useEffect, Fragment, useContext, useMemo, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button, Badge } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -9,7 +9,7 @@ export default function ProjectDetailPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
   const { projectList, currentProject, currentArea} = appContextState;
   const { projectId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
   
   const projectName = useMemo(() => currentProject.name || '',[currentProject]);
   const projectCategory = useMemo(() => currentProject.category || '',[currentProject]);
@@ -19,8 +19,8 @@ export default function ProjectDetailPage(){
   const projectEndDate = useMemo(() => currentProject.end_date || '',[currentProject]);
   const projectAgency = useMemo(() => currentProject.assessment_company || '',[currentProject]);
   const projectNote = useMemo(() => currentProject.note || '',[currentProject]);
-  const projectAreaList = useMemo(() => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${projectId}/${areaAlias.split('-').pop()}`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>)),[currentProject]);
-  const projectAssessors = useMemo(() => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)) || '',[currentProject]);
+  const projectAreaList = useMemo(() => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}/step1`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>)),[currentProject]);
+  const projectAssessors = useMemo(() => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)),[currentProject]);
 
 
   // currentProject value set when URL direct access w
@@ -51,7 +51,7 @@ export default function ProjectDetailPage(){
           />
           <div className="form-actions">
             <Button size="sm" as={Link} to={`/p/${projectId}/edit`} style={{marginLeft : '5px'}}>편집</Button>
-            <Button size="sm" onClick={()=>{ (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate('/p/') : navigate('/auth')): console.log('deleted cancel'); }}>삭제</Button>
+            <Button size="sm" onClick={()=>{ (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate.current('/p/') : navigate.current('/auth')): console.log('deleted cancel'); }}>삭제</Button>
 
           </div>
         </div>

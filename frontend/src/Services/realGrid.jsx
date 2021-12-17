@@ -63,6 +63,7 @@ export function saveGridData(gridView, dataProvider, projectId, areaAlias){
       'updatedRow' : updatedRow,
       'deletedRow' : deletedRow,
     };
+    console.log(gridData);
     gridView.showToast({'message':'저장중입니다..'}, true);
     saveAssetGridDataReq(gridData, projectId, areaAlias).then( ([result, jsonData]) => {
       if(result) { gridView.hideToast(); dataProvider.clearRowStates(true,false); console.log(jsonData)} else {console.log(jsonData)}
@@ -96,25 +97,23 @@ export async function importXlsx(gridView, dataProvider, fileObj) {
   const workSheet = workBook.Sheets['halo'];
   let sheetData = XLSX.utils.sheet_to_json(workSheet)
   sheetData = convertAssetSheetData(sheetData);
-  console.log(sheetData);
   let rowsData = dataProvider.getJsonRows(0,-1,true);
-  console.log(dataProvider.getRows());
-  console.log(rowsData);
+  
   for(let sheetRow of sheetData){
-
     const oldRowIdx = rowsData.findIndex( (e)=> (parseInt(e.code.slice(1)) === parseInt(sheetRow.code.slice(1))) ? e : false);
-    
     if(oldRowIdx === -1){
-      console.log('신규');
-      console.log(sheetRow);
       dataProvider.addRow(sheetRow);
     }else{
-      console.log('기존');
-      let a = dataProvider.getJsonRow(oldRowIdx);
       dataProvider.updateRow(oldRowIdx, sheetRow);
     }
   }
 
+  for(let rowIdx in rowsData){
+    const oldRowIdx = sheetData.findIndex( (e)=> (parseInt(e.code.slice(1)) === parseInt(rowsData[rowIdx].code.slice(1))) ? e : false);
+    if(oldRowIdx === -1){
+      dataProvider.setRowState(rowIdx, 'deleted', true);
+    }
+  }
 }
 
 

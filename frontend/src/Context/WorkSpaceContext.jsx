@@ -1,5 +1,5 @@
-import { useMemo, createContext, useReducer, useEffect, useState, useContext } from 'react';
-import { getUserInfoReq, getProjectListReq, getAssetListByAreaAliasReq } from '../utils'
+import { useMemo, createContext, useReducer, useEffect, useContext, useRef } from 'react';
+import { getAssetListByAreaAliasReq } from '../utils'
 import { AppContext } from '../Context/AppContext';
 import { useNavigate } from "react-router-dom";
 
@@ -28,19 +28,16 @@ const contextReducer = (state, action) => {
 export const WorkSpaceContextProvider = ({children}) => {
   const [WorkSpaceContextState, WorkSpaceContextDispatch] = useReducer(contextReducer, initialState);
   const contextValue = useMemo(() => ({ WorkSpaceContextState, WorkSpaceContextDispatch }),[WorkSpaceContextState, WorkSpaceContextDispatch]);
-  const [initVal, setinitVal] = useState(true)
 
   const { appContextState } = useContext(AppContext);
   const { currentProject, currentArea } = appContextState;
   
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
   useEffect(() => {
-    if(initVal){
-      setinitVal(false);
-    }else{
-      getAssetListByAreaAliasReq(currentProject.id, currentArea).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+    if(currentProject.id && currentArea){
+      getAssetListByAreaAliasReq(currentProject.id, currentArea).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate.current('/auth'));
     }
-  },[WorkSpaceContextState.resetAsset]);
+  },[currentProject, currentArea, WorkSpaceContextState.resetAsset]);
 
   return (
     <WorkSpaceContext.Provider value={contextValue}>

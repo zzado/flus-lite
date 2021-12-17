@@ -1,12 +1,12 @@
 import { Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as utils from '../utils'
 
 export default function AuthPage() {
   const [inputID, setInputID] = useState('');
   const [inputPW, setInputPW] = useState('');
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
   
   const updateInputID = e => {
       setInputID(e.target.value);
@@ -23,7 +23,7 @@ export default function AuthPage() {
     const [result, jsonData] = await utils.APIRequest(URL, OPTION);
     if(result){
       localStorage.setItem('Token', jsonData.Token);
-      navigate('/dashboard');
+      navigate.current('/dashboard');
     }else{
       alert(jsonData);
     }

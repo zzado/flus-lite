@@ -1,5 +1,5 @@
 import { useEffect, Fragment, useContext, useState, useRef, useMemo } from 'react';
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import Select from 'react-select';
@@ -8,10 +8,8 @@ import ProjectInfoTable from '../Components/ProjectInfoTable'
 
 
 export default function ProjectCreatePage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject} = appContextState;
-  const { projectId } = useParams();
-  const navigate = useNavigate();
+  const { appContextDispatch } = useContext(AppContext);
+  const navigate = useRef(useNavigate());
   
   // state 
   const [ projectCategory, setProjectCategory ] = useState({});
@@ -31,10 +29,10 @@ export default function ProjectCreatePage(){
   // areaAliasList, allUserList value set
   useEffect(() => {
     getUserListReq().then( ([result, jsonData]) => {
-      (result) ? setAllUserList(jsonData.map( (e) => { return {value: e.id, label: e.username}; })) : navigate('/auth');
+      (result) ? setAllUserList(jsonData.map( (e) => { return {value: e.id, label: e.username}; })) : navigate.current('/auth');
     });
     getComplianceListReq().then( ([result, jsonData]) => {
-      (result) ? setAllComplianceList(jsonData.map( (e) => { return {value: e.code, label: e.code}; })) : navigate('/auth');
+      (result) ? setAllComplianceList(jsonData.map( (e) => { return {value: e.code, label: e.code}; })) : navigate.current('/auth');
     });
   },[]);
 
@@ -69,7 +67,7 @@ export default function ProjectCreatePage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     createProjectReq(payload).then( ([result, jsonData]) => {
-      if(result){ appContextDispatch({ type: 'reset' }); navigate(`/p/`); }else{ navigate('/auth');}
+      if(result){ appContextDispatch({ type: 'reset' }); navigate.current(`/p/`); }else{ navigate.current('/auth');}
     });
 
   };

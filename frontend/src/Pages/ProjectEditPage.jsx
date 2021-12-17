@@ -8,7 +8,7 @@ import ProjectInfoTable from '../Components/ProjectInfoTable'
 
 export default function ProjectEditPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject, currentArea } = appContextState;
+  const { projectList, currentProject } = appContextState;
   const [ projectUserList, setProjectUserList ] = useState([]);
   const [ areaAliasList, setAreaAliasList ] = useState([]);
   const [ allUserList, setAllUserList ] = useState([]);
@@ -22,20 +22,22 @@ export default function ProjectEditPage(){
   const projectNoteRef = useRef(null);
 
 
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
   
   useEffect(() => {
     if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
-    if( currentArea.length ) appContextDispatch({ type: 'unSetArea'});
   },[projectList, projectId]);
 
+  useEffect(() => {
+    appContextDispatch({ type: 'unSetArea'});
+  },[]);
   
   // areaAliasList, allUserList value set
   useEffect(() => {
     if(Object.keys(currentProject).length){
       setAreaAliasList( currentProject.area.map( (e) => { const areaName = e.split('-').pop(); return {value: areaName, label: global.config.AREA_RNAME[areaName]}}));
       getUserListReq().then( ([result, jsonData]) => {
-        (result) ? setAllUserList(jsonData.map( (e) => { return {value: e.id, label: e.username}; })) : navigate('/auth');
+        (result) ? setAllUserList(jsonData.map( (e) => { return {value: e.id, label: e.username}; })) : navigate.current('/auth');
       });
     }
   },[currentProject]);
@@ -44,7 +46,7 @@ export default function ProjectEditPage(){
   useEffect(() => {
     if(allUserList.length)
       setProjectUserList(currentProject.assessors.map( (e) => allUserList.find( (e2) => e2.value === e )));
-  },[allUserList]);
+  },[allUserList, currentProject.assessors]);
 
 
   //const projectNameForm = useCallback( () => { console.log('zz'); return (<input ref={projectNameRef} defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>)}, []);
@@ -59,7 +61,7 @@ export default function ProjectEditPage(){
   const projectAgencyForm = useMemo(() => <input ref={projectAgencyRef} defaultValue={currentProject.assessment_company || ''} type="text" style={{width:'100%'}}/>, [currentProject]);
   const projectNoteForm = useMemo(() => <textarea ref={projectNoteRef} defaultValue={currentProject.note || ''} style={{width:'100%', height:'80px'}}/>, [currentProject]);
   const projectAreaListForm = useMemo(() => <Select isMulti closeMenuOnSelect={false} onChange={e=>setAreaAliasList(e)} value={ areaAliasList } options={ (currentProject.category === '공개용') ? global.config.OPEN_PROJECT_AREALIST: global.config.EFI_PROJECT_AREALIST} />, [areaAliasList, currentProject]);
-  const projectAssessorsForm = useMemo(() => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>, [projectUserList, allUserList, currentProject]);
+  const projectAssessorsForm = useMemo(() => <Select isMulti closeMenuOnSelect={false} onChange={e=>setProjectUserList(e)} value={ projectUserList } options={ allUserList }/>, [projectUserList, allUserList]);
   
   const editProject = () => {
     const payload = {
@@ -80,7 +82,7 @@ export default function ProjectEditPage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     editProjectReq(payload).then( ([result, jsonData]) => {
-      if(result){ appContextDispatch({ type: 'reset' }); navigate(`/p/${projectId}/`); }else{ navigate('/auth');}
+      if(result){ appContextDispatch({ type: 'reset' }); navigate.current(`/p/${projectId}/`); }else{ navigate.current('/auth');}
     });
   };
 

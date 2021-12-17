@@ -12,7 +12,7 @@ export default function ProjectListPage(){
     appContextDispatch({ type: 'unSetProject'});
     appContextDispatch({ type: 'unSetArea'});
   },[]);
-
+  
   const SubMenuBox = () => {
     return (
       <div className="emptybox text-center" style={{width: '100%', display: 'inline-flex', flexDirection: 'column'}}>

@@ -21,7 +21,7 @@ export default function TopNavBar(props){
     return (Object.keys(currentProject).length) ? 
       (<DropdownButton id="dropdown-basic-button" size="sm" title={currentArea || "분야 선택 (클릭하세요)"} style={{marginLeft: '15px', float: 'left'}}>
       { currentProject.area && currentProject.area.map((areaAlias, idx) => (
-        <Dropdown.Item as={Link} to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}`} key={idx}>{global.config.AREA_RNAME[areaAlias.split('-').pop()]}</Dropdown.Item>
+        <Dropdown.Item as={Link} to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}/step1`} key={idx}>{global.config.AREA_RNAME[areaAlias.split('-').pop()]}</Dropdown.Item>
       ))}
       </DropdownButton>):null;
   }

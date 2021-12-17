@@ -16,7 +16,7 @@ export default function AssetCreatePage(){
   const { projectList, currentProject, currentArea } = appContextState;
 
   const { projectId, areaAlias } = useParams();
-  const navigate = useNavigate();
+  const navigate = useRef(useNavigate());
 
   const [platformList, setPlatformList] = useState([]);
   const [assetNum, setAssetNum] = useState(1);
@@ -51,11 +51,11 @@ export default function AssetCreatePage(){
   },[projectList]);
 
   useEffect(() => {
-    if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate('/auth'));
-  },[currentProject]);
+    if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate.current('/auth'));
+  },[currentProject, areaAlias]);
 
   useEffect(() => {
-    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
+    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate.current('/auth'));
   },[]);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ export default function AssetCreatePage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     createAssetReq(payload).then( ([result, jsonData]) => {
-      if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate(`/w/${projectId}/${areaAlias}/`); }else{ navigate('/auth');}
+      if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate.current(`/w/${projectId}/${areaAlias}/step1`); }else{ navigate.current('/auth');}
     });
   };
 

@@ -1,23 +1,20 @@
-import { Fragment, useContext, useEffect, useState, useRef } from 'react';
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { Dropdown, DropdownButton, Table, Button,  } from "react-bootstrap";
+import { Fragment, useContext, useEffect, useState, useRef, useCallback } from 'react';
+import { Link, useParams } from "react-router-dom";
+import { Table, Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import { WorkSpaceContext } from '../Context/WorkSpaceContext';
-import { getAssetListByAreaAliasReq } from '../utils'
 import { loadGridData, saveGridData, exportXlsx, importXlsx } from '../Services/realGrid';
 import { GridView, LocalDataProvider } from 'realgrid';
-import { FileUploader } from "react-drag-drop-files";
+
 
 export default function WorkSpaceStep1(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
   const { WorkSpaceContextState, WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
   const { assetList } = WorkSpaceContextState;
-  const { projectList, currentArea, currentProject } = appContextState;
+  const { projectList } = appContextState;
   const { projectId, areaAlias } = useParams();
-  const navigate = useNavigate();
 
   const [isGridView, setIsGridView] = useState(false);
-  const [maxGridVeiw, setMaxGridVeiw] = useState(false);
   const isFileUploadRef = useRef(false);
 
   const [gridView, setGridView] = useState(null);
@@ -25,12 +22,14 @@ export default function WorkSpaceStep1(){
 
   useEffect(() => {
     if( projectList.length )appContextDispatch({ type: 'setProject', value: projectId });
-    if( areaAlias !== currentArea ) appContextDispatch({ type: 'setArea', value: areaAlias });
-    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate('/auth'));
-    setIsGridView(false);
-  },[projectList, projectId, areaAlias]);
+  },[projectList, projectId]);
 
-  const realGridInit = () => {
+  useEffect(() => {
+    appContextDispatch({ type: 'setArea', value: areaAlias });
+    setIsGridView(false);
+  },[areaAlias]);
+
+  const realGridInit = useCallback(() => {
     if(gridView === null && dataProvider === null){
       const tempObj1 = new GridView(document.getElementById('realgrid'));
       const tempObj2 = new LocalDataProvider(false);
@@ -40,21 +39,19 @@ export default function WorkSpaceStep1(){
     }else{
       loadGridData(gridView, dataProvider, assetList, areaAlias);
     }
-  };
+  },[gridView, dataProvider, assetList, areaAlias]);
 
-  const saveRealGrid = () => {
+  const saveRealGrid = useCallback(() => {
     if(gridView && dataProvider){
       if(saveGridData(gridView, dataProvider, projectId, areaAlias)){
         WorkSpaceContextDispatch({ type:'resetAsset' });
+        alert('저장 완료');
         setIsGridView(false);
       }
     }
-  };
-
-
+  },[gridView, dataProvider, assetList, areaAlias]);
 
   const SubMenuBox = () => {
-    
     return (isGridView) ? (
       <Fragment>
       <div className="card-header py-3">
