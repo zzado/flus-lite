@@ -93,12 +93,12 @@ export default function WorkSpaceStep1(){
             { assetList && assetList.map( (assetObj, idx) => (
             <tr key={idx}>
               <td><input type="checkbox"/></td>
-              <td>1</td>
+              <td>{idx}</td>
               <td><span className="label">{assetObj.code}</span></td>
               <td><Link to={`/a/${projectId}/${areaAlias}/${assetObj.id}`}>{assetObj.name}</Link></td>
-              <td ><span className="label">미정</span></td>
-              <td ><span className="label">미정</span></td>
-              <td><span className="label label-secondary">분석중</span></td>
+              <td ><span className="label">{assetObj.assessors}</span></td>
+              <td ><span className="label">{assetObj.operator}</span></td>
+              <td><span className="label label-secondary">{assetObj.manual_done ? '완료' : '진행중'}</span></td>
             </tr>
             ))}
           </tbody>

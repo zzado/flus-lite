@@ -1,12 +1,14 @@
-import { useEffect, Fragment, useContext, useState, useRef } from 'react';
+import { useEffect, Fragment, useContext, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
-import { getAssetReq } from '../utils'
+import { getAssetReq, deleteAssetReq } from '../utils'
 import { AppContext } from '../Context/AppContext';
+import { WorkSpaceContext } from '../Context/WorkSpaceContext';
 
 export default function AssetDetailPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
 
   const { projectList, currentArea } = appContextState;
   
@@ -25,6 +27,17 @@ export default function AssetDetailPage(){
     });
   },[assetId]);
 
+  const deleteAsset = ()=>{
+    if(window.confirm("자산을 정말 삭제 하시겠습니까?")){
+      deleteAssetReq(assetId).then( (result) => {
+        if(result){
+          WorkSpaceContextDispatch({type:'resetAsset'});
+          navigate.current(`/w/${projectId}/${areaAlias}/step1`);
+        }
+      });
+    }//(() ? navigate.current('/p/') : navigate.current('/auth')): console.log('delete canceled')
+  };
+
   return (
     <Fragment>
       <div className="container-fluid" style={{width: '95%'}}>
@@ -34,7 +47,6 @@ export default function AssetDetailPage(){
         </div>
         <div className="card-body">
           <AssetInfoTable
-            projectId = {projectId}
             areaAlias = {areaAlias}
             assetName={assetObj.name}
             assetNum = {assetObj.code}
@@ -59,6 +71,7 @@ export default function AssetDetailPage(){
             assetIsNewBool = {assetObj.is_new? 'true': 'false'}/>
           <div className="form-actions">
           <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetId}/edit`} size="sm" style={{marginLeft : '5px'}}>편집</Button>
+          <Button onClick={deleteAsset} size="sm" style={{marginLeft : '5px'}}>삭제</Button>
           <Button as={Link} to={`/w/${projectId}/${areaAlias}/step1`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
           </div>
         </div>

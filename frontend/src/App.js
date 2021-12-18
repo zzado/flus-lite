@@ -18,7 +18,10 @@ import AssetDetailPage from './Pages/AssetDetailPage';
 import AssetEditPage from './Pages/AssetEditPage';
 
 import WorkSpaceStep1 from './Pages/WorkSpaceStep1';
+import WorkSpaceStep2 from './Pages/WorkSpaceStep2';
+import VulEditPage from './Pages/VulEditPage';
 
+import VulListByAssetPage from './Pages/VulListByAssetPage';
 import { AppContextProvider } from './Context/AppContext';
 import { WorkSpaceContextProvider } from './Context/WorkSpaceContext';
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -45,8 +48,12 @@ export default function App (){
           <Route path="a/:projectId/:areaAlias/:assetId" element={<WorkSpaceContextProvider><AssetDetailPage/></WorkSpaceContextProvider>} />
           <Route path="a/:projectId/:areaAlias/:assetId/edit" element={<WorkSpaceContextProvider><AssetEditPage/></WorkSpaceContextProvider>} />
           
+          <Route path="v-a/:projectId/:areaAlias/:assetId" element={<WorkSpaceLayOut step={2}><VulListByAssetPage/></WorkSpaceLayOut>}/>
+          
+          <Route path="v/:vulId" element={<WorkSpaceLayOut step={2}><VulEditPage/></WorkSpaceLayOut>} />
+
           <Route path="w/:projectId/:areaAlias/step1" element={<WorkSpaceContextProvider><WorkSpaceLayOut step={1}><WorkSpaceStep1/></WorkSpaceLayOut></WorkSpaceContextProvider>} />
-          <Route path="w/:projectId/:areaAlias/step2" element={<WorkSpaceContextProvider><WorkSpaceLayOut step={2}><WorkSpaceStep1/></WorkSpaceLayOut></WorkSpaceContextProvider>} />
+          <Route path="w/:projectId/:areaAlias/step2" element={<WorkSpaceContextProvider><WorkSpaceLayOut step={2}><WorkSpaceStep2/></WorkSpaceLayOut></WorkSpaceContextProvider>} />
           <Route path="w/:projectId/:areaAlias/step3" element={<WorkSpaceContextProvider><WorkSpaceLayOut step={3}><WorkSpaceStep1/></WorkSpaceLayOut></WorkSpaceContextProvider>} />
           <Route path="w/:projectId/:areaAlias/step4" element={<WorkSpaceContextProvider><WorkSpaceLayOut step={4}><WorkSpaceStep1/></WorkSpaceLayOut></WorkSpaceContextProvider>} />
           <Route path="w/:projectId/:areaAlias/step5" element={<WorkSpaceContextProvider><WorkSpaceLayOut step={5}><WorkSpaceStep1/></WorkSpaceLayOut></WorkSpaceContextProvider>} />

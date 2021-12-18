@@ -137,7 +137,6 @@ export default function AssetCreatePage(){
         </div>
         <div className="card-body">
           <AssetInfoTable
-            projectId = {projectId}
             areaAlias = {areaAlias}
             assetName={assetNameForm}
             assetNum = {assetNumForm}

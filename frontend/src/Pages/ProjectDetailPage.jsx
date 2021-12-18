@@ -1,6 +1,6 @@
 import { useEffect, Fragment, useContext, useMemo, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Button, Badge } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import { deleteProjectReq } from '../utils';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
@@ -10,18 +10,6 @@ export default function ProjectDetailPage(){
   const { projectList, currentProject, currentArea} = appContextState;
   const { projectId } = useParams();
   const navigate = useRef(useNavigate());
-  
-  const projectName = useMemo(() => currentProject.name || '',[currentProject]);
-  const projectCategory = useMemo(() => currentProject.category || '',[currentProject]);
-  const projectCompliance = useMemo(() => currentProject.compliance || '',[currentProject]);
-  const projectStartDate = useMemo(() => currentProject.start_date || '',[currentProject]);
-  const projectClient = useMemo(() => currentProject.client_company || '',[currentProject]);
-  const projectEndDate = useMemo(() => currentProject.end_date || '',[currentProject]);
-  const projectAgency = useMemo(() => currentProject.assessment_company || '',[currentProject]);
-  const projectNote = useMemo(() => currentProject.note || '',[currentProject]);
-  const projectAreaList = useMemo(() => currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}/step1`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>)),[currentProject]);
-  const projectAssessors = useMemo(() => currentProject.assessors && currentProject.assessors.map((e=>`${e}, `)),[currentProject]);
-
 
   // currentProject value set when URL direct access w
   useEffect(() => {
@@ -38,16 +26,16 @@ export default function ProjectDetailPage(){
         </div>
         <div className="card-body">
           <ProjectInfoTable 
-            projectName={projectName}
-            projectCategory={projectCategory}
-            projectCompliance={projectCompliance}
-            projectAreaList={projectAreaList}
-            projectAssessors={projectAssessors}
-            projectStartDate={projectStartDate}
-            projectClient={projectClient}
-            projectEndDate={projectEndDate}
-            projectAgency={projectAgency}
-            projectNote={projectNote}
+            projectName={currentProject.name || ''}
+            projectCategory={currentProject.category || ''}
+            projectCompliance={currentProject.compliance || ''}
+            projectAreaList={currentProject.start_date || ''}
+            projectAssessors={currentProject.assessors && currentProject.assessors.map((e=>`${e}, `))}
+            projectStartDate={currentProject.start_date || ''}
+            projectClient={currentProject.client_company || ''}
+            projectEndDate={currentProject.end_date || ''}
+            projectAgency={currentProject.assessment_company || ''}
+            projectNote={currentProject.note || ''}
           />
           <div className="form-actions">
             <Button size="sm" as={Link} to={`/p/${projectId}/edit`} style={{marginLeft : '5px'}}>편집</Button>

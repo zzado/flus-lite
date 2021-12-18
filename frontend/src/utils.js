@@ -29,6 +29,13 @@ export const deleteProjectReq = async(projectId)=>{
   return result;
 };
 
+export const deleteAssetReq = async(asetId)=>{
+  const URL = `api/asset/${asetId}/`;
+  const OPTION = {method: 'DELETE'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return result;
+};
+
 export const getUserInfoReq = async()=>{
   const URL = 'api/auth/user/';
   const OPTION = {method: 'GET'};
@@ -114,6 +121,12 @@ export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
   return [result, jsonData];
 }
 
+export const getVulListByAssetReq = async(assetId)=>{
+  const URL = `api/vuls-by-asset/${assetId}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
 
 export const payloadEmptyCheck = (payload, fields) =>{
   for(let _ in payload){

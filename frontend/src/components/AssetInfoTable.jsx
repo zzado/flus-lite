@@ -137,7 +137,7 @@ export default function AssetInfoTable(props){
 
   return (
     <Fragment>
-      <Table id="AssetInfoTable" responsive="md" bordered>
+      <Table responsive="md" bordered>
         <colgroup>
           <col width="5%"/>
           <col width="5%"/>
