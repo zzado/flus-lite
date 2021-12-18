@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useContext, useMemo, useRef } from 'react';
+import { Fragment, useContext, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
@@ -6,16 +6,10 @@ import { deleteProjectReq } from '../utils';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
 
 export default function ProjectDetailPage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject, currentArea} = appContextState;
+  const { appContextState } = useContext(AppContext);
+  const { currentProject } = appContextState;
   const { projectId } = useParams();
   const navigate = useRef(useNavigate());
-
-  // currentProject value set when URL direct access w
-  useEffect(() => {
-    if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
-    if( currentArea.length ) appContextDispatch({ type: 'unSetArea'});
-  },[projectList, projectId]);
 
   return (
     <Fragment>

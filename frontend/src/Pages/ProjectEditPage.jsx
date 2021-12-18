@@ -16,7 +16,7 @@ const stateReducer = (state, action) => {
 
 export default function ProjectEditPage() {
   const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject } = appContextState;
+  const { currentProject } = appContextState;
   const { projectId } = useParams();
   const navigate = useRef(useNavigate());
 
@@ -48,14 +48,8 @@ export default function ProjectEditPage() {
   } = projectState;
 
 
-  useEffect(() => {
-    if (projectList.length)
-      appContextDispatch({ type: 'setProject', value: projectId });
-  }, [projectList, projectId]);
-
   //allUserList value set
   useEffect(() => {
-    appContextDispatch({ type: 'unSetArea' });
     getUserListReq().then(([result, jsonData]) => {
       result
         ? projectStateDispatch({
@@ -81,14 +75,14 @@ export default function ProjectEditPage() {
 
   // projectUserList value set
   useEffect(() => {
-    if (allUserList.length)
+    if (allUserList.length && Object.keys(currentProject).length)
       projectStateDispatch({
         name: 'projectUserList',
         value: currentProject.assessors.map((e) =>
           allUserList.find((e2) => e2.value === e)
         ),
       });
-  }, [allUserList, currentProject.assessors]);
+  }, [allUserList, currentProject]);
 
   //const projectNameForm = useCallback( () => { console.log('zz'); return (<input ref={projectNameRef} defaultValue={currentProject.name || ''} type="text" style={{width:'100%'}}/>)}, []);
 
@@ -225,7 +219,7 @@ export default function ProjectEditPage() {
         <div className='card shadow mb-4'>
           <div className='card-header py-3'>
             <span className='m-0 font-weight-bold search-title'>
-              프로젝트 상세
+              프로젝트 편집
             </span>
           </div>
           <div className='card-body'>

@@ -1,17 +1,14 @@
-import { Fragment, useContext, useEffect, useState, useRef, useCallback } from 'react';
+import { Fragment, useContext, useState, useRef, useCallback } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
-import { AppContext } from '../Context/AppContext';
-import { WorkSpaceContext } from '../Context/WorkSpaceContext';
+import { AssetContext } from '../Context/AssetContext';
 import { loadGridData, saveGridData, exportXlsx, importXlsx } from '../Services/realGrid';
 import { GridView, LocalDataProvider } from 'realgrid';
 
 
 export default function WorkSpaceStep1(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { WorkSpaceContextState, WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
-  const { assetList } = WorkSpaceContextState;
-  const { projectList } = appContextState;
+  const { AssetContextState, AssetContextDispatch } = useContext(AssetContext);
+  const { assetList } = AssetContextState;
   const { projectId, areaAlias } = useParams();
 
   const [isGridView, setIsGridView] = useState(false);
@@ -20,14 +17,6 @@ export default function WorkSpaceStep1(){
   const [gridView, setGridView] = useState(null);
   const [dataProvider, setDataProvider] = useState(null);
 
-  useEffect(() => {
-    if( projectList.length )appContextDispatch({ type: 'setProject', value: projectId });
-  },[projectList, projectId]);
-
-  useEffect(() => {
-    appContextDispatch({ type: 'setArea', value: areaAlias });
-    setIsGridView(false);
-  },[areaAlias]);
 
   const realGridInit = useCallback(() => {
     if(gridView === null && dataProvider === null){
@@ -41,16 +30,16 @@ export default function WorkSpaceStep1(){
     }
   },[gridView, dataProvider, assetList, areaAlias]);
 
-  const saveRealGrid = useCallback(() => {
+  const saveRealGrid = () => {
     if(gridView && dataProvider){
       if(saveGridData(gridView, dataProvider, projectId, areaAlias)){
-        WorkSpaceContextDispatch({ type:'resetAsset' });
+        AssetContextDispatch({ type:'reset' });
         alert('저장 완료');
         setIsGridView(false);
       }
     }
-  },[gridView, dataProvider, assetList, areaAlias]);
-
+  };
+  
   const SubMenuBox = () => {
     return (isGridView) ? (
       <Fragment>
@@ -87,6 +76,7 @@ export default function WorkSpaceStep1(){
               <th>평가자</th>
               <th>담당자</th>
               <th>진행상황</th>
+              <th>분석</th>
             </tr>
           </thead>
           <tbody>
@@ -95,10 +85,11 @@ export default function WorkSpaceStep1(){
               <td><input type="checkbox"/></td>
               <td>{idx}</td>
               <td><span className="label">{assetObj.code}</span></td>
-              <td><Link to={`/a/${projectId}/${areaAlias}/${assetObj.id}`}>{assetObj.name}</Link></td>
+              <td><Link to={`/a/${projectId}/${areaAlias}/${assetObj.id}`} state={{assetObj: assetObj}}>{assetObj.name}</Link></td>
               <td ><span className="label">{assetObj.assessors}</span></td>
               <td ><span className="label">{assetObj.operator}</span></td>
               <td><span className="label label-secondary">{assetObj.manual_done ? '완료' : '진행중'}</span></td>
+              <td style={{padding:'0'}}><Button as={Link} to={`/v-a/${projectId}/${areaAlias}/${assetObj.id}`} state={{assetObj: assetObj}} size="sm">점검</Button></td>
             </tr>
             ))}
           </tbody>

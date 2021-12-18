@@ -1,8 +1,7 @@
-import { Fragment, useContext, useEffect, useState, useRef, useCallback } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import { Link, useParams,useNavigate } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
-import VulInfoTable from '../Components/VulInfoTable';
 import { getVulListByAssetReq, getAssetReq } from '../utils'
 
 export default function VulListByAssetPage(){
@@ -22,7 +21,8 @@ export default function VulListByAssetPage(){
     return (
       <Fragment>
       <div className="card-header py-3">
-        <Button size="sm" onClick={()=> navigate.current(`/w/${projectId}/${areaAlias}/step2`)}>뒤로</Button>
+        <span className='m-0 font-weight-bold search-title'>자산 별 취약점</span>
+        <Button size="sm" onClick={()=> navigate.current(`/w/${projectId}/${areaAlias}/step1`)}>뒤로</Button>
       </div>
       </Fragment>
     )
@@ -92,43 +92,36 @@ export default function VulListByAssetPage(){
             </tr>
           </thead>
           <tbody>
-          { vulList && vulList.map( (vulObj, idx) => { 
-            if(vulResultFilter === false){
-              return (
-                <><tr>
+          { vulList && vulList.map( (vulObj, idx) => 
+            (vulResultFilter === false)?
+              (
+                <tr key={idx}>
                   <td><input type="checkbox" /></td>
                   <td>{idx}</td>
                   <td>{vulObj.vulnerability_item.code || ''}</td>
-                  <Link to={`/v/${vulObj.id}/`} state={{vulObj:vulObj, zzado:'a'}}><td>{vulObj.vulnerability_item.name || ''}</td></Link>
+                  <td><Link to={`/v/${projectId}/${areaAlias}/${assetId}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link></td>
                   <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
                   <td>{vulObj.is_new ? '신규' : '기존'}</td>
                   <td>{vulObj.is_reported ? '전달' : ''}</td>
                   <td>{vulObj.is_patched ? '조치' : ''}</td>
                   <td>{vulObj.vulnerability_item.risk || ''}</td>
                 </tr>
-                </>
                 )
-            }else{
-              if(vulResultFilter === vulObj.result ){
-                return (
-                  <><tr>
+            : (vulResultFilter === vulObj.result )?
+                (
+                  <tr key={idx}>
                     <td><input type="checkbox"/></td>
                     <td>{idx}</td>
                     <td>{vulObj.vulnerability_item.code || ''}</td>
-                    <td>{vulObj.vulnerability_item.name || ''}</td>
+                    <td><Link to={`/v/${projectId}/${areaAlias}/${assetId}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link></td>
                     <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
                     <td>{vulObj.is_new ? '신규' : '기존'}</td>
                     <td>{vulObj.is_reported ? '전달' : ''}</td>
                     <td>{vulObj.is_patched ? '조치' : ''}</td>
                     <td>{vulObj.vulnerability_item.risk || ''}</td>
                   </tr>
-                  </>
-                  )
-              }else{
-                return null
-              }
-            }
-          })}
+                ) : null
+              )}
           </tbody>
         </Table>
         

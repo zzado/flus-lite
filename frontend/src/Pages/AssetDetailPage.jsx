@@ -1,37 +1,26 @@
-import { useEffect, Fragment, useContext, useState, useRef, useCallback } from 'react';
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useEffect, Fragment, useContext, useState, useRef } from 'react';
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import { getAssetReq, deleteAssetReq } from '../utils'
-import { AppContext } from '../Context/AppContext';
-import { WorkSpaceContext } from '../Context/WorkSpaceContext';
+import { AssetContext } from '../Context/AssetContext';
 
 export default function AssetDetailPage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
-
-  const { projectList, currentArea } = appContextState;
-  
+  const { AssetContextDispatch } = useContext(AssetContext);
+  const { state } = useLocation();
   const { projectId, areaAlias, assetId } = useParams();
-  const [ assetObj, setAssetObj ] = useState({});
+  const [ assetObj, setAssetObj ] = useState(()=> state ? state.assetObj : {});
   const navigate = useRef(useNavigate());
 
   useEffect(() => {
-    if( projectList.length) appContextDispatch({ type: 'setProject', value: projectId });
-    if( areaAlias !== currentArea ) appContextDispatch({ type: 'setArea', value: areaAlias });
-  },[projectList, projectId, assetId]);
-
-  useEffect(() => {
-    getAssetReq(assetId).then( ([result, jsonData]) => {
-      (result) ? setAssetObj(jsonData) : navigate.current('/auth');
-    });
-  },[assetId]);
+      if(!Object.keys(assetObj).length) getAssetReq(assetId).then( ([result, jsonData]) => { (result) ? setAssetObj(jsonData) : navigate.current('/auth'); });
+  },[assetObj, assetId]);
 
   const deleteAsset = ()=>{
     if(window.confirm("자산을 정말 삭제 하시겠습니까?")){
       deleteAssetReq(assetId).then( (result) => {
         if(result){
-          WorkSpaceContextDispatch({type:'resetAsset'});
+          AssetContextDispatch({type:'reset'});
           navigate.current(`/w/${projectId}/${areaAlias}/step1`);
         }
       });
@@ -40,7 +29,6 @@ export default function AssetDetailPage(){
 
   return (
     <Fragment>
-      <div className="container-fluid" style={{width: '95%'}}>
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <span className="m-0 font-weight-bold search-title">자산 상세</span>
@@ -70,13 +58,12 @@ export default function AssetDetailPage(){
             assetIsServerBool = {assetObj.is_server? 'true': 'false'}
             assetIsNewBool = {assetObj.is_new? 'true': 'false'}/>
           <div className="form-actions">
-          <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetId}/edit`} size="sm" style={{marginLeft : '5px'}}>편집</Button>
+          <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetId}/edit`} state={{assetObj: assetObj}}size="sm" style={{marginLeft : '5px'}}>편집</Button>
           <Button onClick={deleteAsset} size="sm" style={{marginLeft : '5px'}}>삭제</Button>
           <Button as={Link} to={`/w/${projectId}/${areaAlias}/step1`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
           </div>
         </div>
       </div>
-    </div>
     </Fragment>
   );
 }

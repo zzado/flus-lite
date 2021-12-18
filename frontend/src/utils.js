@@ -99,6 +99,13 @@ export const getAssetReq = async(assetId)=>{
   return [result, jsonData];
 }
 
+export const getVulReq = async(vulId)=>{
+  const URL = `api/vulnerability/${vulId}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
 export const getPlatformListReq = async(compliance, areaAlias)=>{
   const URL = `api/platform/${compliance}/${areaAlias}/`;
   const OPTION = {method: 'GET'};

@@ -1,17 +1,13 @@
-import { Fragment, useContext, useEffect } from 'react';
+import { Fragment, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 
 
 export default function ProjectListPage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { appContextState } = useContext(AppContext);
   const { projectList } = appContextState;
 
-  useEffect(() => {
-    appContextDispatch({ type: 'unSetProject'});
-    appContextDispatch({ type: 'unSetArea'});
-  },[]);
   
   const SubMenuBox = () => {
     return (

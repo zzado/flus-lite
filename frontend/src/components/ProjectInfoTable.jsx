@@ -5,7 +5,7 @@ export default function ProjectInfoTable(props){
   const { projectName, projectCategory, projectCompliance, projectAreaList, projectAssessors ,projectStartDate, projectClient, projectEndDate, projectAgency, projectNote } = props;
   return (
     <Fragment>
-      <Table id="projectInfoTable" responsive="md" bordered>
+      <Table responsive="md" bordered>
         <colgroup>
           <col width="10%"/>
           <col width="10%"/>

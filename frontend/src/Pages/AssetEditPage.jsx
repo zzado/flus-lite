@@ -1,23 +1,23 @@
 import { useEffect, Fragment, useContext, useState, useRef, useMemo } from 'react';
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 import { payloadEmptyCheck, getPlatformListReq, getAssetReq, editAssetReq } from '../utils'
 import { AppContext } from '../Context/AppContext';
-import { WorkSpaceContext } from '../Context/WorkSpaceContext';
+import { AssetContext } from '../Context/AssetContext';
 
 export default function AssetEditPage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject, currentArea } = appContextState;
+  const { appContextState } = useContext(AppContext);
+  const { currentProject } = appContextState;
 
-  const { WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
+  const { AssetContextDispatch } = useContext(AssetContext);
 
   const { projectId, areaAlias, assetId } = useParams();
   const navigate = useRef(useNavigate());
-
-  const [ assetObj, setAssetObj ] = useState({});
+  const { state } = useLocation();
+  const [ assetObj, setAssetObj ] = useState(()=> state ? state.assetObj : {});
   
   const [platformList, setPlatformList] = useState([]);
 
@@ -45,17 +45,12 @@ export default function AssetEditPage(){
   const assetAnalysisDoneRef = useRef(null);
 
   useEffect(() => {
-    if( projectList.length && currentProject.id !== parseInt(projectId)) appContextDispatch({ type: 'setProject', value: projectId });
-    if( currentArea !== areaAlias ) appContextDispatch({ type: 'setArea', value: areaAlias });
-  },[projectList]);
-
-  useEffect(() => {
     if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate.current('/auth'));
   },[currentProject, areaAlias]);
 
   useEffect(() => {
-    getAssetReq(assetId).then( ([result, jsonData]) => { result ? setAssetObj(jsonData) : navigate.current('/auth');});
-  },[]);
+    if(!Object.keys(assetObj).length) getAssetReq(assetId).then( ([result, jsonData]) => { result ? setAssetObj(jsonData) : navigate.current('/auth');});
+  },[assetId, assetObj]);
 
   useEffect(() => {
     if(Object.keys(assetObj).length){
@@ -131,16 +126,15 @@ export default function AssetEditPage(){
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     editAssetReq(assetId, payload).then( ([result, jsonData]) => {
-       if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate.current(`/a/${projectId}/${areaAlias}/${assetId}`); }else{ navigate.current('/auth');}
+       if(result){ AssetContextDispatch({ type:'reset' }); navigate.current(`/a/${projectId}/${areaAlias}/${assetId}`); }else{ navigate.current('/auth');}
     });
   };
 
   return (
     <Fragment>
-      <div className="container-fluid" style={{width: '95%'}}>
       <div className="card shadow mb-4">
         <div className="card-header py-3">
-          <span className="m-0 font-weight-bold search-title">자산 생성 {`[${projectId}]-${areaAlias}`}</span>
+          <span className="m-0 font-weight-bold search-title">자산 편집</span>
         </div>
         <div className="card-body">
           <AssetInfoTable
@@ -173,7 +167,6 @@ export default function AssetEditPage(){
           </div>
         </div>
       </div>
-    </div>
     </Fragment>
   );
 }

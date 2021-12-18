@@ -4,16 +4,16 @@ import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
-import { payloadEmptyCheck, getAssetListByAreaAliasReq, getPlatformListReq, createAssetReq } from '../utils'
-import { WorkSpaceContext } from '../Context/WorkSpaceContext';
+import { payloadEmptyCheck, getPlatformListReq, createAssetReq } from '../utils'
+import { AssetContext } from '../Context/AssetContext';
 import { AppContext } from '../Context/AppContext';
 
 export default function AssetCreatePage(){
-  const { WorkSpaceContextState, WorkSpaceContextDispatch } = useContext(WorkSpaceContext);
-  const { assetList } = WorkSpaceContextState;
+  const { AssetContextState, AssetContextDispatch } = useContext(AssetContext);
+  const { assetList } = AssetContextState;
 
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { projectList, currentProject, currentArea } = appContextState;
+  const { appContextState } = useContext(AppContext);
+  const { currentProject } = appContextState;
 
   const { projectId, areaAlias } = useParams();
   const navigate = useRef(useNavigate());
@@ -44,19 +44,9 @@ export default function AssetCreatePage(){
   const assetAnalysisDoneRef = useRef(null);
 
 
-
-  useEffect(() => {
-    if( projectList.length && currentProject.id !== parseInt(projectId) ) appContextDispatch({ type: 'setProject', value: projectId });
-    if( currentArea !== areaAlias ) appContextDispatch({ type: 'setArea', value: areaAlias });
-  },[projectList]);
-
   useEffect(() => {
     if(Object.keys(currentProject).length) getPlatformListReq(currentProject.compliance, areaAlias).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : navigate.current('/auth'));
   },[currentProject, areaAlias]);
-
-  useEffect(() => {
-    getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? WorkSpaceContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate.current('/auth'));
-  },[]);
 
   useEffect(() => {
     if(assetList.length) setAssetNum( assetList[assetList.length-1].num +1 );
@@ -115,14 +105,14 @@ export default function AssetCreatePage(){
       pwd_change_cycle: assetPWDCycleRef.current ? assetPWDCycleRef.current.value : 0,
       backup_cycle: assetBackUpCycleRef.current ? assetBackUpCycleRef.current.value : 0,
     };
-    
+    console.log(payload);
     if( ['SRV', 'DBM', 'MOB', 'ISS', 'NET'].includes(areaAlias) && payload.platform === 'NONE') payload.platform = '';
   
     const [validResult, value] = payloadEmptyCheck(payload, global.config.ASSET_VALID_CHECK_FIELDS);
     if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
 
     createAssetReq(payload).then( ([result, jsonData]) => {
-      if(result){ WorkSpaceContextDispatch({ type:'resetAsset' }); navigate.current(`/w/${projectId}/${areaAlias}/step1`); }else{ navigate.current('/auth');}
+      if(result){ AssetContextDispatch({ type:'reset' }); navigate.current(`/w/${projectId}/${areaAlias}/step1`); }else{ navigate.current('/auth');}
     });
   };
 
@@ -130,10 +120,9 @@ export default function AssetCreatePage(){
 
   return (
     <Fragment>
-      <div className="container-fluid" style={{width: '95%'}}>
       <div className="card shadow mb-4">
         <div className="card-header py-3">
-          <span className="m-0 font-weight-bold search-title">자산 생성 {`[${projectId}]-${areaAlias}`}</span>
+          <span className="m-0 font-weight-bold search-title">자산 생성</span>
         </div>
         <div className="card-body">
           <AssetInfoTable
@@ -166,7 +155,6 @@ export default function AssetCreatePage(){
           </div>
         </div>
       </div>
-    </div>
     </Fragment>
   );
 }

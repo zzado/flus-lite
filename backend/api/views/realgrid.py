@@ -38,7 +38,7 @@ class RealGridAssetAPI(views.APIView):
             assetInfo['project'] = projectId
             assetInfo['area_alias'] = areaAlias
             assetInfo['num'] = int(assetInfo['code'].replace(settings.AREA_SIGNATURE[areaAlias], ''))
-            assetInfo['platform'] = assetInfo.get('platform', 'NONE')
+            if assetInfo.get('platform') == '' or assetInfo.get('platform') == None : assetInfo['platform'] = 'NONE'
             platformList = [ _ for _ in settings.G_PLATFORM_INFO[projectObj.compliance.code][areaAlias]]
             platformList.remove('[[OTHER]]') if '[[OTHER]]' in platformList else platformList
             if assetInfo['platform'] not in platformList:
