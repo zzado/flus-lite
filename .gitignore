@@ -1,6 +1,8 @@
 frontend/node_modlues/
+frontend/build/
 node_modules
 ./frontend/node_modules/
+./frontend/build/
 ./activate
 venv/
 __pycache__/
