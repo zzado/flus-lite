@@ -24,6 +24,8 @@ urlpatterns = [
     path('vulnerability/', VulnerabilityListCreateAPI.as_view()),
     path('vulnerability/<int:pk>/', VulnerabilityDetailUpdateDeleteAPI.as_view()),
 
+    path('poc/<int:pk>/', POCDetailUpdateDeleteAPI.as_view()),
+
     path('vuls-by-asset/<int:assetId>/', VulnerabilityListByAssetAPI.as_view()),
 
     path('realgrid/asset/<int:projectId>/<str:areaAlias>/', RealGridAssetAPI.as_view()),

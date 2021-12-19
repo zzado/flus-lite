@@ -26,6 +26,7 @@ import { AssetContextProvider } from './Context/AssetContext';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'realgrid/dist/realgrid-style.css'
+//import 'realgrid/dist/realgrid-white.css'
 import './Assets/css/flus.css';
 import './config';
 

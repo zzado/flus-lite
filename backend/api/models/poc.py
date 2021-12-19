@@ -17,5 +17,4 @@ class POC(models.Model):
     class Meta:
         ordering = ['-found_date']
 
-    def __str__(self):
-        return self.vulnerability
+

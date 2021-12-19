@@ -4,3 +4,4 @@ from api.views.vulnerability import VulnerabilityDetailUpdateDeleteAPI, Vulnerab
 from api.views.authentication import SignUpAPI, SignInAPI, UserInfoGetAPI, UserListAPI
 from api.views.compliance import ComplianceListAPI, PlatformListAPI
 from api.views.realgrid import RealGridAssetAPI
+from api.views.poc import POCDetailUpdateDeleteAPI

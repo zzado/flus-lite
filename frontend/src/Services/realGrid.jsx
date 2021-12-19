@@ -87,14 +87,14 @@ export function exportXlsx(gridView){
     footer: 'hidden',
     compatibility: true,
     //allColumns : true,
-    sheetName : 'halo'
+    sheetName : '자산'
   });
 }
 
 export async function importXlsx(gridView, dataProvider, fileObj) {
   const data = await fileObj.arrayBuffer();
   const workBook = XLSX.read(data);
-  const workSheet = workBook.Sheets['halo'];
+  const workSheet = workBook.Sheets['자산'];
   let sheetData = XLSX.utils.sheet_to_json(workSheet)
   sheetData = convertAssetSheetData(sheetData);
   let rowsData = dataProvider.getJsonRows(0,-1,true);
@@ -188,13 +188,12 @@ function setGridViewCommonConfig(gridView){
   gridView.setDisplayOptions({
     rowResizable: true,
     eachRowResizable: true,
-    selectionStyle : "rows",
-
+    selectionStyle : "block",
   });
 
   gridView.setContextMenu([
     {label: '행 삭제', tag: 'deleteRow'},
-    {label: '아래에 행 삽입', tag: 'insertRow'},
+    //{label: '아래에 행 삽입', tag: 'insertRow'},
     {label: '-'},
   ]);
 

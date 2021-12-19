@@ -99,7 +99,7 @@ export default function VulListByAssetPage(){
                   <td><input type="checkbox" /></td>
                   <td>{idx}</td>
                   <td>{vulObj.vulnerability_item.code || ''}</td>
-                  <td><Link to={`/v/${projectId}/${areaAlias}/${assetId}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link></td>
+                  <td><Link to={`/v/${projectId}/${areaAlias}/${assetId}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link> { vulObj.pocs.length }</td>
                   <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
                   <td>{vulObj.is_new ? '신규' : '기존'}</td>
                   <td>{vulObj.is_reported ? '전달' : ''}</td>

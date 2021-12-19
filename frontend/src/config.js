@@ -65,5 +65,28 @@ module.exports = global.config = {
         MOB : ["id", "num", "code",  "name", "asset_value", "platform", "operator", "assessors", "is_new", "is_test", "is_financial", "manual_done", "note"],
         WEB : ["id", "num", "code",  "name", "asset_value", "ip_url", "operator", "assessors", "is_new", "is_test", "is_financial", "is_https", "manual_done", "note"],
         HTS : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "is_test", "is_financial", "manual_done",  "note"]
-    }
+    },
+
+    VUL_FIELD : {
+        STATE :[
+            {value: 'Y', label: '취약'},
+            {value: 'N', label: '양호'},
+            {value: 'NA', label: 'NA'},
+            {value: '', label: '미정'}
+        ],
+        REPROTED : [
+            {value: true, label: '전달'},
+            {value: false, label: '미전달'}
+        ],
+        PATCHED : [
+            {value: true, label: '조치'},
+            {value: false, label: '미조치'}
+        ],
+        NEW : [
+            {value: true, label: '신규'},
+            {value: false, label: '기존'}
+        ],
+    }  
+    
+
 };

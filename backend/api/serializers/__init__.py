@@ -3,4 +3,4 @@ from api.serializers.asset import AssetSerializer, AssetUpdateSerializer
 from api.serializers.vulnerability import VulnerabilitySerializer
 from api.serializers.user import SignUpUserSerializer, UserSerializer
 from api.serializers.compliance import ComplianceSerializer
-
+from api.serializers.poc import POCSerializer
