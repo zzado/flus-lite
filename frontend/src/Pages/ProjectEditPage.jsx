@@ -79,7 +79,7 @@ export default function ProjectEditPage() {
       projectStateDispatch({
         name: 'projectUserList',
         value: currentProject.assessors.map((e) =>
-          allUserList.find((e2) => e2.value === e)
+          ({value:e.id, label:e.username})
         ),
       });
   }, [allUserList, currentProject]);

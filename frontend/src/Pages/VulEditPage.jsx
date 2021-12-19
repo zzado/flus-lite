@@ -33,28 +33,26 @@ export default function VulEditPage(props){
       <SubMenuBox/>
         <div className="card-body">
           <Table responsive="md" bordered>
-            <thead>
-              <colgroup>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-                <col width="10%"/>
-              </colgroup>
-            </thead>
+            <colgroup>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%"/>
+            </colgroup>
             <tbody>
               <tr>
-                <th>취약점코드</th>
-                <td>{vulObj && vulObj.vulnerability_item.code}</td>
-                <th>항목명</th>
+                <th colSpan={1}>취약점코드</th>
+                <td colSpan={1}>{vulObj && vulObj.vulnerability_item.code}</td>
+                <th colSpan={1}>항목명</th>
                 <td colSpan={5}>{vulObj && vulObj.vulnerability_item.name}</td>
-                <th>평가결과</th>
-                <td><Select onChange={(e) => e} options={[{value: 'Y',label:'취약'},{value: 'N',label:'양호'},{value: 'NA',label:'NA'},{value: '',label:'미정'}]}/></td>
+                <th colSpan={1}>평가결과</th>
+                <td colSpan={1}><Select onChange={(e) => e} options={[{value: 'Y',label:'취약'},{value: 'N',label:'양호'},{value: 'NA',label:'NA'},{value: '',label:'미정'}]}/></td>
               </tr>
               <tr>
                 <th>현재상태</th>

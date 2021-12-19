@@ -4,7 +4,7 @@ from django.db import models
 class POC(models.Model):
     result = models.CharField('취약여부', max_length=10, default='')
     auto_result = models.CharField('자동판단결과', max_length=10, default='')
-    vulnerability = models.ForeignKey('Vulnerability', on_delete=models.CASCADE,)
+    vulnerability = models.ForeignKey('Vulnerability', related_name='pocs', on_delete=models.CASCADE,)
     point = models.TextField('취약항목', default='')
     found_date = models.DateField('등록일자', null=True, blank=True)
     is_reported = models.BooleanField('전달', default=False)
@@ -18,4 +18,4 @@ class POC(models.Model):
         ordering = ['-found_date']
 
     def __str__(self):
-        return self.name
+        return self.vulnerability

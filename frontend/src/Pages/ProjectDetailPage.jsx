@@ -24,7 +24,7 @@ export default function ProjectDetailPage(){
             projectCategory={currentProject.category || ''}
             projectCompliance={currentProject.compliance || ''}
             projectAreaList={currentProject.start_date || ''}
-            projectAssessors={currentProject.assessors && currentProject.assessors.map((e=>`${e}, `))}
+            projectAssessors={currentProject.assessors && currentProject.assessors.map((e=>`${e.username}, `))}
             projectStartDate={currentProject.start_date || ''}
             projectClient={currentProject.client_company || ''}
             projectEndDate={currentProject.end_date || ''}

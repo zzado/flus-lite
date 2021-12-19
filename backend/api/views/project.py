@@ -5,14 +5,17 @@ from api.models import *
 
 class ProjectListCreateAPI(mixins.ListModelMixin, mixins.CreateModelMixin,generics.GenericAPIView):
     queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+    serializer_class = None
     #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        self.serializer_class = ProjectListSerializer
         return self.list(request)
     
     def post(self, request, *args, **kwargs):
+        self.serializer_class = ProjectSerializer
         return self.create(request)
+
 
 class ProjectDetailUpdateDeleteAPI(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Project.objects.all()
