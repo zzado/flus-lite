@@ -16,5 +16,4 @@ class POC(models.Model):
 
     class Meta:
         ordering = ['-found_date']
-
-
+        

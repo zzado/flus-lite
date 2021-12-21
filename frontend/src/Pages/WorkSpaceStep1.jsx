@@ -2,7 +2,7 @@ import { Fragment, useContext, useState, useRef, useCallback } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { AssetContext } from '../Context/AssetContext';
-import { loadGridData, saveGridData, exportXlsx, importXlsx } from '../Services/realGrid';
+import { loadAssetGridData, saveAssetRealGrid, exportXlsx, importAssetXlsx } from '../Services/realGrid';
 import { GridView, LocalDataProvider } from 'realgrid';
 
 
@@ -18,21 +18,21 @@ export default function WorkSpaceStep1(){
   const [dataProvider, setDataProvider] = useState(null);
 
 
-  const realGridInit = useCallback(() => {
+  const gridInit = useCallback(() => {
     if(gridView === null && dataProvider === null){
       const tempObj1 = new GridView(document.getElementById('realgrid'));
       const tempObj2 = new LocalDataProvider(false);
       setGridView(tempObj1);
       setDataProvider(tempObj2);
-      loadGridData(tempObj1, tempObj2, assetList, areaAlias);
+      loadAssetGridData(tempObj1, tempObj2, assetList, areaAlias);
     }else{
-      loadGridData(gridView, dataProvider, assetList, areaAlias);
+      loadAssetGridData(gridView, dataProvider, assetList, areaAlias);
     }
   },[gridView, dataProvider, assetList, areaAlias]);
 
-  const saveRealGrid = () => {
+  const saveGrid = () => {
     if(gridView && dataProvider){
-      if(saveGridData(gridView, dataProvider, projectId, areaAlias)){
+      if(saveAssetRealGrid(gridView, dataProvider, projectId, areaAlias)){
         AssetContextDispatch({ type:'reset' });
         alert('저장 완료');
         setIsGridView(false);
@@ -44,19 +44,19 @@ export default function WorkSpaceStep1(){
     return (isGridView) ? (
       <Fragment>
       <div className="card-header py-3">
-        <Button size="sm" onClick={()=> loadGridData(gridView, dataProvider, assetList, areaAlias)} style={{marginLeft : '5px'}}>Reload</Button>
-        <Button size="sm" onClick={saveRealGrid} style={{marginLeft : '5px'}}>Save</Button>
-        <Button size="sm" onClick={()=> exportXlsx(gridView)} style={{marginLeft : '5px'}}>Export</Button>
+        <Button size="sm" onClick={()=> loadAssetGridData(gridView, dataProvider, assetList, areaAlias)} style={{marginLeft : '5px'}}>Reload</Button>
+        <Button size="sm" onClick={saveGrid} style={{marginLeft : '5px'}}>Save</Button>
+        <Button size="sm" onClick={()=> exportXlsx(gridView, `[자산] ${areaAlias}.xlsx`, '자산')} style={{marginLeft : '5px'}}>Export</Button>
         <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
         <Button size="sm" onClick={()=> setIsGridView(!isGridView)} style={{marginLeft : '5px'}}>뒤로</Button>
-        <input type="file" onChange={(e)=> importXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
+        <input type="file" onChange={(e)=> importAssetXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
       </div>
       </Fragment>
     ) : 
      (
       <div className="card-header py-3">
         <Button size="sm" as={Link} to={`/a/${projectId}/${areaAlias}/create`} style={{marginLeft : '5px'}}>자산 등록</Button>
-        <Button size="sm" onClick={() => { setIsGridView(!isGridView); realGridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
+        <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
       </div>
     )
   };
@@ -89,7 +89,7 @@ export default function WorkSpaceStep1(){
               <td ><span className="label">{assetObj.assessors}</span></td>
               <td ><span className="label">{assetObj.operator}</span></td>
               <td><span className="label label-secondary">{assetObj.manual_done ? '완료' : '진행중'}</span></td>
-              <td style={{padding:'0'}}><Button as={Link} to={`/v-a/${projectId}/${areaAlias}/${assetObj.id}`} state={{assetObj: assetObj}} size="sm">점검</Button></td>
+              <td style={{padding:'0'}}><Button as={Link} to={`/v-a/${projectId}/${areaAlias}/${assetObj.id}`} state={{assetObj: assetObj}} size="sm" style={{float:"none"}}>점검</Button></td>
             </tr>
             ))}
           </tbody>

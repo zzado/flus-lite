@@ -1,28 +1,61 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
-import { Link, useParams,useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import { getVulListByAssetReq, getAssetReq } from '../utils'
+import { GridView, LocalDataProvider } from 'realgrid';
+import { loadVulsGridData, saveVulRealGrid, exportXlsx, importVulXlsx } from '../Services/realGrid';
+
 
 export default function VulListByAssetPage(){
+  const { state } = useLocation();
   const { projectId, areaAlias, assetId } = useParams();
 
   const [vulResultFilter, setVulResultFilter] = useState(false);
+  
   const [vulList, setVulList] = useState([]);
-  const [assetObj, setAssetObj] = useState({});
+  const [assetObj, setAssetObj] = useState(() => state ? state.assetObj : {});
+  
   const navigate = useRef(useNavigate());
 
+  const [isGridView, setIsGridView] = useState(false);
+  const isFileUploadRef = useRef(false);
+  const [gridView, setGridView] = useState(null);
+  const [dataProvider, setDataProvider] = useState(null);
+
   useEffect(() => {
+    if(Object.keys(assetObj).length===0) getAssetReq(assetId).then( ([result, jsonData])=> setAssetObj(jsonData));
+
     getVulListByAssetReq(assetId).then( ([result, jsonData])=> setVulList(jsonData));
-    getAssetReq(assetId).then( ([result, jsonData])=> setAssetObj(jsonData));
   },[assetId]);
+
+  const gridInit =() => {
+    if(gridView === null && dataProvider === null){
+      const tempObj1 = new GridView(document.getElementById('realgrid'));
+      const tempObj2 = new LocalDataProvider(false);
+      setGridView(tempObj1);
+      setDataProvider(tempObj2);
+      loadVulsGridData(tempObj1, tempObj2, assetObj, vulList);
+    }else{
+      loadVulsGridData(gridView, dataProvider, assetObj, vulList, areaAlias);
+    }
+  };
+
+  const saveGrid = () => {
+    if(gridView && dataProvider){
+      if(saveVulRealGrid(gridView, dataProvider, projectId, areaAlias)){
+        alert('저장 완료');
+        setIsGridView(false);
+      }
+    }
+  };
 
   const SubMenuBox = () => {
     return (
       <Fragment>
       <div className="card-header py-3">
         <span className='m-0 font-weight-bold search-title'>자산 별 취약점</span>
-        <Button size="sm" onClick={()=> navigate.current(`/w/${projectId}/${areaAlias}/step1`)}>뒤로</Button>
+        <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} >뒤로</Button>
       </div>
       </Fragment>
     )
@@ -75,9 +108,20 @@ export default function VulListByAssetPage(){
           <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
             <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter('')}/>미정
           </div>
+          { (!isGridView)? (
+          <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
+          ) : (
+          <>
+          <Button size="sm" onClick={() => { saveGrid(); setIsGridView(!isGridView);}} style={{marginLeft : '5px'}}>저장</Button>
+          <Button size="sm" onClick={()=> exportXlsx(gridView, `[취약점] ${areaAlias}.xlsx`, '취약점')} style={{marginLeft : '5px'}}>Export</Button>
+          <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
+          <input type="file" onChange={(e)=> importVulXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
+          <Button size="sm" onClick={() => { setIsGridView(!isGridView);}} >뒤로</Button>
+          </>
+          )}
         </div>
 
-        <Table responsive="md" >
+        <Table responsive="md" style={ {display : (isGridView)? 'none' : ''} }>
           <thead>
             <tr>
               <th><input type="checkbox"/></th>
@@ -124,7 +168,7 @@ export default function VulListByAssetPage(){
               )}
           </tbody>
         </Table>
-        
+        <div id='realgrid' style={{display : (isGridView)? '' : 'none'}}></div>
         </div>
         
       </div>

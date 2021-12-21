@@ -1,3 +1,346 @@
+export const vulColunms = [
+    {
+        name: "vul_id",
+        fieldName: "vul_id",
+        type: "data",
+        width: 10,
+        visible: false,
+        header: {
+            text: "vul_id"
+        },
+        editable: false,
+    },
+    {
+        "name": "poc_id",
+        "fieldName": "poc_id",
+        "type": "data",
+        "width": 10,
+        "visible": false,
+        "header": {
+            "text": "poc_id"
+        },
+        editable: false,
+    },
+    {
+        name: "asset_code",
+        fieldName: "asset_code",
+        type: "data",
+        width: 40,
+        header: {
+            "text": "자산번호"
+        },
+        mergeRule:{
+            criteria: "value"
+        },
+        editable: false,
+    },
+    {
+        name: "vulitem_code",
+        fieldName: "vulitem_code",
+        type: "data",
+        width: 60,
+        header: {
+            text: "평가항목ID"
+        },
+        autoFilter: true,
+        sortable: true,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "asset_hostname",
+        "fieldName": "asset_hostname",
+        "type": "data",
+        "width": 100,
+        "header": {
+            "text": "호스트명"
+        },
+        "autoFilter": true,
+        mergeRule:{
+            criteria: "value['asset_code']",
+        },
+        editable: false,
+    },
+    {
+        "name": "asset_platform",
+        "fieldName": "asset_platform",
+        "type": "data",
+        "width": 60,
+        "header": {
+            "text": "자산종류"
+        },
+        "autoFilter": true,
+        mergeRule:{
+            criteria: "value['asset_code']",
+        },
+        editable: false,
+    },
+    {
+        "name": "vulitem_name",
+        "fieldName": "vulitem_name",
+        "type": "data",
+        "width": 200,
+        "header": {
+            "text": "평가항목명"
+        },
+        "autoFilter": true,
+        "sortable": true,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "vulitem_description",
+        "fieldName": "vulitem_description",
+        "type": "data",
+        "width": 200,
+        "header": {
+            "text": "상세설명"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "vulitem_checking_guide",
+        "fieldName": "vulitem_checking_guide",
+        "type": "data",
+        "width": 200,
+        "header": {
+            "text": "판단방법"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "vulitem_judgment_guide",
+        "fieldName": "vulitem_judgment_guide",
+        "type": "data",
+        "width": 200,
+        "header": {
+            "text": "판단기준"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "vul_gathering_data",
+        "fieldName": "vul_gathering_data",
+        "type": "data",
+        "width": 120,
+        "header": {
+            "text": "정보수집결과"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "vul_status",
+        "fieldName": "vul_status",
+        "type": "data",
+        "width": 120,
+        "header": {
+            "text": "현재상태"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false,
+        editable: false,
+        mergeRule:{
+            criteria: "value['vulitem_code']",
+        }
+    },
+    {
+        "name": "poc_point",
+        "fieldName": "poc_point",
+        "type": "data",
+        "width": 120,
+        "header": {
+            "text": "취약항목"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false
+    },
+    {
+        "name": "poc_note",
+        "fieldName": "poc_note",
+        "type": "data",
+        "width": 80,
+        "header": {
+            "text": "비고"
+        },
+        "editor": {
+            "type": "multiline",
+            "altEnterNewLine": true
+        },
+        "styleName": "multiline-editor",
+        "autoFilter": true,
+        "sortable": false
+    },
+    {
+        "name": "poc_is_new",
+        "fieldName": "poc_is_new",
+        "type": "data",
+        "width": 70,
+        "defaultValue": "N",
+        "header": {
+            "text": "신규여부(Y/N)"
+        },
+        "editor": {
+            "booleanFormat": "N:Y:0",
+            "emptyValue": false
+        },
+        "booleanFormat": "N:Y",
+        "autoFilter": true,
+        "sortable": false
+    },{
+        "name": "poc_found_date",
+        "fieldName": "poc_found_date",
+        "type": "data",
+        "width": 70,
+        "header": {
+            "text": "등록일자"
+        },
+        "autoFilter": true,
+        "sortable": true,
+        "readOnly": true
+    },{
+        "name": "poc_reported_date",
+        "fieldName": "poc_reported_date",
+        "type": "data",
+        "width": 70,
+        "header": {
+            "text": "전달일자"
+        },
+        "autoFilter": true,
+        "sortable": true,
+        "readOnly": true
+    },{
+        "name": "poc_patched_date",
+        "fieldName": "poc_patched_date",
+        "type": "data",
+        "width": 70,
+        "header": {
+            "text": "패치일자"
+        },
+        "autoFilter": true,
+        "sortable": true,
+        "readOnly": true
+    },
+];
+
+export const vulFields = [
+    {
+        "fieldName": "vul_id",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "poc_id",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "asset_code",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vulitem_code",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "asset_hostname",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "asset_platform",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vulitem_name",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vulitem_description",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vulitem_checking_guide",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vulitem_judgment_guide",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vul_gathering_data",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "poc_point",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "vul_status",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "poc_note",
+        "dataType": "text"
+    },
+    {
+        "fieldName": "poc_is_new",
+        "dataType": "boolean",
+        "booleanFormat": "N:Y:0"
+    }
+]
+
+
 export const assetColunms = [
     {
         "name": "id",

@@ -55,12 +55,28 @@ module.exports = global.config = {
         'ISS',
     ],
     
-    ASSET_FIELD : { 
+    ASSET_GRID_FIELD : { 
         FISM : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "manual_done",  "note"],
         INF : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "manual_done",  "note"],
         SRV : ["id", "num", "code",  "name", "asset_value", "platform", "version", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
         DBM : ["id", "num", "code",  "name", "asset_value", "platform", "version", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
         NET : ["id", "num", "code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",   "operator", "assessors", "is_new", "is_test", "is_switch", "is_external", "backup_cycle", "pwd_change_cycle", "manual_done", "note",],
+        ISS : ["id", "num", "code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
+        MOB : ["id", "num", "code",  "name", "asset_value", "platform", "operator", "assessors", "is_new", "is_test", "is_financial", "manual_done", "note"],
+        WEB : ["id", "num", "code",  "name", "asset_value", "ip_url", "operator", "assessors", "is_new", "is_test", "is_financial", "is_https", "manual_done", "note"],
+        HTS : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "is_test", "is_financial", "manual_done",  "note"]
+    },
+
+    VUL_GRID_FIELD : { 
+        INF : ["id", "num", "code",  "name", "asset_value", "operator", "assessors", "is_new", "manual_done",  "note"],
+
+        SRV : ["vul_id","poc_id", "asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+        DBM : ["vul_id","poc_id", "asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+        NET : ["vul_id","poc_id", "asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+        //SRV : ["vul_id","poc_id", "asset_code", "asset_hostname", "asset_platform", "vulitem_name",  "vulitem_code", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "poc_point", "poc_found_date", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
         ISS : ["id", "num", "code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "manual_done", "note",],
         MOB : ["id", "num", "code",  "name", "asset_value", "platform", "operator", "assessors", "is_new", "is_test", "is_financial", "manual_done", "note"],
         WEB : ["id", "num", "code",  "name", "asset_value", "ip_url", "operator", "assessors", "is_new", "is_test", "is_financial", "is_https", "manual_done", "note"],
