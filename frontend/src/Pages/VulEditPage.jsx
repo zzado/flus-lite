@@ -8,12 +8,38 @@ import { faCaretSquareDown, faCaretSquareUp } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FileUploader } from "react-drag-drop-files";
 
+
+
 const stateReducer = (state, action) => {
-  console.log(action);
-  return {
-    ...state,
-    [action.name]: action.value,
-  };
+  if(action.type){
+    switch(action.type) {
+      case 'pocListAppend':
+        return { 
+          ...state,
+          pocList: [...state.pocList, action.value] 
+        }
+      case 'pocListDelete':
+        return { 
+          ...state,
+          pocList: state.pocList.filter((e, idx) => idx !== action.value)
+        }
+      case 'pocListUpdate':
+        state.pocList[action.idx][action.value.name] = action.value.value
+        return { 
+          ...state,
+          pocList: state.pocList
+        }
+      
+      default:
+        return state;
+    }
+  }else{
+    return {
+      ...state,
+      [action.name]: action.value,
+    }
+  }
+    
 };
 
 export default function VulEditPage(props){
@@ -49,7 +75,6 @@ export default function VulEditPage(props){
     showHiddenField,
     pocList
   } = pageState;
-
 
   useEffect(() => {
     if(Object.keys(vulObj).length === 0){
@@ -137,13 +162,15 @@ export default function VulEditPage(props){
               </tr>
               <tr>
                 <th colSpan={1}>전달</th>
-                <td><Select value={vulReported} onChange={(e) => pageStateDispatch( {name: 'vulReported', value: e }) } options={ VUL_FIELD.REPROTED }/></td>
+                <td colSpan={2}><Select value={vulReported} onChange={(e) => pageStateDispatch( {name: 'vulReported', value: e }) } options={ VUL_FIELD.REPROTED }/></td>
                 <th colSpan={1}>조치</th>
-                <td ><Select value={vulPatched} onChange={(e) => pageStateDispatch( {name: 'vulPatched', value: e }) } options={ VUL_FIELD.PATCHED }/></td>
+                <td colSpan={2}><Select value={vulPatched} onChange={(e) => pageStateDispatch( {name: 'vulPatched', value: e }) } options={ VUL_FIELD.PATCHED }/></td>
                 <th colSpan={1}>신규취약점</th>
-                <td><Select value={vulNew} onChange={(e) => pageStateDispatch( {name: 'vulNew', value: e }) } options={ VUL_FIELD.NEW }/></td>
+                <td colSpan={2}><Select value={vulNew} onChange={(e) => pageStateDispatch( {name: 'vulNew', value: e }) } options={ VUL_FIELD.NEW }/></td>
+              </tr>
+              <tr>
                 <th colSpan={1}>첨부파일</th>
-                <td colSpan={3}>
+                <td colSpan={9}>
                   <FileUploader name="file" types={["JPG", "PNG", "GIF"]} />
                 </td>
               </tr>
@@ -152,8 +179,7 @@ export default function VulEditPage(props){
 
           <div className="card-header py-3">
             <span className="m-0 font-weight-bold">취약항목</span>
-            <Button size="sm" style={{marginRight: '5px', marginLeft: '15px', float: 'none'}}>추가</Button>
-            <Button size="sm" style={{marginRight: '5px', marginLeft: '5px', float: 'none'}}>삭제</Button>
+            <Button size="sm" onClick={ ()=> pageStateDispatch({type:'pocListAppend', value: {point:'zzado'} })} style={{marginRight: '5px', marginLeft: '15px', float: 'none'}}>추가</Button>
           </div>
 
           <Table responsive="md" hover >
@@ -175,13 +201,13 @@ export default function VulEditPage(props){
               <tr key = {idx}>
                 <td><input type="checkbox" /></td>
                 <td>{idx+1}</td>
-                <td><input defaultValue={pocObj.point} style={{width:'100%'}}/></td>
-                <td>{pocObj.found_date}</td>
-                <td>{pocObj.reported_date}</td>
-                <td>{pocObj.is_patched}</td>
-                <td>{pocObj.is_new}</td>
+                <td><input type="text" name="point" value={pocObj.point} onChange={(e)=> pageStateDispatch({type:'pocListUpdate', idx: idx, value: e.target })} style={{width:'100%'}}/></td>
+                <td><input type="date" name="found_date" value={pocObj.found_date} onChange={(e)=> pageStateDispatch({type:'pocListUpdate', idx: idx, value: e.target })} style={{width:'100%'}}/></td>
+                <td><input type="date"  name="reported_date" value={pocObj.reported_date} onChange={(e)=> pageStateDispatch({type:'pocListUpdate', idx: idx, value: e.target })} style={{width:'100%'}}/></td>
+                <td><input type="date" name="patched_date" value={pocObj.patched_date} onChange={(e)=> pageStateDispatch({type:'pocListUpdate', idx: idx, value: e.target })} style={{width:'100%'}}/></td>
+                <td><Select options={ VUL_FIELD.NEW }/></td>
                 <td>{pocObj.note}</td>
-                <td>삭제</td>
+                <td><Button size="sm" onClick={()=> pageStateDispatch({type:'pocListDelete', value: idx })} style={{float: 'none'}}>X</Button></td>
               </tr>
             )}
             </tbody>
