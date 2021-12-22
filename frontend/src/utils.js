@@ -106,6 +106,16 @@ export const getVulReq = async(vulId)=>{
   return [result, jsonData];
 }
 
+
+export const editVulReq = async(vulId, payload)=>{
+  console.log(payload)
+  const URL = `api/vulnerability/${vulId}/`;
+  const OPTION = {method: 'PUT', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+
 export const getPlatformListReq = async(compliance, areaAlias)=>{
   const URL = `api/platform/${compliance}/${areaAlias}/`;
   const OPTION = {method: 'GET'};

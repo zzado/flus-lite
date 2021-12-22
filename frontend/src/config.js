@@ -84,21 +84,21 @@ module.exports = global.config = {
     },
 
     VUL_FIELD : {
-        STATE :[
+        RESULT :[
             {value: 'Y', label: '취약'},
             {value: 'N', label: '양호'},
             {value: 'NA', label: 'NA'},
             {value: '', label: '미정'}
         ],
-        REPROTED : [
+        IS_REPROTED : [
             {value: true, label: '전달'},
             {value: false, label: '미전달'}
         ],
-        PATCHED : [
+        IS_PATCHED : [
             {value: true, label: '조치'},
             {value: false, label: '미조치'}
         ],
-        NEW : [
+        IS_NEW : [
             {value: true, label: '신규'},
             {value: false, label: '기존'}
         ],
