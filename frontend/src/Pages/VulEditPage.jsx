@@ -10,9 +10,8 @@ const pocListStateReducer = (state, action) => {
     case 'set' :
       return [ ...action.value ];
     case 'append':
-      return [ ...state, action.value ];
+      return [ ...state, { ...action.value } ];
     case 'delete':
-      console.log(state.filter((e, idx) => idx !== action.value))
       return state.filter((e, idx) => idx !== action.value);
     case 'update':
       state[action.idx][action.name] = action.value;
@@ -28,25 +27,32 @@ const vulObjStateReducer = (state, action) => {
 
 export default function VulEditPage(props){
   const { projectId, areaAlias, assetId, vulId } = useParams();
-  const { state } = useLocation();
-  const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, (state) ? state.vulObj : {});
-  const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, vulObj ? vulObj.pocs : []);
+  //const { state } = useLocation();
+  //const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, (state) ? state.vulObj : {});
+  //const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, vulObj ? vulObj.pocs : []);
+  
+  const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, {});
+  const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, []);
   
   useEffect(() => {
-    if(Object.keys(vulObj).length === 0){
-      getVulReq(vulId).then( ([result, jsonData])=> (result)? vulObjDispatch({ type: 'set', value: jsonData}) : console.log('error'));
-      pocListDispatch({ type: 'set', value: vulObj.pocs });
-    }
-  },[vulId, vulObj]);
+    getVulReq(vulId).then( ([result, jsonData])=> { 
+      if(result){
+        vulObjDispatch({ type: 'set', value: jsonData});
+        pocListDispatch({ type: 'set', value: jsonData.pocs });
+      }
+    });
+  },[vulId]);
 
   
-  const saveVulObj = () =>{
-    console.log(pocList);
-    console.log(vulObj);
-    editVulReq(vulId, vulObj).then(([result, jsonData])=> { vulObjDispatch({ type: 'set', value: jsonData}); });
+  const saveVulObj=()=>{
+    editVulReq(vulId, vulObj, pocList).then(([result, jsonData])=> {
+      console.log(jsonData)
+      vulObjDispatch({ type: 'set', value: jsonData});
+      pocListDispatch({ type: 'set', value: jsonData.pocs });
+    });
   }
 
-  const pocTable = useMemo(()=> <POCInfoTable pocList={pocList} pocListDispatch={pocListDispatch}/>, [pocList]);
+  const pocTable = useMemo(()=> <POCInfoTable vulId={parseInt(vulId)} pocList={pocList} pocListDispatch={pocListDispatch}/>, [pocList]);
   const vulTable = useMemo(()=> <VulInfoTable vulObj={vulObj} vulObjDispatch={vulObjDispatch}/>, [vulObj]);
 
   return (

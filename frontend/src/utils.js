@@ -107,11 +107,13 @@ export const getVulReq = async(vulId)=>{
 }
 
 
-export const editVulReq = async(vulId, payload)=>{
-  console.log(payload)
+export const editVulReq = async(vulId, vulObj, pocList)=>{
+  vulObj.pocs = pocList;
+  console.log(vulObj);
   const URL = `api/vulnerability/${vulId}/`;
-  const OPTION = {method: 'PUT', body: JSON.stringify(payload),};
+  const OPTION = {method: 'PUT', body: JSON.stringify(vulObj),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
+  console.log(jsonData)
   return [result, jsonData];
 }
 

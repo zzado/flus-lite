@@ -4,12 +4,12 @@ import Select from 'react-select';
 import { Button } from "react-bootstrap";
 
 export default function POCInfoTable(props){
-  const { pocListDispatch, pocList } = props;
+  const { pocListDispatch, pocList, vulId } = props;
   const { VUL_FIELD } = global.config;
-
+  
   const currentDate = useMemo(()=>{ const temp = new Date(); return `${temp.getFullYear()}-${temp.getMonth()+1}-${temp.getDate()}` },[]);
-  const newPocData = useMemo( ()=> ({id:0, result: 'Y', auto_result: 'Y', found_date: currentDate, is_reported: false, is_new: true, is_patched: false, note:'', point: '', reported_date: '', patched_date: ''}), []);
-
+  const newPocData = useMemo( ()=> ({id:0, result: 'Y', auto_result: 'Y', found_date: currentDate, is_reported: false, is_new: true, is_patched: false, note:'', point: '', reported_date: undefined, patched_date: undefined, vulnerability: vulId}), []);
+  
   return (
     <Fragment>
       <div className="card-header py-3">
