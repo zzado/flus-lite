@@ -52,7 +52,7 @@ export default function VulEditPage(props){
     });
   }
 
-  const pocTable = useMemo(()=> <POCInfoTable vulId={parseInt(vulId)} pocList={pocList} pocListDispatch={pocListDispatch}/>, [pocList]);
+  const pocTable = useMemo(()=> <POCInfoTable vulId={parseInt(vulId)} pocList={pocList} pocListDispatch={pocListDispatch}/>, [vulId, pocList]);
   const vulTable = useMemo(()=> <VulInfoTable vulObj={vulObj} vulObjDispatch={vulObjDispatch}/>, [vulObj]);
 
   return (

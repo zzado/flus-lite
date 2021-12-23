@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import { getVulListByAssetReq, getAssetReq } from '../utils'
@@ -8,15 +8,13 @@ import { loadVulsGridData, saveVulRealGrid, exportXlsx, importVulXlsx } from '..
 
 
 export default function VulListByAssetPage(){
-  const { state } = useLocation();
   const { projectId, areaAlias, assetId } = useParams();
 
   const [vulResultFilter, setVulResultFilter] = useState(false);
   
   const [vulList, setVulList] = useState([]);
-  const [assetObj, setAssetObj] = useState(() => state ? state.assetObj : {});
+  const [assetObj, setAssetObj] = useState({});
   
-  const navigate = useRef(useNavigate());
 
   const [isGridView, setIsGridView] = useState(false);
   const isFileUploadRef = useRef(false);
@@ -24,8 +22,7 @@ export default function VulListByAssetPage(){
   const [dataProvider, setDataProvider] = useState(null);
 
   useEffect(() => {
-    if(Object.keys(assetObj).length===0) getAssetReq(assetId).then( ([result, jsonData])=> setAssetObj(jsonData));
-
+    getAssetReq(assetId).then( ([result, jsonData])=> setAssetObj(jsonData));
     getVulListByAssetReq(assetId).then( ([result, jsonData])=> setVulList(jsonData));
   },[assetId]);
 
@@ -55,7 +52,7 @@ export default function VulListByAssetPage(){
       <Fragment>
       <div className="card-header py-3">
         <span className='m-0 font-weight-bold search-title'>자산 별 취약점</span>
-        <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} >뒤로</Button>
+        <Button size="sm" as={Link} to={`/w/${projectId}/${areaAlias}/step1`} >뒤로</Button>
       </div>
       </Fragment>
     )

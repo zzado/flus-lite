@@ -1,5 +1,5 @@
 import { useEffect, Fragment, useContext, useState, useRef } from 'react';
-import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation  } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import { getAssetReq, deleteAssetReq } from '../utils'
