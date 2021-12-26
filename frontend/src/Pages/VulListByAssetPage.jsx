@@ -4,7 +4,7 @@ import { Table, Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import { getVulListByAssetReq, getAssetReq } from '../utils'
 import { GridView, LocalDataProvider } from 'realgrid';
-import { loadVulsGridData, saveVulRealGrid, exportXlsx, importVulXlsx } from '../Services/realGrid';
+import { loadVulsGridData, saveVulRealGrid, exportVulXlsx, importVulXlsx } from '../Services/vulGridFunc';
 
 
 export default function VulListByAssetPage(){
@@ -105,17 +105,18 @@ export default function VulListByAssetPage(){
           <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
             <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter('')}/>미정
           </div>
-          { (!isGridView)? (
+          
+          { (areaAlias !== 'FISM')?(!isGridView )? (
           <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
           ) : (
           <>
           <Button size="sm" onClick={() => { saveGrid(); setIsGridView(!isGridView);}} style={{marginLeft : '5px'}}>저장</Button>
-          <Button size="sm" onClick={()=> exportXlsx(gridView, `[취약점] ${areaAlias}.xlsx`, '취약점')} style={{marginLeft : '5px'}}>Export</Button>
+          <Button size="sm" onClick={()=> exportVulXlsx(gridView, `[취약점] ${areaAlias}.xlsx`, '취약점')} style={{marginLeft : '5px'}}>Export</Button>
           <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
           <input type="file" onChange={(e)=> importVulXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
           <Button size="sm" onClick={() => { setIsGridView(!isGridView);}} >뒤로</Button>
           </>
-          )}
+          ) : null}
         </div>
 
         <Table responsive="md" style={ {display : (isGridView)? 'none' : ''} }>

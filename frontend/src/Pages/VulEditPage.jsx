@@ -1,5 +1,5 @@
 import { useEffect, Fragment, useReducer, useMemo } from 'react';
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { getVulReq, editVulReq } from '../utils'
 import VulInfoTable from '../Components/VulInfoTable';
@@ -43,7 +43,6 @@ export default function VulEditPage(props){
     });
   },[vulId]);
 
-  
   const saveVulObj=()=>{
     editVulReq(vulId, vulObj, pocList).then(([result, jsonData])=> {
       console.log(jsonData)

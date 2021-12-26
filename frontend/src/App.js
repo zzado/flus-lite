@@ -20,6 +20,10 @@ import AssetEditPage from './Pages/AssetEditPage';
 import WorkSpaceStep1 from './Pages/WorkSpaceStep1';
 import VulEditPage from './Pages/VulEditPage';
 
+
+import WorkSpaceStep2 from './Pages/WorkSpaceStep2';
+import WorkSpaceStep5 from './Pages/WorkSpaceStep5';
+
 import VulListByAssetPage from './Pages/VulListByAssetPage';
 import { AppContextProvider } from './Context/AppContext';
 import { AssetContextProvider } from './Context/AssetContext';
@@ -55,11 +59,11 @@ export default function App (){
           <Route path="v/:projectId/:areaAlias/:assetId/:vulId" element={<WorkSpaceLayOut step={1}><VulEditPage/></WorkSpaceLayOut>} />
 
 
-          <Route path="w/:projectId/:areaAlias/step2" element={<AssetContextProvider><WorkSpaceLayOut step={2}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
+          <Route path="w/:projectId/:areaAlias/step2" element={<AssetContextProvider><WorkSpaceLayOut step={2}><WorkSpaceStep2/></WorkSpaceLayOut></AssetContextProvider>} />
           
           <Route path="w/:projectId/:areaAlias/step3" element={<AssetContextProvider><WorkSpaceLayOut step={3}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
           <Route path="w/:projectId/:areaAlias/step4" element={<AssetContextProvider><WorkSpaceLayOut step={4}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
-          <Route path="w/:projectId/:areaAlias/step5" element={<AssetContextProvider><WorkSpaceLayOut step={5}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
+          <Route path="w/:projectId/:areaAlias/step5" element={<AssetContextProvider><WorkSpaceLayOut step={5}><WorkSpaceStep5/></WorkSpaceLayOut></AssetContextProvider>} />
 
         </Route>
 

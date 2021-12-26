@@ -2,7 +2,7 @@ import { Fragment, useContext, useState, useRef, useCallback } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { AssetContext } from '../Context/AssetContext';
-import { loadAssetGridData, saveAssetRealGrid, exportXlsx, importAssetXlsx } from '../Services/realGrid';
+import { loadAssetGridData, saveAssetRealGrid, exportAssetXlsx, importAssetXlsx } from '../Services/assetGridFunc';
 import { GridView, LocalDataProvider } from 'realgrid';
 
 
@@ -46,7 +46,7 @@ export default function WorkSpaceStep1(){
       <div className="card-header py-3">
         <Button size="sm" onClick={()=> loadAssetGridData(gridView, dataProvider, assetList, areaAlias)} style={{marginLeft : '5px'}}>Reload</Button>
         <Button size="sm" onClick={saveGrid} style={{marginLeft : '5px'}}>Save</Button>
-        <Button size="sm" onClick={()=> exportXlsx(gridView, `[자산] ${areaAlias}.xlsx`, '자산')} style={{marginLeft : '5px'}}>Export</Button>
+        <Button size="sm" onClick={()=> exportAssetXlsx(gridView, `[자산] ${areaAlias}.xlsx`, '자산')} style={{marginLeft : '5px'}}>Export</Button>
         <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
         <Button size="sm" onClick={()=> setIsGridView(!isGridView)} style={{marginLeft : '5px'}}>뒤로</Button>
         <input type="file" onChange={(e)=> importAssetXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>

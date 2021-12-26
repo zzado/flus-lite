@@ -140,6 +140,14 @@ export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
   return [result, jsonData];
 }
 
+export const saveVulGridDataReq = async(payload, projectId, areaAlias, assetId)=>{
+  const URL = `api/realgrid/vul/${projectId}/${areaAlias}/${assetId}`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+
 export const getVulListByAssetReq = async(assetId)=>{
   const URL = `api/vuls-by-asset/${assetId}/`;
   const OPTION = {method: 'GET'};

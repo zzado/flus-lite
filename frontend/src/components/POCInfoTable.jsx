@@ -8,7 +8,7 @@ export default function POCInfoTable(props){
   const { VUL_FIELD } = global.config;
   
   const currentDate = useMemo(()=>{ const temp = new Date(); return `${temp.getFullYear()}-${temp.getMonth()+1}-${temp.getDate()}` },[]);
-  const newPocData = useMemo( ()=> ({id:0, result: 'Y', auto_result: 'Y', found_date: currentDate, is_reported: false, is_new: true, is_patched: false, note:'', point: '', reported_date: undefined, patched_date: undefined, vulnerability: vulId}), []);
+  const newPocData = useMemo( ()=> ({id:0, result: 'Y', auto_result: 'Y', found_date: currentDate, is_reported: false, is_new: true, is_patched: false, note:'', point: '', reported_date: undefined, patched_date: undefined, vulnerability: vulId}), [vulId]);
 
   return (
     <Fragment>
@@ -39,11 +39,11 @@ export default function POCInfoTable(props){
             <td><input type="date" value={pocObj.found_date} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'found_date',value: e.target.value })} style={{width:'100%'}}/></td>
             <td>
               <input type="checkbox" checked={pocObj.is_reported} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'is_reported', value: e.target.checked })} style={{width:'10%'}}/>
-              <input type="date" disabled={!pocObj.is_reported} value={pocObj.reported_date} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'reported_date', value: e.target.value })} style={{width:'85%'}}/>
+              <input type="date" disabled={!pocObj.is_reported} value={pocObj.reported_date || ''} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'reported_date', value: e.target.value })} style={{width:'85%'}}/>
             </td>
             <td>
               <input type="checkbox" name="is_patched" checked={pocObj.is_patched} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'is_patched', value: e.target.checked })} style={{width:'10%'}}/>
-              <input type="date" disabled={!pocObj.is_patched} name="patched_date" value={pocObj.patched_date} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'patched_date', value: e.target.value })} style={{width:'85%'}}/>
+              <input type="date" disabled={!pocObj.is_patched} name="patched_date" value={pocObj.patched_date || ''} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'patched_date', value: e.target.value })} style={{width:'85%'}}/>
             </td>
             <td><Select value={VUL_FIELD.IS_NEW.filter(e=> e.value === pocObj.is_new)} onChange={(e)=> pocListDispatch( {type: 'update', idx: idx, name: "is_new", value: e.value })} options={ VUL_FIELD.IS_NEW }/></td>
             <td><textarea value={pocObj.note} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'note', value: e.target.value })} style={{width:'100%'}}/></td>
