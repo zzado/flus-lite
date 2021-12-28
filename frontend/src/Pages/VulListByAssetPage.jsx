@@ -40,9 +40,9 @@ export default function VulListByAssetPage(){
 
   const saveGrid = () => {
     if(gridView && dataProvider){
-      if(saveVulRealGrid(gridView, dataProvider, projectId, areaAlias)){
+      if(saveVulRealGrid(gridView, dataProvider, projectId, areaAlias, assetId)){
         alert('저장 완료');
-        setIsGridView(false);
+        //setIsGridView(false);
       }
     }
   };
@@ -110,7 +110,7 @@ export default function VulListByAssetPage(){
           <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
           ) : (
           <>
-          <Button size="sm" onClick={() => { saveGrid(); setIsGridView(!isGridView);}} style={{marginLeft : '5px'}}>저장</Button>
+          <Button size="sm" onClick={() => { saveGrid();}} style={{marginLeft : '5px'}}>저장</Button>
           <Button size="sm" onClick={()=> exportVulXlsx(gridView, `[취약점] ${areaAlias}.xlsx`, '취약점')} style={{marginLeft : '5px'}}>Export</Button>
           <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
           <input type="file" onChange={(e)=> importVulXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>

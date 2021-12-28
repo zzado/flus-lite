@@ -71,7 +71,7 @@ export const AppContextProvider = ({children}) => {
     }else{
       appContextDispatch({ type: 'unSetProject' });
     }
-    },[projectList, projectId]);
+  },[projectList, projectId]);
 
   useEffect(() => {
     (areaAlias) ? appContextDispatch({ type: 'setArea', value: areaAlias }) : appContextDispatch({ type: 'unSetArea', value: areaAlias })

@@ -7,3 +7,9 @@ class POCSerializer(serializers.ModelSerializer):
         model = POC
         fields = '__all__'
         extra_kwargs = {'id': {'read_only': False, 'required': True}}
+
+class POC_CUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = POC
+        fields = '__all__'
+        

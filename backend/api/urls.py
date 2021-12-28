@@ -29,4 +29,6 @@ urlpatterns = [
     path('vuls-by-asset/<int:assetId>/', VulnerabilityListByAssetAPI.as_view()),
 
     path('realgrid/asset/<int:projectId>/<str:areaAlias>/', RealGridAssetAPI.as_view()),
+
+    path('realgrid/vul/<int:projectId>/<str:areaAlias>/<int:assetId>/', RealGridVulAPI.as_view()),
 ]

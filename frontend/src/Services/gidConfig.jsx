@@ -89,31 +89,32 @@ export const vulColunms = [
     header: {
         text: "vul_id"
     },
-    //editable: false,
+    editable: false,
   },
   {
     "name": "poc_id",
     "fieldName": "poc_id",
     "type": "data",
     "width": 10,
-    "visible": false,
+    visible: false,
     "header": {
         "text": "poc_id"
     },
-    //editable: false,
+    editable: false,
   },
   {
     name: "asset_code",
     fieldName: "asset_code",
     type: "data",
     width: 40,
+    //visible: false,
     header: {
         "text": "자산번호"
     },
-    mergeRule:{
-        criteria: "value"
-    },
-    //editable: false,
+    // mergeRule:{
+    //     criteria: "value"
+    // },
+    editable: false,
   },
   {
       name: "vulitem_code",
@@ -125,10 +126,10 @@ export const vulColunms = [
       },
       autoFilter: true,
       sortable: true,
-      //editable: false,
+      editable: false,
       mergeRule:{
           criteria: "value['vulitem_code']",
-      }
+      },
   },
   {
       "name": "asset_hostname",
@@ -142,7 +143,7 @@ export const vulColunms = [
       mergeRule:{
           criteria: "value['asset_code']",
       },
-      //editable: false,
+      editable: false,
   },
   {
       "name": "asset_platform",
@@ -156,7 +157,7 @@ export const vulColunms = [
       mergeRule:{
           criteria: "value['asset_code']",
       },
-      //editable: false,
+      editable: false,
   },
   {
       "name": "vulitem_name",
@@ -168,7 +169,7 @@ export const vulColunms = [
       },
       "autoFilter": true,
       "sortable": true,
-      //editable: false,
+      readOnly: true,
       mergeRule:{
           criteria: "value['vulitem_code']",
       }
@@ -188,7 +189,7 @@ export const vulColunms = [
       "styleName": "multiline-editor",
       "autoFilter": true,
       "sortable": false,
-      //editable: false,
+      readOnly: true,
       mergeRule:{
           criteria: "value['vulitem_code']",
       }
@@ -208,7 +209,7 @@ export const vulColunms = [
       "styleName": "multiline-editor",
       "autoFilter": true,
       "sortable": false,
-      //editable: false,
+      readOnly: true,
       mergeRule:{
           criteria: "value['vulitem_code']",
       }
@@ -228,7 +229,7 @@ export const vulColunms = [
       "styleName": "multiline-editor",
       "autoFilter": true,
       "sortable": false,
-      //editable: false,
+      readOnly: true,
       mergeRule:{
           criteria: "value['vulitem_code']",
       }
@@ -272,6 +273,26 @@ export const vulColunms = [
       mergeRule:{
           criteria: "value['vulitem_code']",
       }
+  },
+  {
+    name: "vul_result",
+    fieldName: "vul_result",
+    type: "data",
+    width: 70,
+    header: {
+        text: "취약여부"
+    },
+    editor: {
+        type: "multiline",
+        altEnterNewLine: true
+    },
+    styleName: "multiline-editor",
+    autoFilter: true,
+    sortable: false,
+    // mergeRule:{
+    //   criteria: "value['vulitem_code']",
+    // },
+    //editable : false,
   },
   {
       "name": "poc_point",
@@ -331,7 +352,7 @@ export const vulColunms = [
       },
       "autoFilter": true,
       "sortable": true,
-      "readOnly": true
+      //datetimeFormat : "yyyy-MM-dd"
   },{
       "name": "poc_reported_date",
       "fieldName": "poc_reported_date",
@@ -342,7 +363,7 @@ export const vulColunms = [
       },
       "autoFilter": true,
       "sortable": true,
-      "readOnly": true
+      //datetimeFormat : "yyyy-MM-dd"
   },{
       "name": "poc_patched_date",
       "fieldName": "poc_patched_date",
@@ -353,7 +374,7 @@ export const vulColunms = [
       },
       "autoFilter": true,
       "sortable": true,
-      "readOnly": true
+      //datetimeFormat : "yyyy-MM-dd"
   },
 ];
 
@@ -374,6 +395,10 @@ export const vulFields = [
       "fieldName": "vulitem_code",
       "dataType": "text"
   },
+  {
+    "fieldName": "vul_result",
+    "dataType": "text"
+},
   {
       "fieldName": "asset_hostname",
       "dataType": "text"
@@ -413,6 +438,18 @@ export const vulFields = [
   {
       "fieldName": "poc_note",
       "dataType": "text"
+  },
+  {
+    "fieldName": "poc_reported_date",
+    dataType: "text",
+  },
+  {
+    "fieldName": "poc_patched_date",
+    dataType: "text",
+  },
+  {
+    "fieldName": "poc_found_date",
+    dataType: "text",
   },
   {
       "fieldName": "poc_is_new",

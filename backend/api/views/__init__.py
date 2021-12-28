@@ -3,5 +3,5 @@ from api.views.asset import AssetListCreateAPI, AssetDetailUpdateDeleteAPI, Asse
 from api.views.vulnerability import VulnerabilityDetailUpdateDeleteAPI, VulnerabilityListCreateAPI, VulnerabilityListByAssetAPI
 from api.views.authentication import SignUpAPI, SignInAPI, UserInfoGetAPI, UserListAPI
 from api.views.compliance import ComplianceListAPI, PlatformListAPI
-from api.views.realgrid import RealGridAssetAPI
+from api.views.realgrid import RealGridAssetAPI, RealGridVulAPI
 from api.views.poc import POCDetailUpdateDeleteAPI

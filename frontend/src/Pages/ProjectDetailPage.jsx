@@ -6,7 +6,7 @@ import { deleteProjectReq } from '../utils';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
 
 export default function ProjectDetailPage(){
-  const { appContextState } = useContext(AppContext);
+  const { appContextState, appContextDispatch } = useContext(AppContext);
   const { currentProject } = appContextState;
   const { projectId } = useParams();
   const navigate = useRef(useNavigate());
@@ -33,7 +33,16 @@ export default function ProjectDetailPage(){
           />
           <div className="form-actions">
             <Button size="sm" as={Link} to={`/p/${projectId}/edit`} style={{marginLeft : '5px'}}>편집</Button>
-            <Button size="sm" onClick={()=>{ (window.confirm("프로젝트를 정말 삭제 하시겠습니까?")) ? ((deleteProjectReq(projectId)) ? navigate.current('/p/') : navigate.current('/auth')): console.log('deleted cancel'); }}>삭제</Button>
+            <Button size="sm" onClick={()=>{ 
+              if(window.confirm("프로젝트를 정말 삭제 하시겠습니까?")){
+                if(deleteProjectReq(projectId)){
+                  appContextDispatch({ type: 'reset' });
+                  navigate.current('/p/');
+                }else{
+                  navigate.current('/auth');
+                }
+              }
+              }}>삭제</Button>
 
           </div>
         </div>

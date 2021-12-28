@@ -56,7 +56,8 @@ export function loadAssetGridData(gridView, dataProvider, assetList, areaAlias){
       updatedRow.push({ 'id'  : idx, 'data' : _['updatedCells'] });
     }
     
-    for(let _ of updatedRowList['deleted']) deletedRow.push(dataProvider.getJsonRows(_)[0]['id']);
+    for(let _ of updatedRowList['deleted']) 
+      deletedRow.push(dataProvider.getJsonRow(_)['id']);
     //for(let _ of updatedRowList['deleted']) deletedRow.push(dataProvider.getJsonRow(_));
   
     if(createdRow.length || updatedRow.length || deletedRow.length){

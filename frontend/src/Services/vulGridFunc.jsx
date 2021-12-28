@@ -1,4 +1,4 @@
-import { saveVulGridDataReq } from '../utils';
+import { saveVulGridDataReq, } from '../utils';
 import {
   setGridViewCommonConfig,
   setDataProviderCommonConfig,
@@ -14,7 +14,7 @@ export function loadVulsGridData(gridView, dataProvider, assetObj, vulList) {
   let fields = vulFields;
 
   for (let field of global.config.VUL_GRID_FIELD[assetObj.area_alias]) {
-    console.log(field);
+    //console.log(field);
     columns.push(vulColunms.find((e) => e.name === field));
   }
   //console.log(fields);
@@ -29,7 +29,7 @@ export function loadVulsGridData(gridView, dataProvider, assetObj, vulList) {
   }
 
   setGridViewCommonConfig(gridView);
-  setGridViewVulConfig(gridView);
+  setGridViewVulConfig(gridView, dataProvider);
   setDataProviderCommonConfig(dataProvider);
   setDataProviderVulConfig(dataProvider);
 }
@@ -53,6 +53,7 @@ function convertVulJsonData(assetObj, vulList) {
       vulitem_judgment_guide: vulObj.vulnerability_item.judgment_guide,
       vul_gathering_data: vulObj.gathering_data,
       vul_status: vulObj.status,
+      vul_result: vulObj.result,
       poc_id: '',
       poc_point: '',
       poc_found_date: '',
@@ -75,6 +76,7 @@ function convertVulJsonData(assetObj, vulList) {
           tempObj2.vulitem_description = '';
           tempObj2.vulitem_checking_guide = '';
           tempObj2.vulitem_judgment_guide = '';
+          tempObj2.vul_result = 'Y';
           tempObj2.vul_status = '';
           tempObj2.vul_gathering_data = '';
           tempObj2.vulitem_name = '';
@@ -87,7 +89,7 @@ function convertVulJsonData(assetObj, vulList) {
   }
   return resultList;
 }
-export function saveVulRealGrid(gridView, dataProvider, projectId, areaAlias) {
+export function saveVulRealGrid(gridView, dataProvider, projectId, areaAlias, assetId) {
   gridView.commit(true);
 
   let invaildColumns = gridView.validateCells(null, false);
@@ -108,13 +110,14 @@ export function saveVulRealGrid(gridView, dataProvider, projectId, areaAlias) {
   }
 
   for (let _ of dataProvider.getUpdatedCells(null)) {
-    const vulIdx = dataProvider.getJsonRow(_['__rowId'])['vul_id'];
-    const pocIdx = dataProvider.getJsonRow(_['__rowId'])['poc_id'];
-    updatedRow.push({ vulId: vulIdx, pocId: pocIdx, data: _['updatedCells'] });
+    const rowData = dataProvider.getJsonRow(_['__rowId']);
+    updatedRow.push({ vul_id: rowData['vul_id'], poc_id: rowData['poc_id'], data: _['updatedCells'] });
   }
-
-  for (let _ of updatedRowList['deleted'])
-    deletedRow.push(dataProvider.getJsonRows(_)[0]['id']);
+  console.log(updatedRowList['deleted']);
+  for (let _ of updatedRowList['deleted']){
+    const rowData = dataProvider.getJsonRow(_);
+    deletedRow.push({ vul_id: rowData['vul_id'], poc_id: rowData['poc_id'] });
+  }
   //for(let _ of updatedRowList['deleted']) deletedRow.push(dataProvider.getJsonRow(_));
 
   if (createdRow.length || updatedRow.length || deletedRow.length) {
@@ -124,8 +127,12 @@ export function saveVulRealGrid(gridView, dataProvider, projectId, areaAlias) {
       deletedRow: deletedRow,
     };
     console.log(gridData);
+    gridView.showToast({'message':'저장중입니다..'}, true);
+    saveVulGridDataReq(gridData, projectId, areaAlias, assetId).then( ([result, jsonData]) => {
+      if(result) { gridView.hideToast(); dataProvider.clearRowStates(true,false); console.log(jsonData)} else {console.log(jsonData)}
+    });
 
-    return true;
+    //return true;
   } else {
     alert('변경사항이 없습니다');
     return false;
@@ -212,6 +219,7 @@ function setDataProviderVulConfig(dataProvider) {
     restoreMode: 'explicit',
   });
 
+
   dataProvider.onRowInserted = function (prov, row) {
     const vulCode = prov.getValue(row - 1, 'vulitem_code');
     const vulId = prov.getValue(row - 1, 'vul_id');
@@ -220,10 +228,57 @@ function setDataProviderVulConfig(dataProvider) {
     prov.setValue(row, 'asset_code', assetCode);
     prov.setValue(row, 'vul_id', vulId);
     prov.setValue(row, 'poc_id', 0);
+    const temp = new Date(); 
+    const currentDate = `${temp.getFullYear()}-${temp.getMonth()+1}-${temp.getDate()}`;
+    prov.setValue(row, 'poc_found_date', currentDate);
+    prov.setValue(row, 'vul_result', 'Y');
+    //prov.setValue(row-1, 'vul_result', 'Y');
+    //poc_reported_date
   };
 }
 
-function setGridViewVulConfig(gridView) {}
+function setGridViewVulConfig(gridView, dataProvider) {
+  //gridView.setRowGroup({mergeMode: true});
+  gridView.setRowStyleCallback((grid, item, fixed) =>{
+    const vulResult = grid.getValue(item.index, "vul_result");
+    if (vulResult === 'Y') {
+      return {styleName : 'grid-vul-Y'};
+    }else if(vulResult === 'N'){
+      return {styleName : 'grid-vul-N'};
+    }else if(vulResult === 'NA'){
+      return {styleName : 'grid-vul-NA'};
+    }else{
+      return null;
+    }
+  });
+
+  gridView.onValidateRow =  function (grid, itemIndex, dataRow, inserting, values) {
+  //  console.log(dataProvider.getJsonRow(dataRow))
+  //  console.log(values) 
+  };
+
+  gridView.onValidateColumn = (grid, column, inserting, value) =>{
+    let error = {level:'error', message: ''};
+    if(column.fieldName === 'vul_result'){
+      if( !(value === 'Y' || value === 'N' || value === '' || value === 'NA') ){
+        error.message = `${column.fieldName} 필드는 'Y', 'N', 'NA' 또는 공백만 입력 가능합니다`;
+        return error;
+      }
+    }else if(column.fieldName.includes('date')){
+      if( value === null || value === '' || value === undefined){
+        return null
+      }else{
+        console.log(value)
+        if( !value.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/) ){
+          error.message = `${column.fieldName} 필드는 'YYYY-MM-DD' 형식으로 작성해주세요.`;
+          return error;
+        }
+      }
+    }
+  }
+
+
+}
 
 export function exportVulXlsx(gridView, exportFileName, exportSheetName) {
   gridView.exportGrid({

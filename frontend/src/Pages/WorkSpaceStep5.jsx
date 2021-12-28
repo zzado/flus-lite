@@ -2,8 +2,6 @@ import { Fragment, useContext, useState, useRef, useCallback } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { AssetContext } from '../Context/AssetContext';
-import { loadAssetGridData, saveAssetRealGrid, exportAssetXlsx, importAssetXlsx } from '../Services/assetGridFunc';
-import { GridView, LocalDataProvider } from 'realgrid';
 
 
 export default function WorkSpaceStep5(){
@@ -14,32 +12,7 @@ export default function WorkSpaceStep5(){
   const [isGridView, setIsGridView] = useState(false);
   const isFileUploadRef = useRef(false);
 
-  const [gridView, setGridView] = useState(null);
-  const [dataProvider, setDataProvider] = useState(null);
 
-
-  const gridInit = useCallback(() => {
-    if(gridView === null && dataProvider === null){
-      const tempObj1 = new GridView(document.getElementById('realgrid'));
-      const tempObj2 = new LocalDataProvider(false);
-      setGridView(tempObj1);
-      setDataProvider(tempObj2);
-      loadAssetGridData(tempObj1, tempObj2, assetList, areaAlias);
-    }else{
-      loadAssetGridData(gridView, dataProvider, assetList, areaAlias);
-    }
-  },[gridView, dataProvider, assetList, areaAlias]);
-
-  const saveGrid = () => {
-    if(gridView && dataProvider){
-      if(saveAssetRealGrid(gridView, dataProvider, projectId, areaAlias)){
-        AssetContextDispatch({ type:'reset' });
-        alert('저장 완료');
-        setIsGridView(false);
-      }
-    }
-  };
-  
   const SubMenuBox = () => {
     return(
       <Fragment>
