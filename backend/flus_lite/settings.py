@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    # legacy
+    'markdown_deux',
 ]
 
 REST_FRAMEWORK = {
@@ -144,4 +146,12 @@ G_PLATFORM_INFO = {}
 COMMON_ERROR_MESSAGE = {'error':'error'}
 
 AREA_SIGNATURE = {"FISM": "M", "SRV": "S", "DBM": "D", "INF": "I", "NET": "N", "ISS": "P", "WEB": "W", "MOB": "V", "HTS": "H", "PEN": "PT", "CSP": "CSP", "SBO": "SBO"}
+AREA_CN_LISTS = {"FISM": "정보보호관리체계", "SRV": "서버", "DBM": "데이터베이스", "INF": "네트워크 인프라", "NET": "네트워크 장비", "ISS": "정보보호시스템 장비", "WEB": "웹 애플리케이션", "MOB": "모바일 애플리케이션", "HTS": "HTS", "PEN": "모의해킹", "CSP": "클라우드컴퓨팅서비스 제공자", "SBO": "전자금융보조업자"}
+
 CORS_ORIGIN_ALLOW_ALL = True
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+) 
