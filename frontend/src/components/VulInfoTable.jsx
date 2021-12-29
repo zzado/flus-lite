@@ -1,9 +1,10 @@
-import { Fragment, useState } from 'react';
-import { Table } from "react-bootstrap";
+import { Fragment, useState, useRef } from 'react';
 import { faCaretSquareDown, faCaretSquareUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FileUploader } from "react-drag-drop-files";
+import { Table, Button } from "react-bootstrap";
 import Select from 'react-select';
+import { createScreenshotReq } from '../utils'
 
 export default function VulInfoTable(props){
   const { vulObj, vulObjDispatch } = props;
@@ -70,12 +71,6 @@ export default function VulInfoTable(props){
             <td colSpan={2}><Select value={VUL_FIELD.IS_PATCHED.filter(e=> e.value === vulObj.is_patched)} onChange={(e)=> vulObjDispatch( {name: 'is_patched', value: e.value }) } options={ VUL_FIELD.IS_PATCHED }/></td>
             <th colSpan={1}>신규취약점</th>
             <td colSpan={2}><Select value={VUL_FIELD.IS_NEW.filter(e=> e.value === vulObj.is_new)} onChange={(e)=> vulObjDispatch( {nname: 'is_new', value: e.value }) } options={ VUL_FIELD.IS_NEW }/></td>
-          </tr>
-          <tr>
-            <th colSpan={1}>첨부파일</th>
-            <td colSpan={9}>
-              <FileUploader name="file" types={["JPG", "PNG", "GIF"]} />
-            </td>
           </tr>
         </tbody>
       </Table>

@@ -4,3 +4,4 @@ from api.models.project import Project
 from api.models.vulnerability import Vulnerability
 from api.models.vulnerability_item import VulnerabilityItem
 from api.models.poc import POC
+from api.models.upload_file import Screenshot

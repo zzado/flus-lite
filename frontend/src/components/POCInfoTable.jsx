@@ -35,10 +35,10 @@ export default function POCInfoTable(props){
           <tr key = {idx}>
             <td></td>
             <td>{idx+1}</td>
-            <td><textarea value={pocObj.point} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'point', value: e.target.value })} style={{width:'100%'}}/></td>
-            <td><input type="date" value={pocObj.found_date} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'found_date',value: e.target.value })} style={{width:'100%'}}/></td>
+            <td><textarea value={pocObj.point || ''} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'point', value: e.target.value })} style={{width:'100%'}}/></td>
+            <td><input type="date" value={pocObj.found_date || ''} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'found_date',value: e.target.value })} style={{width:'100%'}}/></td>
             <td>
-              <input type="checkbox" checked={pocObj.is_reported} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'is_reported', value: e.target.checked })} style={{width:'10%'}}/>
+              <input type="checkbox" checked={pocObj.is_reported || ''} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'is_reported', value: e.target.checked })} style={{width:'10%'}}/>
               <input type="date" disabled={!pocObj.is_reported} value={pocObj.reported_date || ''} onChange={(e)=> pocListDispatch({type:'update', idx: idx, name: 'reported_date', value: e.target.value })} style={{width:'85%'}}/>
             </td>
             <td>

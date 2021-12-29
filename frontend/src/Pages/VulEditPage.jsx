@@ -1,9 +1,11 @@
-import { useEffect, Fragment, useReducer, useMemo } from 'react';
-import { useParams, Link } from "react-router-dom";
+import { useEffect, Fragment, useReducer, useMemo, useRef } from 'react';
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import { getVulReq, editVulReq } from '../utils'
+import { getVulReq, editVulReq, getScreenShotReq } from '../utils'
 import VulInfoTable from '../Components/VulInfoTable';
 import POCInfoTable from '../Components/POCInfoTable';
+import ScreenShotInfoTable from '../Components/ScreenShotInfoTable';
+import { useState } from 'react';
 
 const pocListStateReducer = (state, action) => {
   switch(action.type) {
@@ -33,6 +35,9 @@ export default function VulEditPage(props){
   
   const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, {});
   const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, []);
+  const [ refFileList, setRefFileList ] = useState([]);
+
+  const navigate = useRef(useNavigate());
   
   useEffect(() => {
     getVulReq(vulId).then( ([result, jsonData])=> { 
@@ -41,18 +46,40 @@ export default function VulEditPage(props){
         pocListDispatch({ type: 'set', value: jsonData.pocs });
       }
     });
+    getScreenShotReq(vulId).then( ([result, jsonData])=> { 
+      if(result){
+        setRefFileList(jsonData);
+      }
+    });
   },[vulId]);
 
   const saveVulObj=()=>{
+    if(pocList.length && ( vulObj.result === 'N' || vulObj.result === 'NA' || vulObj.result === '' )){
+      alert('취약항목이 존재하므로 평가결과를 "취약"으로 변경합니다');
+      vulObjDispatch({ name: 'result', value: 'Y'});
+      return false;
+    }
+    if(pocList.length === 0 && vulObj.result === 'Y'){
+      alert('취약항목이 존재하지 않으므로 평가결과를 "양호"으로 변경합니다');
+      vulObjDispatch({ name: 'result', value: 'N'});
+      return false;
+    }
+
     editVulReq(vulId, vulObj, pocList).then(([result, jsonData])=> {
-      console.log(jsonData)
-      vulObjDispatch({ type: 'set', value: jsonData});
-      pocListDispatch({ type: 'set', value: jsonData.pocs });
+      if(result){
+        vulObjDispatch({ type: 'set', value: jsonData});
+        pocListDispatch({ type: 'set', value: jsonData.pocs });
+        navigate.current(`/v-a/${projectId}/${areaAlias}/${assetId}`);
+        return true;
+      }else{ 
+        alert('error')
+      }
     });
   }
 
   const pocTable = useMemo(()=> <POCInfoTable vulId={parseInt(vulId)} pocList={pocList} pocListDispatch={pocListDispatch}/>, [vulId, pocList]);
   const vulTable = useMemo(()=> <VulInfoTable vulObj={vulObj} vulObjDispatch={vulObjDispatch}/>, [vulObj]);
+  const ScreenShotTable = useMemo(()=> <ScreenShotInfoTable refFileList={refFileList} setRefFileList={setRefFileList} vulId={vulId}/>, [refFileList]);
 
   return (
     <Fragment>
@@ -64,6 +91,7 @@ export default function VulEditPage(props){
       </div>
         <div className="card-body">
           { vulTable }
+          { ScreenShotTable }
           { pocTable }
           <div className="form-actions">
           </div>

@@ -5,3 +5,4 @@ from api.views.authentication import SignUpAPI, SignInAPI, UserInfoGetAPI, UserL
 from api.views.compliance import ComplianceListAPI, PlatformListAPI
 from api.views.realgrid import RealGridAssetAPI, RealGridVulAPI
 from api.views.poc import POCDetailUpdateDeleteAPI
+from api.views.upload_file import ScreenShotAPI, ScreenShotByVulAPI

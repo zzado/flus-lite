@@ -22,6 +22,29 @@ export async function APIRequest(URL, OPTION){
   }
 }
 
+export async function LegacyRequest(URL, OPTION){
+  URL = `http://127.0.0.1:8000/${URL}`;
+  OPTION.headers = {};
+  //OPTION.headers['Content-Type'] = 'application/json';
+  
+  const AUTH_TOKEN = localStorage.getItem('Token');
+  if(AUTH_TOKEN !== null) OPTION.headers['Authorization'] = `Token ${AUTH_TOKEN}`;
+  
+  const responseObj = await fetch(URL, OPTION);
+  if(responseObj.ok){
+      return [true, await responseObj.blob()]
+  }else{
+      return [false, await responseObj.blob()]
+  }
+}
+
+export const exportHtmlReporttReq = async(projectId, areaAlias)=>{
+  const URL = `legacy/export-html-report/${projectId}/${areaAlias}/`;
+  const OPTION = {method: 'GET'};
+  const [result, resData] = await LegacyRequest(URL, OPTION);
+  return [result, resData];
+};
+
 export const deleteProjectReq = async(projectId)=>{
   const URL = `api/project/${projectId}/`;
   const OPTION = {method: 'DELETE'};
@@ -132,6 +155,34 @@ export const editAssetReq = async(assetId, payload)=>{
   return [result, jsonData];
 }
 
+
+
+
+
+
+// scr
+export const createScreenshotReq = async(vulId, payload)=>{
+  const URL = `api/screenshots-by-vul/${vulId}/`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getScreenShotReq = async(vulId)=>{
+  const URL = `api/screenshots-by-vul/${vulId}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+
+export const deleteScreenShotReq = async(scrId)=>{
+  const URL = `api/screenshot/${scrId}/`;
+  const OPTION = {method: 'DELETE'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return result;
+};
+//
 
 export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
   const URL = `api/realgrid/asset/${projectId}/${areaAlias}/`;

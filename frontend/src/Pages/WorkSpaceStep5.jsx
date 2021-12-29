@@ -2,24 +2,28 @@ import { Fragment, useContext, useState, useRef, useCallback } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { AssetContext } from '../Context/AssetContext';
-
+import { exportHtmlReporttReq } from '../utils';
+import FileSaver from 'file-saver';
 
 export default function WorkSpaceStep5(){
   const { AssetContextState, AssetContextDispatch } = useContext(AssetContext);
   const { assetList } = AssetContextState;
   const { projectId, areaAlias } = useParams();
 
-  const [isGridView, setIsGridView] = useState(false);
-  const isFileUploadRef = useRef(false);
 
+  const exportHtml = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
+
+  const exportDocx = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
+
+  const exportXlsx = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
 
   const SubMenuBox = () => {
     return(
       <Fragment>
       <div className="card-header py-3">
-        <Button size="sm" onClick={()=> alert(1)} style={{marginLeft : '5px'}}>분야별 결과서(DOCX)</Button>
-        <Button size="sm" onClick={()=> alert(1)} style={{marginLeft : '5px'}}>취약점 목록(HTML)</Button>
-        <Button size="sm" onClick={()=> alert(1)} style={{marginLeft : '5px'}}>취약점 목록(XLSX)</Button>
+        <Button size="sm" onClick={()=> exportDocx()} style={{marginLeft : '5px'}}>분야별 결과서(DOCX)</Button>
+        <Button size="sm" onClick={()=> exportHtml()} style={{marginLeft : '5px'}}>취약점 목록(HTML)</Button>
+        <Button size="sm" onClick={()=> exportXlsx()} style={{marginLeft : '5px'}}>취약점 목록(XLSX)</Button>
       </div>
       </Fragment>
     )
@@ -29,7 +33,7 @@ export default function WorkSpaceStep5(){
     <Fragment>
       <div className="card shadow mb-4">
         <SubMenuBox />
-        <div className="card-body" style={ {display : (isGridView)? 'none' : ''} }>
+        <div className="card-body">
         <Table responsive="md" hover >
           <thead>
             <tr>
@@ -57,7 +61,6 @@ export default function WorkSpaceStep5(){
           </tbody>
         </Table>
         </div>
-        <div id='realgrid' style={{display : (isGridView)? '' : 'none'}}></div>
       </div>
     </Fragment>
   );

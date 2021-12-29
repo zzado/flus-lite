@@ -151,7 +151,6 @@ AREA_CN_LISTS = {"FISM": "정보보호관리체계", "SRV": "서버", "DBM": "�
 CORS_ORIGIN_ALLOW_ALL = True
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-) 
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'static'),)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
