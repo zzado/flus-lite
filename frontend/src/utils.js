@@ -184,6 +184,30 @@ export const deleteScreenShotReq = async(scrId)=>{
 };
 //
 
+// reffile
+export const createRefFileReq = async(vulId, payload)=>{
+  const URL = `api/screenshots-by-vul/${vulId}/`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getRefFileReq = async(vulId)=>{
+  const URL = `api/screenshots-by-vul/${vulId}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+
+export const deleteRefFileReq = async(scrId)=>{
+  const URL = `api/screenshot/${scrId}/`;
+  const OPTION = {method: 'DELETE'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return result;
+};
+//
+
 export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
   const URL = `api/realgrid/asset/${projectId}/${areaAlias}/`;
   const OPTION = {method: 'POST', body: JSON.stringify(payload),};

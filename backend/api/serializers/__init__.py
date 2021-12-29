@@ -4,4 +4,4 @@ from api.serializers.vulnerability import VulnerabilitySerializer
 from api.serializers.user import SignUpUserSerializer, UserSerializer
 from api.serializers.compliance import ComplianceSerializer
 from api.serializers.poc import POCSerializer, POC_CUDSerializer
-from api.serializers.upload_file import ScreenShotCreateSerializer, ScreenShotListSerializer#, ScreenShotCreateSerializer
+from api.serializers.upload_file import ScreenshotSetSerializer, ScreenshotGetSerializer#, ScreenshotSetSerializer

@@ -9,7 +9,6 @@ urlpatterns = [
     path('user/', UserListAPI.as_view()),
 
     path('compliance/', ComplianceListAPI.as_view()),
-
     path('platform/<str:complianceKey>/<str:areaAlias>/', PlatformListAPI.as_view()),
 
     path('project/', ProjectListCreateAPI.as_view()),
@@ -17,21 +16,22 @@ urlpatterns = [
 
     path('asset/', AssetListCreateAPI.as_view()),
     path('asset/<int:pk>/', AssetDetailUpdateDeleteAPI.as_view()),
-
     path('asset-by-project/<int:projectId>/', AssetListByProjectAPI.as_view()),
     path('asset-by-project/<int:projectId>/<str:areaAlias>/', AssetListByAreaAliasAPI.as_view()),
 
     path('vulnerability/', VulnerabilityListCreateAPI.as_view()),
     path('vulnerability/<int:pk>/', VulnerabilityDetailUpdateDeleteAPI.as_view()),
+    path('vuls-by-asset/<int:assetId>/', VulnerabilityListByAssetAPI.as_view()),
 
     path('poc/<int:pk>/', POCDetailUpdateDeleteAPI.as_view()),
 
-    path('vuls-by-asset/<int:assetId>/', VulnerabilityListByAssetAPI.as_view()),
-
     path('realgrid/asset/<int:projectId>/<str:areaAlias>/', RealGridAssetAPI.as_view()),
-
     path('realgrid/vul/<int:projectId>/<str:areaAlias>/<int:assetId>/', RealGridVulAPI.as_view()),
 
     path('screenshot/<int:pk>/', ScreenShotAPI.as_view()),
     path('screenshots-by-vul/<int:vulId>/', ScreenShotByVulAPI.as_view()),
+
+    path('referfile/<int:pk>/', ReferFileAPI.as_view()),
+    path('referfile-by-vul/<int:vulId>/', ReferFileByVulAPI.as_view()),
+
 ]

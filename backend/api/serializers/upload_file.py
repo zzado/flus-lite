@@ -8,7 +8,7 @@ from drf_extra_fields.fields import Base64ImageField
 #         fields = '__all__'
 
 
-class ScreenShotListSerializer(serializers.ModelSerializer):
+class ScreenshotGetSerializer(serializers.ModelSerializer):
     image = serializers.CharField(source='get_encoded_data', read_only=True)
     name = serializers.CharField(source='get_filename', read_only=True)
     class Meta:
@@ -21,7 +21,7 @@ class ScreenShotListSerializer(serializers.ModelSerializer):
         return Screenshot.objects.create(image=image, vulnerability=vulnerability)
 
 
-class ScreenShotCreateSerializer(serializers.ModelSerializer):
+class ScreenshotSetSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     class Meta:
         model = Screenshot

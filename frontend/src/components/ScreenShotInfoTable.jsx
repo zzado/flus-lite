@@ -1,9 +1,5 @@
-import { Fragment, useState, useRef } from 'react';
-import { faCaretSquareDown, faCaretSquareUp } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FileUploader } from "react-drag-drop-files";
+import { Fragment, useRef } from 'react';
 import { Table, Button } from "react-bootstrap";
-import Select from 'react-select';
 import { createScreenshotReq, deleteScreenShotReq } from '../utils'
 
 export default function ScreenShotInfoTable(props){
@@ -29,11 +25,11 @@ export default function ScreenShotInfoTable(props){
       <Table responsive="md" bordered>
         <tbody>
           <tr>
-            <th width="10%">첨부파일 <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{float: 'none'}}>업로드</Button></th>
+            <th width="10%">스크린샷 <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{float: 'none'}}>업로드</Button></th>
             <td width="90%">
               { refFileList.map( (e, idx) =>
                 <div key={idx} style={{'float':'left'}}>
-                <img src={e.image} style={{ "cursor": "pointer", "maxWidth": "150px", "maxHeight": "150px" }}/>
+                <img src={e.image} style={{"maxWidth": "150px", "maxHeight": "150px" }} alt={e.name}/>
                 <p>{ e.name } <Button size="sm" onClick={() => { deleteScreenShotReq(e.id).then(result => result ? setRefFileList(refFileList.filter(e2=>e2.id !== e.id)) : console.log('error')) }} style={{float: 'none'}}>삭제</Button></p>
                 </div>
               )}
