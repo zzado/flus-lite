@@ -1,10 +1,8 @@
-import { Fragment, useState, useRef } from 'react';
+import { Fragment, useState } from 'react';
 import { faCaretSquareDown, faCaretSquareUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FileUploader } from "react-drag-drop-files";
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import Select from 'react-select';
-import { createScreenshotReq } from '../utils'
 
 export default function VulInfoTable(props){
   const { vulObj, vulObjDispatch } = props;

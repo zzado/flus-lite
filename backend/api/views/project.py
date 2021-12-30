@@ -1,39 +1,30 @@
-from api.serializers import *
-from rest_framework import generics, mixins, response, status
+from rest_framework import generics, mixins, response, status, viewsets
 from rest_framework.permissions import IsAuthenticated
+from api.serializers import *
 from api.models import *
 
-class ProjectListCreateAPI(mixins.ListModelMixin, mixins.CreateModelMixin,generics.GenericAPIView):
+class ProjectAPI(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = None
     #permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        self.serializer_class = ProjectListSerializer
-        return self.list(request)
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = ProjectGetSerializer
+        return super().list(request, *args, **kwargs)
     
-    def post(self, request, *args, **kwargs):
-        self.serializer_class = ProjectSerializer
-        return self.create(request)
+    def create(self, request, *args, **kwargs):
+        self.serializer_class = ProjectSetSerializer
+        return super().create(request, *args, **kwargs)
 
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = ProjectGetSerializer
+        return super().retrieve(request, *args, **kwargs)
 
-class ProjectDetailUpdateDeleteAPI(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-    #permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = ProjectSetSerializer
+        return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return response.Response({'result':True}, status=status.HTTP_200_OK)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
+        return super().destroy(request, *args, **kwargs)
+    
 

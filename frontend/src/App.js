@@ -21,12 +21,16 @@ import WorkSpaceStep1 from './Pages/WorkSpaceStep1';
 import VulEditPage from './Pages/VulEditPage';
 
 
-import WorkSpaceStep2 from './Pages/WorkSpaceStep2';
+import WorkSpaceStep3 from './Pages/WorkSpaceStep3';
 import WorkSpaceStep5 from './Pages/WorkSpaceStep5';
+import AssetGridPage from './Pages/AssetGridPage';
+import VulGridPage from './Pages/VulGridPage';
 
 import VulListByAssetPage from './Pages/VulListByAssetPage';
 import { AppContextProvider } from './Context/AppContext';
 import { AssetContextProvider } from './Context/AssetContext';
+import { VulsByAssetContextProvider } from './Context/VulsByAssetContext';
+
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'realgrid/dist/realgrid-style.css'
@@ -54,14 +58,31 @@ export default function App (){
             <Route path=":assetId/edit" element={<AssetEditPage/>}/>
           </Route>
           
+
           <Route path="w/:projectId/:areaAlias/step1" element={<AssetContextProvider><WorkSpaceLayOut step={1}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
-          <Route path="v-a/:projectId/:areaAlias/:assetId" element={<WorkSpaceLayOut step={1}><VulListByAssetPage/></WorkSpaceLayOut>}/>
+          
+          <Route path="w/:projectId/:areaAlias/asset-grid" element={<AssetContextProvider><WorkSpaceLayOut step={1}><AssetGridPage/></WorkSpaceLayOut></AssetContextProvider>} />
+
+
+          <Route path="/v-a/:projectId/:areaAlias/:assetId/vul-grid" element={
+            <VulsByAssetContextProvider>
+              <WorkSpaceLayOut step={1}>
+                <VulGridPage/>
+              </WorkSpaceLayOut>
+            </VulsByAssetContextProvider>}/>
+          
+          <Route path="v-a/:projectId/:areaAlias/:assetId" element={
+            <VulsByAssetContextProvider>
+              <WorkSpaceLayOut step={1}>
+                <VulListByAssetPage/>
+              </WorkSpaceLayOut>
+            </VulsByAssetContextProvider>}/>
+
+
           <Route path="v/:projectId/:areaAlias/:assetId/:vulId" element={<WorkSpaceLayOut step={1}><VulEditPage/></WorkSpaceLayOut>} />
 
-
-          <Route path="w/:projectId/:areaAlias/step2" element={<AssetContextProvider><WorkSpaceLayOut step={2}><WorkSpaceStep2/></WorkSpaceLayOut></AssetContextProvider>} />
           
-          <Route path="w/:projectId/:areaAlias/step3" element={<AssetContextProvider><WorkSpaceLayOut step={3}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
+          <Route path="w/:projectId/:areaAlias/step3" element={<AssetContextProvider><WorkSpaceLayOut step={3}><WorkSpaceStep3/></WorkSpaceLayOut></AssetContextProvider>} />
           <Route path="w/:projectId/:areaAlias/step4" element={<AssetContextProvider><WorkSpaceLayOut step={4}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
           <Route path="w/:projectId/:areaAlias/step5" element={<AssetContextProvider><WorkSpaceLayOut step={5}><WorkSpaceStep5/></WorkSpaceLayOut></AssetContextProvider>} />
 

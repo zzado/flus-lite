@@ -91,7 +91,7 @@ class Asset(AssetAbstractModel, HardwareAssetModel, ApplicationAssetModel):
 
         vulObjs = []
         for vulItem in vulItemObjs:
-            vulObjs.append(Vulnerability(project=projectObj, asset=self, vulnerability_item=vulItem, status= f'예) {vulItem.default_status}' if vulItem.default_status != "" else ""))
+            vulObjs.append(Vulnerability(project=projectObj, asset=self, vulnerability_item=vulItem, status= f'예) {vulItem.default_status}' if vulItem.default_status != "" else "", is_test=self.is_test))
         print(len(vulObjs))
         Vulnerability.objects.bulk_create(vulObjs)
         return True
@@ -137,7 +137,7 @@ class Asset(AssetAbstractModel, HardwareAssetModel, ApplicationAssetModel):
 
         for vulCode in newAssetVulItemDict:
             vulItem = newAssetVulItemDict[vulCode]
-            bulk_list.append(Vulnerability(project=projectObj, asset=self, vulnerability_item=vulItem, status= f'예) {vulItem.default_status}' if vulItem.default_status != "" else ""))
+            bulk_list.append(Vulnerability(project=projectObj, asset=self, is_test=self.is_test, vulnerability_item=vulItem, status= f'예) {vulItem.default_status}' if vulItem.default_status != "" else ""))
             print(f'[*] New vulItem {vulObj}')
 
         return True

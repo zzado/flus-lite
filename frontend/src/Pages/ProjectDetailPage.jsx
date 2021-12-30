@@ -1,6 +1,6 @@
 import { Fragment, useContext, useRef } from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Badge } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
 import { deleteProjectReq } from '../utils';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
@@ -23,7 +23,7 @@ export default function ProjectDetailPage(){
             projectName={currentProject.name || ''}
             projectCategory={currentProject.category || ''}
             projectCompliance={currentProject.compliance || ''}
-            projectAreaList={currentProject.start_date || ''}
+            projectAreaList={currentProject.area && currentProject.area.map((areaAlias, idx) => (<span key={idx} style={{fontSize:"1rem"}}> <Badge as={Link} to={`/w/${projectId}/${areaAlias.split('-').pop()}/step1`} key={idx} style={{textDecoration:"none"}}> {global.config.AREA_RNAME[areaAlias.split('-').pop()]} </Badge> </span>))}
             projectAssessors={currentProject.assessors && currentProject.assessors.map((e=>`${e.username}, `))}
             projectStartDate={currentProject.start_date || ''}
             projectClient={currentProject.client_company || ''}

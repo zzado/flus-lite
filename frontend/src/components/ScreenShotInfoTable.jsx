@@ -7,14 +7,13 @@ export default function ScreenShotInfoTable(props){
 //  const { VUL_FIELD } = global.config;
 //  const [ hideField, setHideField ] = useState();
   const isFileUploadRef = useRef()
-
-
+  console.log('1')
   const uploadImageFile = (fileObjs) =>{
     for(let fileObj of fileObjs){
       let reader = new FileReader();
       reader.readAsDataURL(fileObj);
       reader.onloadend = () => {
-        createScreenshotReq(vulId, { vulnerability : vulId, image: reader.result }).then(([result, jsonData])=> result? setRefFileList([...refFileList, jsonData]) : console.log('error'));
+        createScreenshotReq({ vulnerability : vulId, image: reader.result }).then(([result, jsonData])=> result? setRefFileList([...refFileList, jsonData]) : console.log(jsonData));
       }
     }
   }
@@ -30,7 +29,7 @@ export default function ScreenShotInfoTable(props){
               { refFileList.map( (e, idx) =>
                 <div key={idx} style={{'float':'left'}}>
                 <img src={e.image} style={{"maxWidth": "150px", "maxHeight": "150px" }} alt={e.name}/>
-                <p>{ e.name } <Button size="sm" onClick={() => { deleteScreenShotReq(e.id).then(result => result ? setRefFileList(refFileList.filter(e2=>e2.id !== e.id)) : console.log('error')) }} style={{float: 'none'}}>삭제</Button></p>
+                <p>{ e.name } <Button size="sm" onClick={() => { deleteScreenShotReq(e.id).then(([result, jsonData]) => result ? setRefFileList(refFileList.filter(e2=>e2.id !== e.id)) : console.log(jsonData)) }} style={{float: 'none'}}>삭제</Button></p>
                 </div>
               )}
               <input ref={isFileUploadRef} onChange={(e)=> uploadImageFile(e.target.files)} type="file" multiple style={{display:'none'}}/>

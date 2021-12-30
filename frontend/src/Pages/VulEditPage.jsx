@@ -30,15 +30,12 @@ const vulObjStateReducer = (state, action) => {
 
 export default function VulEditPage(props){
   const { projectId, areaAlias, assetId, vulId } = useParams();
-  //const { state } = useLocation();
-  //const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, (state) ? state.vulObj : {});
-  //const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, vulObj ? vulObj.pocs : []);
-  
+
   const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, {});
   const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, []);
   const [ screenshotList, setScreenshotList ] = useState([]);
 
-  const [ refFileList, setRefFileList ] = useState([]);
+  // const [ refFileList, setRefFileList ] = useState([]);
 
   const navigate = useRef(useNavigate());
   
@@ -52,29 +49,48 @@ export default function VulEditPage(props){
     getScreenShotReq(vulId).then( ([result, jsonData])=> { 
       if(result) setScreenshotList(jsonData);
     });
-    getRefFileReq(vulId).then( ([result, jsonData])=> { 
-      if(result) setRefFileList(jsonData);
-    });
+    // getRefFileReq(vulId).then( ([result, jsonData])=> { 
+    //   if(result) setRefFileList(jsonData);
+    // });
   },[vulId]);
 
   const saveVulObj=()=>{
+    let payload = {...vulObj };
+    payload.pocs = pocList;
+    
     if(pocList.length && ( vulObj.result === 'N' || vulObj.result === 'NA' || vulObj.result === '' )){
       vulObjDispatch({ name: 'result', value: 'Y'});
-      alert('취약항목이 존재하므로 평가결과를 "취약"으로 변경합니다');
-      return false;
+      alert('취약항목이 존재하므로 평가결과를 "취약"으로 변경하여 저장합니다.');
+      payload.result = 'Y';
     }
     if(pocList.length === 0 && vulObj.result === 'Y'){
       vulObjDispatch({ name: 'result', value: 'N'});
-      alert('취약항목이 존재하지 않으므로 평가결과를 "양호"으로 변경합니다');
-      return false;
+      alert('취약항목이 존재하지 않으므로 평가결과를 "양호"로 변경하여 저장합니다.');
+      payload.result = 'N';
     }
+    
+    for(let poc of pocList){
+      if(poc.is_patched === false && payload.is_patched === true){
+        vulObjDispatch({ name: 'is_patch', value: false});
+        payload.is_patched = false;
+      }
+      if(poc.is_reported === false && payload.is_reported === true){
+        vulObjDispatch({ name: 'is_reported', value: false});
+        payload.is_reported = false;
+      }
+      if(poc.is_new === true && payload.is_new === false){
+        vulObjDispatch({ name: 'is_new', value: true});
+        payload.is_new = true;
+      }
+    }
+    
 
-    editVulReq(vulId, vulObj, pocList).then(([result, jsonData])=> {
+    editVulReq(vulId, payload).then(([result, jsonData])=> {
       if(result){
+        console.log(jsonData)
         vulObjDispatch({ type: 'set', value: jsonData});
         pocListDispatch({ type: 'set', value: jsonData.pocs });
-        navigate.current(`/v-a/${projectId}/${areaAlias}/${assetId}`);
-        return true;
+        alert('저장 완료');
       }else{ 
         alert('error')
       }
@@ -85,7 +101,7 @@ export default function VulEditPage(props){
   const vulTable = useMemo(()=> <VulInfoTable vulObj={vulObj} vulObjDispatch={vulObjDispatch}/>, [vulObj]);
   const ScreenShotTable = useMemo(()=> <ScreenShotInfoTable refFileList={screenshotList} setRefFileList={setScreenshotList} vulId={vulId}/>, [screenshotList, vulId]);
 
-  const ReferFileTable = useMemo(()=> <ReferFileInfoTable refFileList={refFileList} setRefFileList={setRefFileList} vulId={vulId}/>, [refFileList, vulId]);
+  // const ReferFileTable = useMemo(()=> <ReferFileInfoTable refFileList={refFileList} setRefFileList={setRefFileList} vulId={vulId}/>, [refFileList, vulId]);
 
 
   return (
@@ -98,8 +114,8 @@ export default function VulEditPage(props){
       </div>
         <div className="card-body">
           { vulTable }
-          { ScreenShotTable }
-          { ReferFileTable }
+          { areaAlias === 'WEB' || areaAlias === 'MOB' ? ScreenShotTable : null }
+          {/* { ReferFileTable } */}
           { pocTable }
           <div className="form-actions">
           </div>

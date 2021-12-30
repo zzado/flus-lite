@@ -1,62 +1,19 @@
-import { Fragment, useContext, useState, useRef, useCallback } from 'react';
+import { Fragment, useContext } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import { AssetContext } from '../Context/AssetContext';
-import { loadAssetGridData, saveAssetRealGrid, exportAssetXlsx, importAssetXlsx } from '../Services/assetGridFunc';
-import { GridView, LocalDataProvider } from 'realgrid';
-
 
 export default function WorkSpaceStep1(){
-  const { AssetContextState, AssetContextDispatch } = useContext(AssetContext);
+  const { AssetContextState } = useContext(AssetContext);
   const { assetList } = AssetContextState;
   const { projectId, areaAlias } = useParams();
 
-  const [isGridView, setIsGridView] = useState(false);
-  const isFileUploadRef = useRef(false);
 
-  const [gridView, setGridView] = useState(null);
-  const [dataProvider, setDataProvider] = useState(null);
-
-
-  const gridInit = useCallback(() => {
-    if(gridView === null && dataProvider === null){
-      const tempObj1 = new GridView(document.getElementById('realgrid'));
-      const tempObj2 = new LocalDataProvider(false);
-      setGridView(tempObj1);
-      setDataProvider(tempObj2);
-      loadAssetGridData(tempObj1, tempObj2, assetList, areaAlias);
-    }else{
-      loadAssetGridData(gridView, dataProvider, assetList, areaAlias);
-    }
-  },[gridView, dataProvider, assetList, areaAlias]);
-
-  const saveGrid = () => {
-    if(gridView && dataProvider){
-      if(saveAssetRealGrid(gridView, dataProvider, projectId, areaAlias)){
-        AssetContextDispatch({ type:'reset' });
-        alert('저장 완료');
-        setIsGridView(false);
-      }
-    }
-  };
-  
   const SubMenuBox = () => {
-    return (isGridView) ? (
-      <Fragment>
-      <div className="card-header py-3">
-        <Button size="sm" onClick={()=> loadAssetGridData(gridView, dataProvider, assetList, areaAlias)} style={{marginLeft : '5px'}}>Reload</Button>
-        <Button size="sm" onClick={saveGrid} style={{marginLeft : '5px'}}>Save</Button>
-        <Button size="sm" onClick={()=> exportAssetXlsx(gridView, `[자산] ${areaAlias}.xlsx`, '자산')} style={{marginLeft : '5px'}}>Export</Button>
-        <Button size="sm" onClick={() => isFileUploadRef.current.click() } style={{marginLeft : '5px'}}>Import</Button>
-        <Button size="sm" onClick={()=> setIsGridView(!isGridView)} style={{marginLeft : '5px'}}>뒤로</Button>
-        <input type="file" onChange={(e)=> importAssetXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
-      </div>
-      </Fragment>
-    ) : 
-     (
+    return (
       <div className="card-header py-3">
         <Button size="sm" as={Link} to={`/a/${projectId}/${areaAlias}/create`} style={{marginLeft : '5px'}}>자산 등록</Button>
-        <Button size="sm" onClick={() => { setIsGridView(!isGridView); gridInit();}} style={{marginLeft : '5px'}}>일괄 등록</Button>
+        <Button size="sm" as={Link} to={`/w/${projectId}/${areaAlias}/asset-grid`} style={{marginLeft : '5px'}}>일괄 등록</Button>
       </div>
     )
   };
@@ -65,7 +22,7 @@ export default function WorkSpaceStep1(){
     <Fragment>
       <div className="card shadow mb-4">
         <SubMenuBox />
-        <div className="card-body" style={ {display : (isGridView)? 'none' : ''} }>
+        <div className="card-body">
         <Table responsive="md" hover >
           <thead>
             <tr>
@@ -95,7 +52,6 @@ export default function WorkSpaceStep1(){
           </tbody>
         </Table>
         </div>
-        <div id='realgrid' style={{display : (isGridView)? '' : 'none'}}></div>
       </div>
     </Fragment>
   );

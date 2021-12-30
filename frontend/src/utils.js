@@ -16,11 +16,13 @@ export async function APIRequest(URL, OPTION){
   
   const responseObj = await fetch(URL, OPTION);
   if(responseObj.ok){
-      return [true, await responseObj.json()]
+    const data = await responseObj.text()
+    return data ? [true, JSON.parse(data)] : [true, {}]
   }else{
       return [false, await responseObj.json()]
   }
 }
+
 
 export async function LegacyRequest(URL, OPTION){
   URL = `http://127.0.0.1:8000/${URL}`;
@@ -49,14 +51,14 @@ export const deleteProjectReq = async(projectId)=>{
   const URL = `api/project/${projectId}/`;
   const OPTION = {method: 'DELETE'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
-  return result;
+  return [result, jsonData];
 };
 
 export const deleteAssetReq = async(asetId)=>{
   const URL = `api/asset/${asetId}/`;
   const OPTION = {method: 'DELETE'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
-  return result;
+  return [result, jsonData];
 };
 
 export const getUserInfoReq = async()=>{
@@ -130,13 +132,10 @@ export const getVulReq = async(vulId)=>{
 }
 
 
-export const editVulReq = async(vulId, vulObj, pocList)=>{
-  vulObj.pocs = pocList;
-  console.log(vulObj);
+export const editVulReq = async(vulId, vulObj)=>{
   const URL = `api/vulnerability/${vulId}/`;
   const OPTION = {method: 'PUT', body: JSON.stringify(vulObj),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
-  console.log(jsonData)
   return [result, jsonData];
 }
 
@@ -161,8 +160,8 @@ export const editAssetReq = async(assetId, payload)=>{
 
 
 // scr
-export const createScreenshotReq = async(vulId, payload)=>{
-  const URL = `api/screenshots-by-vul/${vulId}/`;
+export const createScreenshotReq = async(payload)=>{
+  const URL = `api/screenshot/`;
   const OPTION = {method: 'POST', body: JSON.stringify(payload),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
@@ -180,33 +179,33 @@ export const deleteScreenShotReq = async(scrId)=>{
   const URL = `api/screenshot/${scrId}/`;
   const OPTION = {method: 'DELETE'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
-  return result;
+  return [result, jsonData];
 };
 //
 
 // reffile
-export const createRefFileReq = async(vulId, payload)=>{
-  const URL = `api/screenshots-by-vul/${vulId}/`;
+export const createRefFileReq = async(payload)=>{
+  const URL = `api/referfile/`;
   const OPTION = {method: 'POST', body: JSON.stringify(payload),};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }
 
 export const getRefFileReq = async(vulId)=>{
-  const URL = `api/screenshots-by-vul/${vulId}/`;
+  const URL = `api/referfiles-by-vul/${vulId}/`;
   const OPTION = {method: 'GET'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
 }
 
 
-export const deleteRefFileReq = async(scrId)=>{
-  const URL = `api/screenshot/${scrId}/`;
+export const deleteRefFileReq = async()=>{
+  const URL = `api/referfile/`;
   const OPTION = {method: 'DELETE'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
-  return result;
+  return [result, jsonData];
 };
-//
+
 
 export const saveAssetGridDataReq = async(payload, projectId, areaAlias)=>{
   const URL = `api/realgrid/asset/${projectId}/${areaAlias}/`;
@@ -225,6 +224,13 @@ export const saveVulGridDataReq = async(payload, projectId, areaAlias, assetId)=
 
 export const getVulListByAssetReq = async(assetId)=>{
   const URL = `api/vuls-by-asset/${assetId}/`;
+  const OPTION = {method: 'GET'};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}
+
+export const getVulListByAreaReq = async(projectId, areaAlias)=>{
+  const URL = `api/vuls-by-asset/${projectId}/${areaAlias}/`;
   const OPTION = {method: 'GET'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];

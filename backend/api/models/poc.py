@@ -15,5 +15,5 @@ class POC(models.Model):
     note = models.TextField('비고', blank=True, default='')
 
     class Meta:
-        ordering = ['-found_date']
+        ordering = ['pk']
         

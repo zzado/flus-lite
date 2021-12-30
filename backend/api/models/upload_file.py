@@ -51,7 +51,7 @@ def get_referfile_upload_to(instance, filename):
 
 class RerferFile(models.Model):
     vulnerability = models.ForeignKey('Vulnerability', related_name='referfiles', on_delete=models.CASCADE,)
-    file = models.FileField('첨부파일', upload_to=get_referfile_upload_to)
+    file = models.FileField('참고파일', upload_to=get_referfile_upload_to)
 
     def get_filename(self):
         return self.file.name.split('/')[-1]
