@@ -1,8 +1,10 @@
-import { Fragment, useState, useContext } from 'react';
+import { Fragment, useState, useContext, useMemo } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import AssetInfoTable from '../Components/AssetInfoTable';
 import { VulsByAssetContext } from '../Context/VulsByAssetContext';
+import VulListTable from '../Components/VulListTable';
+import VulFilterBar from '../Components/VulFilterBar';
 
 export default function VulListByAssetPage(){
   const { projectId, areaAlias, assetId } = useParams();
@@ -12,6 +14,7 @@ export default function VulListByAssetPage(){
   
   const [vulResultFilter, setVulResultFilter] = useState(false);
   
+  const vulTable = useMemo(()=><VulListTable asseCodeDisplay={false} vulList={vulList} vulResultFilter={vulResultFilter}/>, [vulList, vulResultFilter]);
 
   return (
     <Fragment>
@@ -48,74 +51,15 @@ export default function VulListByAssetPage(){
 
           <div className="card-header py-3">
             <span className="font-weight-bold">평가항목</span>
-            <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
-              <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter(false)}/>전체
-            </div>
-            <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
-              <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter('Y')}/>취약
-            </div>
-            <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
-              <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter('N')}/>양호
-            </div>
-            <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
-              <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter('NA')}/>N/A
-            </div>
-            <div className="form-check form-check-inline" style={{marginRight: '5px', marginLeft: '15px', float: 'none', verticalAlign: 'middle'}}>
-              <input name="vulResult" type="radio" onChange={(e)=>setVulResultFilter('')}/>미정
-            </div>
+            <VulFilterBar vulResultFilter={vulResultFilter} setVulResultFilter={setVulResultFilter} serachable={true}/>
             
             { (areaAlias !== 'FISM')? 
               <Button size="sm" as={Link} to={`/v-a/${projectId}/${areaAlias}/${assetId}/vul-grid`} style={{marginLeft : '5px'}}>일괄 등록</Button>
             : null}
           </div>
 
-          <Table responsive="md">
-            <thead>
-              <tr>
-                <th><input type="checkbox"/></th>
-                <th>번호</th>
-                <th>취약점ID</th>
-                <th>항목명 (취약항목 갯수)</th>
-                <th>평가결과</th>
-                <th>신규여부</th>
-                <th>전달</th>
-                <th>조치</th>
-                <th>위험도</th>
-              </tr>
-            </thead>
-            <tbody>
-            { vulList && vulList.map( (vulObj, idx) => 
-              (vulResultFilter === false)?
-                (
-                  <tr key={idx}>
-                    <td><input type="checkbox" /></td>
-                    <td>{idx}</td>
-                    <td>{vulObj.vulnerability_item.code || ''}</td>
-                    <td><Link to={`/v/${projectId}/${areaAlias}/${assetId}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link> { vulObj.pocs.length }</td>
-                    <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
-                    <td>{vulObj.is_new ? '신규' : '기존'}</td>
-                    <td>{vulObj.is_reported ? '전달' : ''}</td>
-                    <td>{vulObj.is_patched ? '조치' : ''}</td>
-                    <td>{vulObj.vulnerability_item.risk || ''}</td>
-                  </tr>
-                  )
-              : (vulResultFilter === vulObj.result )?
-                  (
-                    <tr key={idx}>
-                      <td><input type="checkbox"/></td>
-                      <td>{idx}</td>
-                      <td>{vulObj.vulnerability_item.code || ''}</td>
-                      <td><Link to={`/v/${projectId}/${areaAlias}/${assetId}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link></td>
-                      <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
-                      <td>{vulObj.is_new ? '신규' : '기존'}</td>
-                      <td>{vulObj.is_reported ? '전달' : ''}</td>
-                      <td>{vulObj.is_patched ? '조치' : ''}</td>
-                      <td>{vulObj.vulnerability_item.risk || ''}</td>
-                    </tr>
-                  ) : null
-                )}
-            </tbody>
-          </Table>
+          { vulTable }
+
         </div>
       </div>
     </Fragment>

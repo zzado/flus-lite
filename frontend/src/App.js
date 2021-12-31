@@ -24,12 +24,14 @@ import VulEditPage from './Pages/VulEditPage';
 import WorkSpaceStep3 from './Pages/WorkSpaceStep3';
 import WorkSpaceStep5 from './Pages/WorkSpaceStep5';
 import AssetGridPage from './Pages/AssetGridPage';
-import VulGridPage from './Pages/VulGridPage';
+import VulsByAssetGridPage from './Pages/VulsByAssetGridPage';
 
 import VulListByAssetPage from './Pages/VulListByAssetPage';
 import { AppContextProvider } from './Context/AppContext';
 import { AssetContextProvider } from './Context/AssetContext';
 import { VulsByAssetContextProvider } from './Context/VulsByAssetContext';
+import { VulsByAreaContextProvider } from './Context/VulsByAreaContext'
+import VulsByAreaGridPage from './Pages/VulsByAreaGridPage';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -67,7 +69,7 @@ export default function App (){
           <Route path="/v-a/:projectId/:areaAlias/:assetId/vul-grid" element={
             <VulsByAssetContextProvider>
               <WorkSpaceLayOut step={1}>
-                <VulGridPage/>
+                <VulsByAssetGridPage/>
               </WorkSpaceLayOut>
             </VulsByAssetContextProvider>}/>
           
@@ -79,11 +81,30 @@ export default function App (){
             </VulsByAssetContextProvider>}/>
 
 
-          <Route path="v/:projectId/:areaAlias/:assetId/:vulId" element={<WorkSpaceLayOut step={1}><VulEditPage/></WorkSpaceLayOut>} />
+          <Route path="v/:projectId/:areaAlias/:vulId" element={<WorkSpaceLayOut step={1}><VulEditPage/></WorkSpaceLayOut>} />
 
           
-          <Route path="w/:projectId/:areaAlias/step3" element={<AssetContextProvider><WorkSpaceLayOut step={3}><WorkSpaceStep3/></WorkSpaceLayOut></AssetContextProvider>} />
-          <Route path="w/:projectId/:areaAlias/step4" element={<AssetContextProvider><WorkSpaceLayOut step={4}><WorkSpaceStep1/></WorkSpaceLayOut></AssetContextProvider>} />
+          <Route path="w/:projectId/:areaAlias/step3" element={
+            <VulsByAreaContextProvider>
+              <WorkSpaceLayOut step={3}>
+                <WorkSpaceStep3/>
+              </WorkSpaceLayOut>
+            </VulsByAreaContextProvider>} />
+          
+          <Route path="/w/:projectId/:areaAlias/vuls-grid" element={
+            <VulsByAreaContextProvider>
+              <WorkSpaceLayOut step={3}>
+                <VulsByAreaGridPage/>
+              </WorkSpaceLayOut>
+            </VulsByAreaContextProvider>}/>
+
+          <Route path="w/:projectId/:areaAlias/step4" element={
+            <VulsByAreaContextProvider>
+              <WorkSpaceLayOut step={4}>
+                <WorkSpaceStep3/>
+              </WorkSpaceLayOut>
+            </VulsByAreaContextProvider>} />
+            
           <Route path="w/:projectId/:areaAlias/step5" element={<AssetContextProvider><WorkSpaceLayOut step={5}><WorkSpaceStep5/></WorkSpaceLayOut></AssetContextProvider>} />
 
         </Route>

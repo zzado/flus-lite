@@ -24,7 +24,7 @@ urlpatterns = [
     path('asset-by-project/<int:projectId>/<str:areaAlias>/', AssetListByAreaAliasAPI.as_view()),
 
     path('vuls-by-asset/<int:assetId>/', VulnerabilityListByAssetAPI.as_view()),
-    path('vuls-by-area/<int:projectId>/<str:areaAlias>', VulnerabilityListByAreaAPI.as_view()),
+    path('vuls-by-area/<int:projectId>/<str:areaAlias>/', VulnerabilityListByAreaAPI.as_view()),
 
     path('poc/<int:pk>/', POCDetailUpdateDeleteAPI.as_view()),
 

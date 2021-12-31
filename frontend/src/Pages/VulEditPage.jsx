@@ -38,7 +38,7 @@ export default function VulEditPage(props){
   // const [ refFileList, setRefFileList ] = useState([]);
 
   const navigate = useRef(useNavigate());
-  
+  console.log(vulObj)
   useEffect(() => {
     getVulReq(vulId).then( ([result, jsonData])=> { 
       if(result){
@@ -109,7 +109,7 @@ export default function VulEditPage(props){
       <div className="card shadow mb-4">
       <div className="card-header py-3">
         <span className='m-0 font-weight-bold search-title'>취약점 상세</span>
-        <Button size="sm" as={Link} to={`/v-a/${projectId}/${areaAlias}/${assetId}`}>뒤로</Button>
+        <Button size="sm" as={Link} to={`/v-a/${projectId}/${areaAlias}/${vulObj.asset? vulObj.asset.pk : ''}`}>뒤로</Button>
         <Button size="sm" onClick={ saveVulObj }>저장</Button>
       </div>
         <div className="card-body">

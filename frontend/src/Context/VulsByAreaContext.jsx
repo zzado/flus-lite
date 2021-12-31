@@ -1,16 +1,18 @@
 import { useMemo, createContext, useReducer, useEffect,  useRef } from 'react';
 import { getVulListByAreaReq, getAssetReq } from '../utils'
 import { useNavigate, useParams } from "react-router-dom";
-
+import { Spinner } from 'react-bootstrap'
 export const VulsByAreaContext = createContext();
 
 const initialState = {
   vulList : [],
+  loading : true,
   reset : true,
 };
 
 const contextReducer = (state, action) => {
   const newState = { ...state };
+  console.log(action);
   switch (action.type) {
     case 'setVulList':
       newState.vulList = action.value;
@@ -18,7 +20,11 @@ const contextReducer = (state, action) => {
     case 'reset' :
       newState.reset = !newState.reset;
       return newState;
-    default :
+    case 'loading' :
+      newState.loading = action.value;
+      return newState;
+    
+      default :
       return state;
   }
 };
@@ -29,15 +35,26 @@ export const VulsByAreaContextProvider = ({children}) => {
   const { projectId, areaAlias } = useParams();
   const navigate = useRef(useNavigate());
 
+  //VulsByAreaContextDispatch({type: 'setVulList', value: jsonData}) 
   useEffect(() => {
     if(projectId && areaAlias){
-      getVulListByAreaReq(assetId).then( ([result, jsonData]) => (result)? VulsByAreaContextDispatch({ type: 'setVulList', value: jsonData }) : navigate.current('/auth'));
+      VulsByAreaContextDispatch({type: 'loading', value: true});
+      getVulListByAreaReq(projectId, areaAlias).then( ([result, jsonData]) => {
+        if(result){
+          VulsByAreaContextDispatch({type: 'setVulList', value: jsonData})
+          VulsByAreaContextDispatch({type: 'loading', value: false});
+        }else{
+          navigate.current('/auth');
+        }
+      });
     }
   },[projectId, areaAlias, VulsByAreaContextState.reset]);
 
   return (
-    <VulsByAreaContextState.Provider value={contextValue}>
+    <>
+    <VulsByAreaContext.Provider value={contextValue}>
     { children }
-    </VulsByAreaContextState.Provider>
+    </VulsByAreaContext.Provider>
+  </>
   );
 };

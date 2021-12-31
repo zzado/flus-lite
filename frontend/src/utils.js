@@ -230,7 +230,7 @@ export const getVulListByAssetReq = async(assetId)=>{
 }
 
 export const getVulListByAreaReq = async(projectId, areaAlias)=>{
-  const URL = `api/vuls-by-asset/${projectId}/${areaAlias}/`;
+  const URL = `api/vuls-by-area/${projectId}/${areaAlias}/`;
   const OPTION = {method: 'GET'};
   const [result, jsonData] = await APIRequest(URL, OPTION);
   return [result, jsonData];
