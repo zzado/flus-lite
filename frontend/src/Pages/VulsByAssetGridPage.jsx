@@ -28,11 +28,11 @@ export default function VulsByAssetGridPage(){
       const tempObj2 = new LocalDataProvider(false);
       setGridView(tempObj1);
       setDataProvider(tempObj2);
-      if(vulList.length) loadVulsGridData(tempObj1, tempObj2, assetObj, vulList);
+      if(vulList.length) loadVulsGridData(tempObj1, tempObj2, vulList, areaAlias);
     }else{
-      if(vulList.length) loadVulsGridData(gridView, dataProvider, assetObj, vulList, areaAlias);
+      if(vulList.length) loadVulsGridData(gridView, dataProvider, vulList, areaAlias);
     }
-  },[vulList]);
+  },[vulList, areaAlias]);
   
   const saveGrid = () => {
     if(gridView && dataProvider){

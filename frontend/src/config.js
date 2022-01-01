@@ -31,22 +31,27 @@ module.exports = global.config = {
         'platform': '자산종류',
         'asset_value': '자산가치',
     },
-    
-    EFI_PROJECT_AREALIST : [
-        {value:'FISM', label: '정보보호관리체계'},
-        {value:'SRV', label: '서버'},
-        {value:'DBM', label: '데이터베이스'},
-        {value:'NET', label: '네트워크 장비'},
-        {value:'INF', label: '네트워크 인프라'},
-        {value:'ISS', label: '정보보호시스템'},
-        {value:'WEB', label: '웹 애플리케이션'},
-        {value:'MOB', label: '모바일 애플리케이션'},
-        {value:'HTS', label: 'HTS'},
-    ],
-    OPEN_PROJECT_AREALIST : [
-        {value:'WEB', label: '웹 애플리케이션'},
-        {value:'MOB', label: '모바일 애플리케이션'},
-    ],
+    PROJECT_FIELD : {
+        EFI_PROJECT_AREALIST : [
+            {value:'FISM', label: '정보보호관리체계'},
+            {value:'SRV', label: '서버'},
+            {value:'DBM', label: '데이터베이스'},
+            {value:'NET', label: '네트워크 장비'},
+            {value:'INF', label: '네트워크 인프라'},
+            {value:'ISS', label: '정보보호시스템'},
+            {value:'WEB', label: '웹 애플리케이션'},
+            {value:'MOB', label: '모바일 애플리케이션'},
+            {value:'HTS', label: 'HTS'},
+        ],
+        OPEN_PROJECT_AREALIST : [
+            {value:'WEB', label: '웹 애플리케이션'},
+            {value:'MOB', label: '모바일 애플리케이션'},
+        ],
+        CATEGORY : [
+            { value: '공개용', label: '공개용' },
+            { value: '종합', label: '종합' },
+        ]
+    },
 
     INFRA_DEVICE_AREA_LIST : [
         'SRV',

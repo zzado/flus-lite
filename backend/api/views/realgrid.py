@@ -12,7 +12,7 @@ class RealGridVulAPI(views.APIView):
     def post(self, request, *args, **kwargs):
         areaAlias = kwargs['areaAlias']
         projectId = kwargs['projectId']
-        assetId = kwargs['assetId']
+        #assetId = kwargs['assetId']
         gridData = request.data
         
         dataDict = dict()
@@ -32,11 +32,11 @@ class RealGridVulAPI(views.APIView):
             dataDict['error'] = f'Wrong area alias'
             return response.Response(dataDict)
         
-        try:
-            assetObj = Asset.objects.get(id=assetId)
-        except Asset.DoesNotExist:
-            dataDict['error'] = f'Wrong asset id'
-            return response.Response(dataDict)
+        # try:
+        #     assetObj = Asset.objects.get(id=assetId)
+        # except Asset.DoesNotExist:
+        #     dataDict['error'] = f'Wrong asset id'
+        #     return response.Response(dataDict)
 
         updatedVulList = []
         # createRow

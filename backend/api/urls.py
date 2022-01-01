@@ -29,7 +29,7 @@ urlpatterns = [
     path('poc/<int:pk>/', POCDetailUpdateDeleteAPI.as_view()),
 
     path('realgrid/asset/<int:projectId>/<str:areaAlias>/', RealGridAssetAPI.as_view()),
-    path('realgrid/vul/<int:projectId>/<str:areaAlias>/<int:assetId>/', RealGridVulAPI.as_view()),
+    path('realgrid/vul/<int:projectId>/<str:areaAlias>/', RealGridVulAPI.as_view()),
 
     path('screenshots-by-vul/<int:vulId>/', ScreenShotByVulAPI.as_view()),
 

@@ -24,7 +24,7 @@ const contextReducer = (state, action) => {
       const projectObj = newState.projectList.find( (e) => e.id === parseInt(action.value));
       newState.currentProject = projectObj;
       let sortedArea = [];
-      for(let element of global.config.EFI_PROJECT_AREALIST){
+      for(let element of global.config.PROJECT_FIELD.EFI_PROJECT_AREALIST){
         for(let _ of newState.currentProject.area){
           if(element.value === _.split('-').pop()){
             sortedArea.push(_);

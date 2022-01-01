@@ -7,19 +7,19 @@ import {
 } from './gidConfig';
 import XLSX from 'xlsx';
 
-export function loadVulsGridData(gridView, dataProvider, assetObj, vulList) {
+export function loadVulsGridData(gridView, dataProvider, vulList, areaAlias) {
   gridView.setDataSource(dataProvider);
 
   let columns = [];
   let fields = vulFields;
 
-  for (let field of global.config.VUL_GRID_FIELD[assetObj.area_alias]) {
+  for (let field of global.config.VUL_GRID_FIELD[areaAlias]) {
     //console.log(field);
     columns.push(vulColunms.find((e) => e.name === field));
   }
   //console.log(fields);
   //console.log(columns);
-  let convertedVulList = convertVulJsonData(assetObj, vulList);
+  let convertedVulList = convertVulJsonData(vulList);
   //console.log(convertedVulList);
   dataProvider.setFields(fields);
   gridView.setColumns(columns);
@@ -34,18 +34,18 @@ export function loadVulsGridData(gridView, dataProvider, assetObj, vulList) {
   setDataProviderVulConfig(dataProvider);
 }
 
-function convertVulJsonData(assetObj, vulList) {
+function convertVulJsonData(vulList) {
   console.log(vulList);
   let resultList = [];
   for (let vulObj of vulList) {
     let tempObj = {
       vul_id: vulObj.id,
-      asset_code: assetObj.code,
-      asset_hostname: assetObj.hostname,
+      asset_code: vulObj.asset.code,
+      asset_hostname: vulObj.asset.hostname,
       asset_platform:
-        assetObj.platform === '[[OTHER]]'
-          ? assetObj.platform_t
-          : assetObj.platform,
+        vulObj.asset.platform === '[[OTHER]]'
+          ? vulObj.asset.platform_t
+          : vulObj.asset.platform,
       vulitem_code: vulObj.vulnerability_item.code,
       vulitem_name: vulObj.vulnerability_item.name,
       vulitem_description: vulObj.vulnerability_item.description,
@@ -128,7 +128,7 @@ export function saveVulRealGrid(gridView, dataProvider, projectId, areaAlias, as
     };
     console.log(gridData);
     gridView.showToast({'message':'저장중입니다..'}, true);
-    saveVulGridDataReq(gridData, projectId, areaAlias, assetId).then( ([result, jsonData]) => {
+    saveVulGridDataReq(gridData, projectId, areaAlias).then( ([result, jsonData]) => {
       if(result) { gridView.hideToast(); dataProvider.clearRowStates(true,false); console.log(jsonData)} else {console.log(jsonData)}
     });
 

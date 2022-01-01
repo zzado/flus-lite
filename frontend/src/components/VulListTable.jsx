@@ -6,7 +6,7 @@ export default function VulListTable(props){
   const { vulList, vulResultFilter, asseCodeDisplay } = props;
   const { projectId, areaAlias, assetId } = useParams();
 
-  
+  console.log(asseCodeDisplay)
   return (
     <Fragment>
       <Table responsive="md">
@@ -43,8 +43,8 @@ export default function VulListTable(props){
               (
                 <tr key={idx}>
                   <td><input type="checkbox"/></td>
-                  <td>{idx}</td>
-                  <td>{vulObj.vulnerability_item.code || ''}</td>
+                  <td>{idx+1}</td>
+                  <td>{asseCodeDisplay ? `${vulObj.asset.code}-${vulObj.vulnerability_item.code}` : vulObj.vulnerability_item.code || ''}</td>
                   <td><Link to={`/v/${projectId}/${areaAlias}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link></td>
                   <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
                   <td>{vulObj.is_new ? '신규' : '기존'}</td>

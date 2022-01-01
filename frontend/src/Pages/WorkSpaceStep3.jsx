@@ -1,6 +1,6 @@
 import { Fragment, useContext, useMemo } from 'react';
 import { Link, useParams } from "react-router-dom";
-import { Table, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { VulsByAreaContext } from '../Context/VulsByAreaContext';
 import { useState } from 'react';
 import { Spinner } from 'react-bootstrap'
