@@ -1,6 +1,7 @@
 import { Fragment, useContext } from 'react';
 import { AppContext } from '../Context/AppContext';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
+import { Card, CardHeader, CardContent } from '@mui/material';
 
 export default function ProjectDetailPage(){
   const { appContextState, appContextDispatch } = useContext(AppContext);
@@ -8,16 +9,12 @@ export default function ProjectDetailPage(){
   
   return (
     <Fragment>
-    <div className="container-fluid" style={{width: '95%'}}>
-      <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <span className="m-0 font-weight-bold search-title">프로젝트 상세</span>
-        </div>
-        <div className="card-body">
-          <ProjectInfoTable action={'detail'} projectObj={currentProject} appContextDispatch={appContextDispatch} />
-        </div>
-      </div>
-    </div>
+    <Card>
+      <CardHeader title='프로젝트 정보'/>
+      <CardContent>
+      <ProjectInfoTable action={'detail'} projectObj={currentProject} appContextDispatch={appContextDispatch} />
+      </CardContent>
+    </Card>
     </Fragment>
   );
 }

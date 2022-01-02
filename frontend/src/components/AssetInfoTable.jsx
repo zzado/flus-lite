@@ -1,10 +1,46 @@
-import { Fragment } from 'react';
+import { Fragment, useReducer, useRef, useMemo } from 'react';
 import { Table } from "react-bootstrap";
+import { Link, useNavigate } from 'react-router-dom';
+
+const stateReducer = (state, action) => {
+  if(action.type === 'setProjectObj')
+    return { ...state, ...action.value};
+  else
+    return { ...state, [action.name]: action.value};
+};
+
+const initalState = {
+  name: '',
+  category: '',
+  compliance: '',
+  area: [],
+  assessors: [],
+  start_date: '',
+  end_date: '',
+  client_company: '',
+  assessment_company: '',
+  note: '',
+  allUserList : [],
+  allComplianceList : [],
+}
 
 export default function AssetInfoTable(props){
   
-  const { areaAlias, assetName, assetNum, assetNote, assetHostname, assetSwitchBool, assetExternalBool, assetPWDCycle, assetURL, assetIsFinancialBool, assetIsHttpsBool, assetVersion, assetAssessors, assetPlatform, assetProductModel, assetValue, assetOperator, assetIsTestBool, assetIsServerBool, assetIsNewBool, assetBackUpCycle } = props;
+  const { action, assetObj } = props;
+  const areaAlias = assetObj.area_alias;
+  //const { areaAlias, assetName, assetNum, assetNote, assetHostname, assetSwitchBool, assetExternalBool, assetPWDCycle, assetURL, assetIsFinancialBool, assetIsHttpsBool, assetVersion, assetAssessors, assetPlatform, assetProductModel, assetValue, assetOperator, assetIsTestBool, assetIsServerBool, assetIsNewBool, assetBackUpCycle } = props;
+  const [ assetState, assetStateDispatch ] = useReducer(stateReducer, initalState);
+  const navigate = useRef(useNavigate());
   
+
+  const assetName = useMemo(()=>
+    action === 'detail' ? assetObj.name : 
+    action === 'create' ? <input type='text' onChange={e=>projectStateDispatch({name:'name', value:e.target.value})}/> :  
+    action === 'edit' ? <input type='text' value={projectState.name} onChange={e=>projectStateDispatch({name:'name', value:e.target.value})}/> : 
+    null
+  ,[action, projectObj.name, projectState.name]);
+
+
   const tableRowsByAreaAlias = () => {
     let fragment = null;
     if (global.config.INFRA_DEVICE_AREA_LIST.includes(areaAlias)){
