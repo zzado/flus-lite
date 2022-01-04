@@ -11,7 +11,7 @@ export default function ProjectDetailPage(){
     <Card>
       <CardHeader title='프로젝트 목록'/>
       <CardContent>
-        <ProjectInfoTable action={'create'} projectObj={{}} appContextDispatch={appContextDispatch} />
+        <ProjectInfoTable action={'create'} projectObj={false} appContextDispatch={appContextDispatch} />
       </CardContent>
     </Card>
     </Fragment>

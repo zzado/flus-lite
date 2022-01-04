@@ -112,7 +112,31 @@ module.exports = global.config = {
             {value: true, label: '신규'},
             {value: false, label: '기존'}
         ],
-    }  
+    },
     
 
+    ASSET_FIELD : {
+        IS_SWITCH :[ 
+            {value:true, label:'스위치'}, 
+            {value:false, label:'라우터'} 
+        ],
+        IS_EXTERNAL :[ 
+            {value:true, label:'대외연결'},
+            {value:false, label:'대내연결'} 
+        ],
+
+        IS_FINANCIAL :[ 
+            {value:true, label:'전자금융서비스'},
+            {value:false, label:'비전자금융서비스'}
+        ],
+
+        IS_HTTPS :[
+            {value:true, label:'HTTPS'},
+            {value:false, label:'HTTP'}
+        ],
+        IS_TEST: [ {value:true, label:'테스트'}, {value:false, label:'운영'} ],
+        IS_SERVER : [ {value:true, label:'서버측 점검'}, {value:false, label:'서버측 미점검'} ],
+        IS_NEW:  [ {value:true, label:'신규'}, {value:false, label:'기존'} ],
+    }  
+    
 };

@@ -57,7 +57,7 @@ export default function VulsByAssetGridPage(){
   return (
     <Fragment>
       <div className="card shadow mb-4">
-        <div style={ gridMaxSize ? {'width':'100%', 'height':'100%', 'position':'fixed', 'top': 0, 'left': 0, 'zIndex':1, 'backgroundColor': 'white'} : {'width':'100%', 'height':'700px'}}>
+        <div style={ gridMaxSize ? {'width':'100%', 'height':'100%', 'position':'fixed', 'top': 0, 'left': 0, 'zIndex':9999, 'backgroundColor': 'white'} : {'width':'100%', 'height':'700px'}}>
           <SubMenuBox/>
             <div ref={gridRef} style={{'width':'100%', 'height':'100%'}}/>
         </div>

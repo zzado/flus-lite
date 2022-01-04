@@ -1,32 +1,41 @@
 import { Fragment, useContext } from 'react';
 import { Link } from "react-router-dom";
-import { Dropdown, DropdownButton, Table, Button } from "react-bootstrap";
+import { Dropdown, DropdownButton, Table } from "react-bootstrap";
 import { AppContext } from '../Context/AppContext';
+import { Collapse, List, ListItemIcon, ListItemText, ListSubheader, ListItemButton, Drawer, Divider, Menu, MenuItem, IconButton, CssBaseline, AppBar, Toolbar, Box, Button, Typography, Grid, Container } from '@mui/material';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 
 export default function ProjectListPage(){
   const { appContextState } = useContext(AppContext);
   const { projectList } = appContextState;
 
-  
+  const blackButton = {marginLeft: '5px', float: 'right', backgroundColor:'#1d2124', borderColor: '#171a1d', color: 'white', fontWeight: 'bold', '&:hover': { backgroundColor: 'darkgray', color: 'white',}};
+
   const SubMenuBox = () => {
     return (
-      <div className="emptybox text-center" style={{width: '100%', display: 'inline-flex', flexDirection: 'column'}}>
-        <div style={{width: '100%', margin: '5px 0px'}}>
-        <Button as={Link} size="sm" to="/p/create/" style={{marginLeft: '5px', float: 'right'}}>프로젝트 생성</Button>
+      <Box sx={{width: '100%', display: 'inline-flex', flexDirection: 'column'}}>
+        <Box style={{width: '100%', margin: '5px 0px'}}>
+          <Button variant='cotained' component={Link}  to="/p/create/" sx={{...blackButton}}>프로젝트 생성</Button>
         
-        <DropdownButton size="sm" title="프로젝트 가져오기/내보내기">
-          <Dropdown.Item as={Link} to="/p/create/EFI">프로젝트 가져오기</Dropdown.Item>
-          <Dropdown.Item as={Link} to="/p/create/OPEN">프로젝트 내보내기</Dropdown.Item>
-        </DropdownButton>
-        </div>
-      </div>
+          <PopupState variant="popover">
+            {(popupState) => (
+            <>
+            <Button variant="contained" sx={{...blackButton}} {...bindTrigger(popupState)}>프로젝트 내보내기/가져오기</Button>
+            <Menu {...bindMenu(popupState)}>
+              <MenuItem component={Link} to={`/dashboard`}>프로젝트 내보내기</MenuItem>
+              <MenuItem component={Link} to={`/dashboard`}>프로젝트 가져오기</MenuItem>
+            </Menu>
+            </>
+            )}
+          </PopupState>
+        </Box>
+      </Box>
     )
   };
 
   return (
     <Fragment>
-    <div className="container-fluid" style={{width: '95%'}}>
     <SubMenuBox/>
     <div className="card shadow mb-4">
       <div className="card-header py-3">
@@ -61,7 +70,7 @@ export default function ProjectListPage(){
       </Table>
       </div>
     </div>
-    </div>
+
     </Fragment>
   );
 }

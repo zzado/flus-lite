@@ -33,7 +33,6 @@ import { VulsByAssetContextProvider } from './Context/VulsByAssetContext';
 import { VulsByAreaContextProvider } from './Context/VulsByAreaContext'
 import VulsByAreaGridPage from './Pages/VulsByAreaGridPage';
 
-import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'realgrid/dist/realgrid-style.css'
 //import 'realgrid/dist/realgrid-white.css'
@@ -56,8 +55,9 @@ export default function App (){
 
           <Route path="a/:projectId/:areaAlias/" element={<AssetContextProvider><WorkSpaceLayOut step={1}/></AssetContextProvider>}>
             <Route path="create/" element={<AssetCreatePage/>}/>
-            <Route path=":assetId" element={<AssetDetailPage/>}/>
             <Route path=":assetId/edit" element={<AssetEditPage/>}/>
+            <Route path=":assetId" element={<AssetDetailPage/>}/>
+            
           </Route>
           
 

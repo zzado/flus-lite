@@ -64,32 +64,9 @@ export default function VulsByAssetGridPage(){
           <Button size="sm" as={Link} to={`/w/${projectId}/${areaAlias}/step1`} >뒤로</Button>
         </div>
         <div className="card-body">
-          <AssetInfoTable
-            areaAlias = {areaAlias}
-            assetName={assetObj.name}
-            assetNum = {assetObj.code}
-            assetNote = {assetObj.note}
-            assetHostname = {assetObj.hostname}
-            assetSwitchBool = {assetObj.is_switch? 'true': 'false'}
-            assetExternalBool = {assetObj.is_external? 'true': 'false'}
-            assetBackUpCycle = {assetObj.backup_cycle}
-            assetPWDCycle = {assetObj.pwd_change_cycle}
-            assetURL = {assetObj.ip_url}
-            assetIsFinancialBool = {assetObj.is_financial? 'true': 'false'}
-            assetIsHttpsBool = {assetObj.is_https? 'true': 'false'}
-            assetVersion = {assetObj.version}
-            assetAssessors = {assetObj.assessors}
-            assetPlatform = {assetObj.platform === '[[OTHER]]' ? `기타 (${assetObj.platform_t})` : assetObj.platform }
-            assetProductModel = {assetObj.product_model}
-            assetValue = {assetObj.asset_value}
-            assetOperator = {assetObj.operator}
-            assetAnalysisDoneBool = {assetObj.manual_done? 'true': 'false'}
-            assetIsTestBool = { assetObj.is_test? 'true': 'false'}
-            assetIsServerBool = {assetObj.is_server? 'true': 'false'}
-            assetIsNewBool = {assetObj.is_new? 'true': 'false'}
-          />
+          <AssetInfoTable action={'component'} assetObj={assetObj} areaAlias={areaAlias}/>
 
-          <div style={ gridMaxSize ? {'width':'100%', 'height':'100%', 'position':'fixed', 'top': 0, 'left': 0, 'zIndex':1, 'backgroundColor': 'white'} : {'width':'100%', 'height':'500px'}}>
+          <div style={ gridMaxSize ? {'width':'100%', 'height':'100%', 'position':'fixed', 'top': 0, 'left': 0, 'zIndex':9999, 'backgroundColor': 'white'} : {'width':'100%', 'height':'500px'}}>
             <SubMenuBox/>
             <div ref={gridRef} style={{'width':'100%', 'height':'100%'}}/>
           </div>
