@@ -32,7 +32,7 @@ export const AssetContextProvider = ({children}) => {
 
   useEffect(() => {
     if(projectId && areaAlias){
-      getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? AssetContextDispatch({ type: 'setAssetList', value: jsonData }) : navigate.current('/auth'));
+      getAssetListByAreaAliasReq(projectId, areaAlias).then( ([result, jsonData]) => (result)? AssetContextDispatch({ type: 'assetList', value: jsonData.sort( (e1, e2) => (e1.num  > e2.num) ? 1 : -1 ) }) : navigate.current('/auth'));
     }
   },[projectId, areaAlias, AssetContextState.reset]);
 

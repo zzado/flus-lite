@@ -1,7 +1,7 @@
 import { useMemo, createContext, useReducer, useEffect,  useRef } from 'react';
-import { getVulListByAreaReq, getAssetReq } from '../utils'
+import { getVulListByAreaReq } from '../utils'
 import { useNavigate, useParams } from "react-router-dom";
-import { Spinner } from 'react-bootstrap'
+
 export const VulsByAreaContext = createContext();
 
 const initialState = {

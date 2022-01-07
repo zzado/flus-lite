@@ -1,75 +1,122 @@
-import { Fragment, useContext } from 'react';
-import { Link } from "react-router-dom";
-import { Dropdown, DropdownButton, Table } from "react-bootstrap";
+import { Fragment, useContext, useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from '../Context/AppContext';
-import { Collapse, List, ListItemIcon, ListItemText, ListSubheader, ListItemButton, Drawer, Divider, Menu, MenuItem, IconButton, CssBaseline, AppBar, Toolbar, Box, Button, Typography, Grid, Container } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Tooltip, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Card, CardHeader, CardContent ,Checkbox,  Collapse, List, ListItemIcon, ListItemText, ListSubheader, ListItemButton, Drawer, Divider, Menu, MenuItem, IconButton, CssBaseline, AppBar, Toolbar, Box, Button, Typography, Grid, Container } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteProjectReq } from '../utils';
+import { styled } from '@mui/system';
 
-
+const TableStyle = styled('div')(
+  ({ theme }) => `
+  table {
+    border: 1px solid rgba(224, 224, 224, 1),
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    text-align: center;
+  }
+  th {
+    background-color: #E7EBF0;
+    font-weight : bold
+  }
+  `,
+);
 export default function ProjectListPage(){
-  const { appContextState } = useContext(AppContext);
+  const { appContextState, appContextDispatch } = useContext(AppContext);
   const { projectList } = appContextState;
+  const [ checkedProjectList, setCheckedProjectList ] = useState([]);
+  
+  const navigate = useNavigate();
 
-  const blackButton = {marginLeft: '5px', float: 'right', backgroundColor:'#1d2124', borderColor: '#171a1d', color: 'white', fontWeight: 'bold', '&:hover': { backgroundColor: 'darkgray', color: 'white',}};
+  
+  //const blackButton = {marginLeft: '5px', float: 'right', backgroundColor:'#1d2124', borderColor: '#171a1d', color: 'white', fontWeight: 'bold', '&:hover': { backgroundColor: 'darkgray', color: 'white',}};
 
-  const SubMenuBox = () => {
-    return (
-      <Box sx={{width: '100%', display: 'inline-flex', flexDirection: 'column'}}>
-        <Box style={{width: '100%', margin: '5px 0px'}}>
-          <Button variant='cotained' component={Link}  to="/p/create/" sx={{...blackButton}}>프로젝트 생성</Button>
-        
-          <PopupState variant="popover">
-            {(popupState) => (
-            <>
-            <Button variant="contained" sx={{...blackButton}} {...bindTrigger(popupState)}>프로젝트 내보내기/가져오기</Button>
-            <Menu {...bindMenu(popupState)}>
-              <MenuItem component={Link} to={`/dashboard`}>프로젝트 내보내기</MenuItem>
-              <MenuItem component={Link} to={`/dashboard`}>프로젝트 가져오기</MenuItem>
-            </Menu>
-            </>
-            )}
-          </PopupState>
-        </Box>
-      </Box>
-    )
-  };
+  const onRowClick = (e) =>{
+    const projectid = e.target.parentElement.getAttribute('projectid');
+    if(e.target.type !== 'checkbox') navigate(`/p/${projectid}`);
+  }
 
+  const deleteProject = () =>{
+    // if(window.confirm("프로젝트를 정말 삭제 하시겠습니까?")){
+    //   if(deleteProjectReq(checkedProject)){
+    //     appContextDispatch({ type: 'reset' });
+    //     navigate.current('/p/');
+    //   }else{
+    //     navigate.current('/auth');
+    //   }
+    // }
+  }
+  
   return (
     <Fragment>
-    <SubMenuBox/>
-    <div className="card shadow mb-4">
-      <div className="card-header py-3">
-        <span className="m-0 font-weight-bold search-title">프로젝트 목록</span>
-      </div>
-      <div className="card-body">
-      <Table responsive="md" hover >
-        <thead>
-        <tr>
-            <th></th>
-            <th>번호</th>
-            <th>프로젝트명</th>
-            <th>평가대상기관</th>
-            <th>평가기준</th>
-            <th>시작일</th>
-            <th>종료일</th>
-        </tr>
-        </thead>
-        <tbody>
-        { projectList.map((projectObj, idx) => (
-        <tr key={idx}>
-          <td><input type="checkbox"/></td>
-          <td>{idx+1}</td>
-          <td><Link to={`/p/${projectObj.id}`} key={idx}>{projectObj.name}</Link></td>
-          <td>{projectObj.client_company}</td>
-          <td>{projectObj.compliance}</td>
-          <td>{projectObj.start_date}</td>
-          <td>{projectObj.end_date}</td>
-        </tr>
-        ))}
-        </tbody>
-      </Table>
-      </div>
-    </div>
+    <Card>
+      <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>프로젝트 관리</Typography>} action={ 
+        <>
+        <Tooltip title="프로젝트 가져오기" placement="top" arrow>
+          <IconButton sx={{mr:1}} component={Link} to={`/dashboard`}>
+            <FileUploadIcon sx={{ fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="프로젝트 생성" placement="top" arrow>
+          <IconButton sx={{mr:2}} component={Link} to={`/p/create`}>
+            <AddIcon sx={{ fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="프로젝트 내보내기" placement="top" arrow>
+          <IconButton sx={{mr:1}} component={Link} to={`/dashboard`}>
+            <FileDownloadIcon sx={{ fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="프로젝트 삭제" placement="top" arrow>
+          <IconButton sx={{mr:2}} onClick={deleteProject}>
+            <DeleteIcon sx={{ fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+        </> 
+      }/>
+
+      <CardContent>
+        <TableStyle>
+        <TableContainer>
+          <Table size='medium'>
+            <TableHead>
+              <TableRow >
+                <TableCell padding="checkbox">
+                  <Checkbox color="primary" disabled />
+                </TableCell>
+                <TableCell component="th" scope="row" >프로젝트명</TableCell>
+                <TableCell component="th" scope="row" >평가대상기관</TableCell>
+                <TableCell component="th" scope="row" >평가기준</TableCell>
+                <TableCell component="th" scope="row" >시작일</TableCell>
+                <TableCell component="th" scope="row" >종료일</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            { projectList.map((projectObj, idx) => (
+            <TableRow hover onClick={onRowClick} projectid={projectObj.id} key={projectObj.id}>
+              <TableCell padding="checkbox">
+                <Checkbox color="primary" value={projectObj.id}/>
+              </TableCell>
+              <TableCell component="td">{projectObj.name}</TableCell>
+              <TableCell component="td">{projectObj.client_company}</TableCell>
+              <TableCell component="td">{projectObj.compliance}</TableCell>
+              <TableCell component="td">{projectObj.start_date}</TableCell>
+              <TableCell component="td">{projectObj.end_date}</TableCell>
+            </TableRow>
+            ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        </TableStyle>
+      </CardContent >
+    </Card>
 
     </Fragment>
   );

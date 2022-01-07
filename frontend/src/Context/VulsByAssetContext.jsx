@@ -33,7 +33,7 @@ export const VulsByAssetContextProvider = ({children}) => {
   const contextValue = useMemo(() => ({ VulsByAssetContextState, VulsByAssetContextDispatch }),[VulsByAssetContextState, VulsByAssetContextDispatch]);
   const { assetId } = useParams();
   const navigate = useRef(useNavigate());
-
+  
   useEffect(() => {
     if(assetId){
       getAssetReq(assetId).then( ([result, jsonData])=> result ? VulsByAssetContextDispatch({ type: 'setAssetObj', value: jsonData }) : navigate.current('/auth'));

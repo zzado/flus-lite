@@ -1,29 +1,64 @@
-import { useEffect, Fragment, useContext, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useEffect, Fragment, useState } from 'react';
 import AssetInfoTable from '../Components/AssetInfoTable';
-import { AssetContext } from '../Context/AssetContext';
-import { AppContext } from '../Context/AppContext';
+import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
+import { useParams, useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { deleteAssetReq  } from '../utils';
+import { useAssetContext } from '../Context/AppContext'
+
 
 export default function AssetDetailPage(){
-  const { AssetContextState, AssetContextDispatch } = useContext(AssetContext);
-  const { assetList } = AssetContextState;
-  const { appContextState } = useContext(AppContext);
-  const { currentProject } = appContextState;
+  const { assetObj, resetAssetList} = useAssetContext();
 
-  const { areaAlias, assetId } = useParams();
-  const [ assetObj, setAssetObj ] = useState(false);
+  const navigate = useNavigate();
+  const { projectId, areaAlias, assetId } = useParams();
+  const { ASSET_INIT_STATE } = global.config
+  const [ assetState, setAssetState ] = useState(ASSET_INIT_STATE);
 
   useEffect(() => {
-    setAssetObj(assetList.find(e=>e.id === parseInt(assetId, 10)));
-  },[assetList, assetId]);
+    if(assetObj.name) setAssetState(assetObj);
+  },[assetObj]);
 
+  const deleteAsset = ()=>{
+    if(window.confirm("자산을 정말 삭제 하시겠습니까?")){
+      deleteAssetReq(assetId).then( (result) => {
+        if(result){
+          resetAssetList();
+          navigate(`/w/${projectId}/${areaAlias}/step1`);
+        }
+      });
+    }
+  };
+  
   return (
     <Fragment>
-      <div className="card shadow mb-4">
-        { assetObj ? 
-        <AssetInfoTable action={'detail'} assetList={assetList} projectObj={currentProject} assetObj={assetObj} areaAlias={areaAlias} AssetContextDispatch={AssetContextDispatch}/>
-        : null}
-        </div>
+      <Card>
+      <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>자산 정보</Typography>} action={ 
+        <>
+        <Tooltip title="뒤로가기" placement="top" arrow>
+          <IconButton sx={{mr:1}} onClick={()=>navigate(`/w/${projectId}/${areaAlias}/step1`)}>
+            <ArrowBackIcon sx={{ color:'black', fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="자산 편집" placement="top" arrow>
+          <IconButton sx={{mr:1}} onClick={()=>navigate(`/a/${projectId}/${areaAlias}/${assetId}/edit`)}>
+            <EditIcon sx={{ color:'darkblue', fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="자산 삭제" placement="top" arrow>
+          <IconButton sx={{mr:1}} onClick={deleteAsset}>
+            <DeleteIcon sx={{ color:'#c80004', fontSize: 40 }}/>
+          </IconButton>
+        </Tooltip>
+        </> 
+      }/>
+        <CardContent>
+        <AssetInfoTable action={'detail'} areaAlias={areaAlias} assetState={assetState}/>
+        </CardContent>
+      </Card>
     </Fragment>
   );
 }

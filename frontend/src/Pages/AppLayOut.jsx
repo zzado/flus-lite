@@ -9,7 +9,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { styled } from '@mui/material/styles';
+
 // import TopNavBar from '../Components/TopNavBar'
 // import SideNavBar from '../Components/SideNavBar'
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -27,25 +27,25 @@ export default function AppLayOut() {
   const [ documentOpen, setDocumentOpen ] = useState(false)
 
 
-  const projectSelectButtonStyle = currentProject.name ? {backgroundColor:'#fbc22c', fontWeight:'bold', color:'black', border: '2px solid #fbc22c', '&:hover': { backgroundColor: '#fbc22c',
+  const projectSelectButtonStyle = currentProject.name ? {backgroundColor:'#fbc22c', fontWeight:'bold', color:'black', border: '0.5px solid #fbc22c', '&:hover': { backgroundColor: '#fbc22c',
   color: 'black',},} : {backgroundColor:'white', fontWeight:'bold', color:'black', border: '2px solid #000000', '&:hover': { backgroundColor: 'white',
   color: 'black',},};
 
-  const areaSelectButtonStyle = currentArea ? {backgroundColor:'#fbc22c', fontWeight:'bold', color:'black', border: '2px solid #fbc22c', '&:hover': { backgroundColor: '#fbc22c',
+  const areaSelectButtonStyle = currentArea ? {backgroundColor:'#fbc22c', fontWeight:'bold', color:'black', border: 'px solid #fbc22c', '&:hover': { backgroundColor: '#fbc22c',
   color: 'black',},} : {backgroundColor:'white', fontWeight:'bold', color:'black', border: '2px solid #000000', '&:hover': { backgroundColor: 'white',
   color: 'black',},};
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position='fixed' sx={{ background:'linear-gradient( to right, #ec6815, #f8a428 )', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position='fixed' sx={{ background:'white', }}>
         <Toolbar variant='dense' >
           <Grid container spacing={2} >
-            <Grid item>
-              <Typography component={Link} to={'/'} sx={{color:'black', textDecoration: 'none', '&:hover': { color: 'black',},}} variant='h4' >FLUS</Typography>
+            <Grid item sx={{width: '210px', paddingLeft:'0px',}}>
+              <Box/>
             </Grid>
             <Grid item>
-              <PopupState>
+              <PopupState variant="popover">
                 {(popupState) => (
                 <> 
                   <Button  variant="cotained" sx={{...projectSelectButtonStyle}} {...bindTrigger(popupState)}>{currentProject.name || '프로젝트 선택 (클릭하세요)'}</Button>
@@ -87,9 +87,13 @@ export default function AppLayOut() {
         </Toolbar>
       </AppBar>
       
-      <Drawer variant="permanent" sx={{ width: 220, [`& .MuiDrawer-paper`]: { background:'linear-gradient(180deg, #000000 10%, #555555 100%)', color: 'white', width: 220, boxSizing: 'border-box' }, }} >
-        <Toolbar variant='dense'/>
-
+      <Drawer variant="permanent" sx={{ width: 220, [`& .MuiDrawer-paper`]: { background:'linear-gradient(180deg, #000000 10%, #555555 100%)', color: 'white', width: 220, boxSizing: 'border-box', border: '0px' }, }} >
+        
+        <Box sx={{ height: '80px', background: 'linear-gradient( to right, #ec6815, #f8a428 )'}}>
+          <Typography variant='h4' align='center' >
+            FLUS
+          </Typography>
+        </Box>
         <List dense={false} subheader={
           <ListSubheader sx={{backgroundColor: 'transparent',color:'gray', fontWeight:'bold'}}>
             평가 현황 및 수행
@@ -120,9 +124,9 @@ export default function AppLayOut() {
           : null }
 
           <Collapse in={areaListopen} timeout="auto" unmountOnExit>
-            <List dense={true} disablePadding component='div' sx={{marginLeft: '20px',width:'190px', backgroundColor:'white', borderRadius: '0.5rem'}}>
+            <List dense={true} disablePadding component='div' sx={{marginLeft: '20px',width:'180px', backgroundColor:'white', borderRadius: '0.5rem'}}>
               {currentProject.area && currentProject.area.map((areaAlias,idx)=>
-              <ListItemButton sx={{ pl: 2 }} component={Link} to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}/step1`}>
+              <ListItemButton key={idx} sx={{ pl: 2 }} component={Link} to={`/w/${currentProject.id}/${areaAlias.split('-').pop()}/step1`}>
                 <ListItemText sx={{color: 'black'}} primary={AREA_RNAME[areaAlias.split('-').pop()]} />
               </ListItemButton>
               )}
@@ -168,7 +172,7 @@ export default function AppLayOut() {
           </ListItemButton>
           
           <Collapse in={toolsOpen} timeout="auto" unmountOnExit>
-            <List dense={true} disablePadding component='div' sx={{marginLeft: '20px',width:'190px', backgroundColor:'white', borderRadius: '0.5rem'}}>
+            <List dense={true} disablePadding component='div' sx={{marginLeft: '20px',width:'180px', backgroundColor:'white', borderRadius: '0.5rem'}}>
 
               <ListItemButton sx={{ pl: 2 }} component={Link} to={''}>
                 <ListItemText sx={{color: 'black'}} primary='서버 점검 스크립트' />
@@ -201,7 +205,7 @@ export default function AppLayOut() {
           </ListItemButton>
           
           <Collapse in={documentOpen} timeout="auto" unmountOnExit>
-            <List dense={true} disablePadding component='div' sx={{marginLeft: '20px',width:'190px', backgroundColor:'white', borderRadius: '0.5rem'}}>
+            <List dense={true} disablePadding component='div' sx={{marginLeft: '20px',width:'180px', backgroundColor:'white', borderRadius: '0.5rem'}}>
 
               <ListItemButton sx={{ pl: 2 }} component={Link} to={''}>
                 <ListItemText sx={{color: 'black'}} primary='통계 그래프' />
@@ -223,8 +227,14 @@ export default function AppLayOut() {
       </Drawer>
 
       
-      <Container maxWidth={false}>
-        <Toolbar sx={{paddingBottom:'80px'}}/>
+      <Container sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            height: '100vh',
+          }} maxWidth={false}>
+        <Toolbar sx={{paddingBottom:'100px'}}/>
         <Outlet/>
       </Container>
     </Box>

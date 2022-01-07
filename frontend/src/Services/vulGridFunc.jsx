@@ -132,7 +132,7 @@ export function saveVulRealGrid(gridView, dataProvider, projectId, areaAlias, as
       if(result) { gridView.hideToast(); dataProvider.clearRowStates(true,false); console.log(jsonData)} else {console.log(jsonData)}
     });
 
-    //return true;
+    return true;
   } else {
     alert('변경사항이 없습니다');
     return false;

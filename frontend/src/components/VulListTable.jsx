@@ -1,61 +1,91 @@
-import { Fragment, useState } from 'react';
-import { Table } from "react-bootstrap";
-import { useParams, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Select, MenuItem, Box, TableFooter, Pagination, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Checkbox, } from '@mui/material';
+import { styled } from '@mui/system';
+
+const TableStyle = styled('div')(
+  ({ theme }) => `
+  table {
+    border: 1px solid rgba(224, 224, 224, 1),
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    text-align: center;
+  }
+  th {
+    background-color: #E7EBF0;
+    font-weight : bold
+  }
+  `,
+);
 
 export default function VulListTable(props){
-  const { vulList, vulResultFilter, asseCodeDisplay } = props;
-  const { projectId, areaAlias, assetId } = useParams();
+  const { projectId, areaAlias, vulList, asseCodeDisplay } = props;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const pageCount = Math.ceil(vulList.length / perPage)
+  const { VUL_FIELD } = global.config
+  const navigate = useNavigate()
+  
+  const onRowClick = (e) =>{
+    const vulid = e.target.parentElement.getAttribute('vulid');
+    if(e.target.type !== 'checkbox') navigate(`/v/${projectId}/${areaAlias}/${vulid}`);
+  }
 
-  console.log(asseCodeDisplay)
   return (
-    <Fragment>
-      <Table responsive="md">
-        <thead>
-          <tr>
-            <th><input type="checkbox"/></th>
-            <th>번호</th>
-            <th>취약점ID</th>
-            <th>항목명 (취약항목 갯수)</th>
-            <th>평가결과</th>
-            <th>신규여부</th>
-            <th>전달</th>
-            <th>조치</th>
-            <th>위험도</th>
-          </tr>
-        </thead>
-        <tbody>
-        { vulList && vulList.map( (vulObj, idx) => 
-          (vulResultFilter === false)?
-            (
-              <tr key={idx}>
-                <td><input type="checkbox" /></td>
-                <td>{idx+1}</td>
-                <td>{asseCodeDisplay ? `${vulObj.asset.code}-${vulObj.vulnerability_item.code}` : vulObj.vulnerability_item.code || ''}</td>
-                <td><Link to={`/v/${projectId}/${areaAlias}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link> { vulObj.pocs.length }</td>
-                <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
-                <td>{vulObj.is_new ? '신규' : '기존'}</td>
-                <td>{vulObj.is_reported ? '전달' : ''}</td>
-                <td>{vulObj.is_patched ? '조치' : ''}</td>
-                <td>{vulObj.vulnerability_item.risk || ''}</td>
-              </tr>
-              )
-          : (vulResultFilter === vulObj.result )?
-              (
-                <tr key={idx}>
-                  <td><input type="checkbox"/></td>
-                  <td>{idx+1}</td>
-                  <td>{asseCodeDisplay ? `${vulObj.asset.code}-${vulObj.vulnerability_item.code}` : vulObj.vulnerability_item.code || ''}</td>
-                  <td><Link to={`/v/${projectId}/${areaAlias}/${vulObj.id}/`} state={{ vulObj:vulObj }}>{vulObj.vulnerability_item.name || ''}</Link></td>
-                  <td>{vulObj.result === '' ? '미점검' : vulObj.result}</td>
-                  <td>{vulObj.is_new ? '신규' : '기존'}</td>
-                  <td>{vulObj.is_reported ? '전달' : ''}</td>
-                  <td>{vulObj.is_patched ? '조치' : ''}</td>
-                  <td>{vulObj.vulnerability_item.risk || ''}</td>
-                </tr>
-              ) : null
-            )}
-        </tbody>
-      </Table>
-    </Fragment>
-  );
+    <>
+    <TableStyle>
+      <TableContainer>
+        <Table size='medium'>
+          <TableHead>
+            <TableRow >
+              <TableCell padding="checkbox">
+                <Checkbox color="primary" />
+              </TableCell>
+              <TableCell component="th" scope="row" >취약점ID</TableCell>
+              <TableCell component="th" scope="row" >항목명 (취약항목 갯수)</TableCell>
+              <TableCell component="th" scope="row" >평가결과</TableCell>
+              <TableCell component="th" scope="row" >신규여부</TableCell>
+              <TableCell component="th" scope="row" >전달</TableCell>
+              <TableCell component="th" scope="row" >조치</TableCell>
+              <TableCell component="th" scope="row" >위험도</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          { vulList && vulList.slice((currentPage-1)*perPage, (currentPage-1)*perPage + perPage).map((vulObj, idx) => (
+            <TableRow hover onClick={onRowClick} key={vulObj.id} vulid={vulObj.id}>
+              <TableCell padding="checkbox">
+                <Checkbox color="primary" value={vulObj.id}/>
+              </TableCell>
+              <TableCell component="td">{asseCodeDisplay ? `${vulObj.asset.code}-${vulObj.vulnerability_item.code}` : vulObj.vulnerability_item.code || ''}</TableCell>
+              <TableCell component="td">{vulObj.vulnerability_item.name || ''}{ vulObj.pocs.length }</TableCell>
+              <TableCell component="td">{VUL_FIELD.RESULT.find(e=>e.value === vulObj.result).label}</TableCell>
+              <TableCell component="td">{VUL_FIELD.IS_NEW.find(e=>e.value === vulObj.is_new).label}</TableCell>
+              <TableCell component="td">{VUL_FIELD.IS_REPROTED.find(e=>e.value === vulObj.is_reported).label}</TableCell>
+              <TableCell component="td">{VUL_FIELD.IS_PATCHED.find(e=>e.value === vulObj.is_patched).label}</TableCell>
+              <TableCell component="td">{vulObj.vulnerability_item.risk || ''}</TableCell>
+            </TableRow>
+          ))}
+          </TableBody>
+          <TableFooter>
+          </TableFooter>
+        </Table>
+        <Box sx={{display:"flex", alignItems:"center", justifyContent:"center"}}>
+          <Pagination size='large' count={pageCount} page={currentPage} onChange={(e, v)=>setCurrentPage(v)} />
+          <Select
+            value={perPage}
+            size="small"
+            onChange={e=>{ setPerPage(e.target.value); setCurrentPage(1); }}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+          </Select>
+        </Box>
+      </TableContainer>
+      </TableStyle>
+    </>
+  )
 }

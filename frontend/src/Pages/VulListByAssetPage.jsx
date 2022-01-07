@@ -1,45 +1,47 @@
-import { Fragment, useState, useContext, useMemo } from 'react';
-import { Link, useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Fragment, useEffect, useState } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
 import AssetInfoTable from '../Components/AssetInfoTable';
-import { VulsByAssetContext } from '../Context/VulsByAssetContext';
 import VulListTable from '../Components/VulListTable';
-import VulFilterBar from '../Components/VulFilterBar';
+import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AddRoadIcon from '@mui/icons-material/AddRoad';
+import { useVulListByAssetContext } from '../Context/AppContext';
 
-export default function VulListByAssetPage(){
+export default function VulListByAssetPage(){  
   const { projectId, areaAlias, assetId } = useParams();
+  const { assetObj, vulListByAsset } = useVulListByAssetContext(assetId);
 
-  const { VulsByAssetContextState } = useContext(VulsByAssetContext);
-  const { vulList, assetObj } = VulsByAssetContextState;
+  const { ASSET_INIT_STATE } = global.config
+  const [ assetState, setAssetState ] = useState(ASSET_INIT_STATE);
+  const navigate = useNavigate();
   
-  const [vulResultFilter, setVulResultFilter] = useState(false);
+  useEffect(() => {
+    if(assetObj.id) setAssetState(assetObj);
+  },[assetObj]);
   
-  const vulTable = useMemo(()=><VulListTable asseCodeDisplay={false} vulList={vulList} vulResultFilter={vulResultFilter}/>, [vulList, vulResultFilter]);
-
   return (
     <Fragment>
-      <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <span className='m-0 font-weight-bold search-title'>자산 별 취약점</span>
-          <Button size="sm" as={Link} to={`/w/${projectId}/${areaAlias}/step1`} >뒤로</Button>
-        </div>
-        <div className="card-body">
-          <AssetInfoTable action={'component'} assetObj={assetObj} areaAlias={areaAlias}/>
+      <Card>
+        <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>자산 정보</Typography>} action={ 
+          <>
+          <Tooltip title="일괄 등록" placement="top" arrow>
+              <IconButton sx={{mr:2}} onClick={()=> navigate(`/v-a/${projectId}/${areaAlias}/${assetId}/vul-grid`)}>
+                <AddRoadIcon sx={{ fontSize: 40 }}/>
+              </IconButton>
+            </Tooltip>
 
-          <div className="card-header py-3">
-            <span className="font-weight-bold">평가항목</span>
-            <VulFilterBar vulResultFilter={vulResultFilter} setVulResultFilter={setVulResultFilter} serachable={true}/>
-            
-            { (areaAlias !== 'FISM')? 
-              <Button size="sm" as={Link} to={`/v-a/${projectId}/${areaAlias}/${assetId}/vul-grid`} style={{marginLeft : '5px'}}>일괄 등록</Button>
-            : null}
-          </div>
-
-          { vulTable }
-
-        </div>
-      </div>
+          <Tooltip title="뒤로가기" placement="top" arrow>
+            <IconButton sx={{mr:1}} onClick={()=>navigate(`/w/${projectId}/${areaAlias}/step2`)}>
+              <ArrowBackIcon sx={{ color:'black', fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+          </> 
+        }/>
+        <CardContent>
+          <AssetInfoTable action={'detail'} areaAlias={areaAlias} assetState={assetState} />
+          <VulListTable asseCodeDisplay={false} vulList={vulListByAsset} projectId={projectId} areaAlias={areaAlias}/>
+        </CardContent>
+      </Card>
     </Fragment>
   );
 }
-

@@ -1,15 +1,22 @@
-import { Fragment, useContext, useState, useRef, useCallback } from 'react';
-import { Link, useParams } from "react-router-dom";
-import { Table, Button } from "react-bootstrap";
-import { AssetContext } from '../Context/AssetContext';
-import { exportHtmlReporttReq } from '../utils';
-import FileSaver from 'file-saver';
+
+import { Fragment, useContext, useCallback } from 'react';
+import { useParams } from "react-router-dom";
+import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import AddRoadIcon from '@mui/icons-material/AddRoad';
+import AssetListTable from '../Components/AssetListTable'
+import { exportHtmlReporttReq } from '../utils'
+import FileSaver from 'file-saver'
+import { AppContext } from '../Context/AppContext'
 
 export default function WorkSpaceStep5(){
-  const { AssetContextState, AssetContextDispatch } = useContext(AssetContext);
-  const { assetList } = AssetContextState;
+  const { appContextState } = useContext(AppContext);
+  const { assetList } = appContextState;
   const { projectId, areaAlias } = useParams();
 
+  const onRowClick = (e) =>{
+    if(e.target.type !== 'checkbox') return true;
+  }
 
   const exportHtml = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
 
@@ -17,51 +24,36 @@ export default function WorkSpaceStep5(){
 
   const exportXlsx = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
 
-  const SubMenuBox = () => {
-    return(
-      <Fragment>
-      <div className="card-header py-3">
-        <Button size="sm" onClick={()=> exportDocx()} style={{marginLeft : '5px'}}>분야별 결과서(DOCX)</Button>
-        <Button size="sm" onClick={()=> exportHtml()} style={{marginLeft : '5px'}}>취약점 목록(HTML)</Button>
-        <Button size="sm" onClick={()=> exportXlsx()} style={{marginLeft : '5px'}}>취약점 목록(XLSX)</Button>
-      </div>
-      </Fragment>
-    )
-  };
 
   return (
     <Fragment>
-      <div className="card shadow mb-4">
-        <SubMenuBox />
-        <div className="card-body">
-        <Table responsive="md" hover >
-          <thead>
-            <tr>
-              <th><input type="checkbox"/></th>
-              <th>번호</th>
-              <th>자산코드</th>
-              <th>업무명/용도</th>
-              <th>평가자</th>
-              <th>담당자</th>
-              <th>진행상황</th>
-            </tr>
-          </thead>
-          <tbody>
-            { assetList && assetList.map( (assetObj, idx) => (
-            <tr key={idx}>
-              <td><input type="checkbox"/></td>
-              <td>{idx}</td>
-              <td><span className="label">{assetObj.code}</span></td>
-              <td>{assetObj.name}</td>
-              <td ><span className="label">{assetObj.assessors}</span></td>
-              <td ><span className="label">{assetObj.operator}</span></td>
-              <td><span className="label label-secondary">{assetObj.manual_done ? '완료' : '진행중'}</span></td>
-            </tr>
-            ))}
-          </tbody>
-        </Table>
-        </div>
-      </div>
+      <Card>
+        <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>Step5</Typography>} action={ 
+          <>
+          <Tooltip title="Docx" placement="top" arrow>
+            <IconButton sx={{mr:1}} onClick={exportDocx} >
+              <AddIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Html" placement="top" arrow>
+            <IconButton sx={{mr:2}} onClick={exportHtml} >
+              <AddRoadIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Xlsx" placement="top" arrow>
+            <IconButton sx={{mr:2}} onClick={exportXlsx} >
+              <AddRoadIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+
+          </> 
+        }/>
+        <CardContent>
+          <AssetListTable onRowClick={onRowClick} assetList={assetList} />
+        </CardContent >
+      </Card>
     </Fragment>
   );
 }

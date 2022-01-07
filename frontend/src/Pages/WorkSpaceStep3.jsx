@@ -1,41 +1,35 @@
-import { Fragment, useContext, useMemo } from 'react';
-import { Link, useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
-import { VulsByAreaContext } from '../Context/VulsByAreaContext';
-import { useState } from 'react';
-import { Spinner } from 'react-bootstrap'
+import { Fragment, useContext } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
 import VulListTable from '../Components/VulListTable';
-import VulFilterBar from '../Components/VulFilterBar';
+import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
+import AddRoadIcon from '@mui/icons-material/AddRoad';
+import LinearProgress from '@mui/material/LinearProgress';
+import { AppContext } from '../Context/AppContext'
 
 export default function WorkSpaceStep3(){
   const { projectId, areaAlias } = useParams();
-  const { VulsByAreaContextState } = useContext(VulsByAreaContext);
-  const { vulList, loading } = VulsByAreaContextState;
-  const [ vulResultFilter, setVulResultFilter ] = useState('Y');
-
-  console.log('11')
-  
-  const vulTable = useMemo(()=><VulListTable asseCodeDisplay={true} vulList={vulList} vulResultFilter={vulResultFilter}/>, [vulList, vulResultFilter]);
-
-  const SubMenuBox = () => {
-    return (
-      <div className="card-header py-3">
-        <span className="font-weight-bold">평가항목</span>
-        <VulFilterBar vulResultFilter={vulResultFilter} setVulResultFilter={setVulResultFilter}/>
-        <Button size="sm" as={Link} to={`/w/${projectId}/${areaAlias}/vuls-grid`} style={{marginLeft : '5px'}}>일괄 등록</Button>
-        
-      </div>
-    )
-  };
+  const { appContextState } = useContext(AppContext);
+  const { vulList, vulListLoading  } = appContextState;
+  const navigate = useNavigate()
 
   return (
     <Fragment>
-      <div className="card shadow mb-4">
-        <SubMenuBox />
-        <div className="card-body">
-        {loading ? <Spinner animation="border" role="status"/> : vulTable }
-        </div>
-      </div>
+      <Card>
+        <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>Step3</Typography>} action={ 
+          <>
+          { vulListLoading ? null
+          :<Tooltip title="일괄 등록" placement="top" arrow>
+            <IconButton sx={{mr:2}} onClick={()=>navigate(`/w/${projectId}/${areaAlias}/vuls-grid`)}>
+              <AddRoadIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+          }
+          </> 
+        }/>
+        <CardContent>
+        { vulListLoading ? <LinearProgress /> : <VulListTable asseCodeDisplay={true} projectId={projectId} areaAlias={areaAlias} vulList={vulList} /> }
+        </CardContent >
+      </Card>
     </Fragment>
   );
 }

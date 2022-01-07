@@ -121,13 +121,13 @@ module.exports = global.config = {
             {value:false, label:'라우터'} 
         ],
         IS_EXTERNAL :[ 
-            {value:true, label:'대외연결'},
-            {value:false, label:'대내연결'} 
+            {value:true, label:'외부망 연결'},
+            {value:false, label:'외부망 미연결'} 
         ],
 
         IS_FINANCIAL :[ 
             {value:true, label:'전자금융서비스'},
-            {value:false, label:'비전자금융서비스'}
+            {value:false, label:'일반서비스'}
         ],
 
         IS_HTTPS :[
@@ -137,6 +137,83 @@ module.exports = global.config = {
         IS_TEST: [ {value:true, label:'테스트'}, {value:false, label:'운영'} ],
         IS_SERVER : [ {value:true, label:'서버측 점검'}, {value:false, label:'서버측 미점검'} ],
         IS_NEW:  [ {value:true, label:'신규'}, {value:false, label:'기존'} ],
-    }  
-    
+    },
+
+    PROJECT_INIT_STATE :{
+        name: '',
+        category: '',
+        compliance: '',
+        area: [],
+        assessors: [],
+        start_date: '',
+        end_date: '',
+        client_company: '',
+        assessment_company: '',
+        note: '',
+        allUserList : [],
+        allComplianceList : [],
+      },
+
+      ASSET_INIT_STATE :{
+        num : 1,
+        name: '',
+        assessors: '',
+        operator: '',
+        note: '',
+        hostname: '',
+        ip_url: '',
+        version: '',
+        product_model: '',
+        platform: 'NONE',
+        platform_t : '',
+        is_new: true,
+        is_switch: true,
+        is_external: false,
+        is_financial: true,
+        is_https: false,
+        is_test: false,
+        is_server: true,
+        asset_value: 3,
+        pwd_change_cycle: 0,
+        backup_cycle: 0,
+        platformList:[],
+      },
+
+      VUL_INIT_STATE : 
+      {
+        id: 0,
+        vulnerability_item: {
+            full_code: '',
+            code: '',
+            name: '',
+            risk: 0,
+            checking_guide: '',
+            judgment_guide: '',
+            description: ''
+        },
+        pocs: [
+        ],
+        asset: {
+            pk: 0,
+            code: '',
+            hostname: '',
+            platform: '',
+            platform_t: ''
+        },
+        status: '',
+        auto_result: '',
+        auto_result_reason: '',
+        result: '',
+        check_method: '',
+        sampling: '',
+        is_reported: false,
+        is_patched: false,
+        new_description: '',
+        new_solution: '',
+        gathering_data: '',
+        is_test: false,
+        needs_login: false,
+        is_new: false,
+        project: 0
+    }
 };

@@ -6,9 +6,17 @@ import VulInfoTable from '../Components/VulInfoTable';
 import POCInfoTable from '../Components/POCInfoTable';
 import ScreenShotInfoTable from '../Components/ScreenShotInfoTable';
 import ReferFileInfoTable from '../Components/ReferFileInfoTable';
+import { Box, Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import UploadIcon from '@mui/icons-material/Upload';
+import DownloadIcon from '@mui/icons-material/Download';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ZoomOutMapRoundedIcon from '@mui/icons-material/ZoomOutMapRounded';
+import ZoomInMapRoundedIcon from '@mui/icons-material/ZoomInMapRounded';
 import { useState } from 'react';
 
 const pocListStateReducer = (state, action) => {
+  console.log(action)
   switch(action.type) {
     case 'set' :
       return [ ...action.value ];
@@ -30,14 +38,14 @@ const vulObjStateReducer = (state, action) => {
 
 export default function VulEditPage(props){
   const { projectId, areaAlias, assetId, vulId } = useParams();
-
-  const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, {});
+  const { VUL_INIT_STATE } = global.config
+  const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, VUL_INIT_STATE);
   const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, []);
   const [ screenshotList, setScreenshotList ] = useState([]);
 
   // const [ refFileList, setRefFileList ] = useState([]);
 
-  const navigate = useRef(useNavigate());
+  const navigate = useNavigate();
   console.log(vulObj)
   useEffect(() => {
     getVulReq(vulId).then( ([result, jsonData])=> { 
@@ -98,6 +106,7 @@ export default function VulEditPage(props){
   }
 
   const pocTable = useMemo(()=> <POCInfoTable vulId={parseInt(vulId)} pocList={pocList} pocListDispatch={pocListDispatch}/>, [vulId, pocList]);
+  
   const vulTable = useMemo(()=> <VulInfoTable vulObj={vulObj} vulObjDispatch={vulObjDispatch}/>, [vulObj]);
   const ScreenShotTable = useMemo(()=> <ScreenShotInfoTable refFileList={screenshotList} setRefFileList={setScreenshotList} vulId={vulId}/>, [screenshotList, vulId]);
 
@@ -106,21 +115,32 @@ export default function VulEditPage(props){
 
   return (
     <Fragment>
-      <div className="card shadow mb-4">
-      <div className="card-header py-3">
-        <span className='m-0 font-weight-bold search-title'>취약점 상세</span>
-        <Button size="sm" onClick={()=>navigate.current(-1)}>뒤로</Button>
-        <Button size="sm" onClick={ saveVulObj }>저장</Button>
-      </div>
-        <div className="card-body">
+      <Card>
+        <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>Step1</Typography>} action={ 
+          <>
+          <Tooltip title="저장" placement="top" arrow>
+            <IconButton sx={{mr:2}} onClick={saveVulObj}>
+              <SaveIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+         
+
+          <Tooltip title="뒤로" placement="top" arrow>
+            <IconButton sx={{mr:2}} onClick={()=>navigate(-1)}>
+              <ArrowBackIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip>
+          </> 
+        }/>
+        <CardContent>
           { vulTable }
           { areaAlias === 'WEB' || areaAlias === 'MOB' ? ScreenShotTable : null }
           {/* { ReferFileTable } */}
           { pocTable }
-          <div className="form-actions">
-          </div>
-        </div>
-      </div>
+        </CardContent >
+      </Card>
+
+      
     </Fragment>
   );
 }

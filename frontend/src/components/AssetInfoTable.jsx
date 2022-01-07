@@ -1,304 +1,267 @@
-import { Fragment, useReducer, useRef, useMemo, useEffect } from 'react';
-import { Table, Button } from "react-bootstrap";
-import { Link, useNavigate } from 'react-router-dom';
-import { payloadEmptyCheck, getPlatformListReq, createAssetReq, deleteAssetReq, editAssetReq } from '../utils'
+import { Fragment, useMemo } from 'react';
+import { FormHelperText, FormControl, InputLabel, MenuItem, Select, TextField, TableContainer, Table, TableRow, TableBody, TableCell } from '@mui/material'
+import { styled } from '@mui/system';
 import CreatableSelect from 'react-select/creatable';
-import Select from 'react-select';
 
-const stateReducer = (state, action) => {
-  console.log(action)
-  if(action.type === 'setAssetObj')
-    return { ...state, ...action.value};
-  else
-    return { ...state, [action.name]: action.value};
-};
-
-const initalState = {
-  num : 1,
-  name: '',
-  assessors: '',
-  operator: '',
-  note: '',
-  hostname: '',
-  ip_url: '',
-  version: '',
-  product_model: '',
-  platform: 'NONE',
-  platform_t : '',
-  is_new: true,
-  is_switch: true,
-  is_external: false,
-  is_financial: true,
-  is_https: false,
-  is_test: false,
-  is_server: true,
-  asset_value: 3,
-  pwd_change_cycle: 0,
-  backup_cycle: 0,
-  platformList:[],
-}
+const TableStyle = styled('div')(
+  ({ theme }) => `
+  table {
+    border: 1px solid rgba(224, 224, 224, 1),
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    border: 1px solid #E0E3E7;
+    text-align: left;
+    padding: 10px;
+  }
+  th {
+    background-color: #E7EBF0;
+    font-weight : bold
+  }
+  `,
+);
 
 export default function AssetInfoTable(props){
   
-  const { action, assetObj, areaAlias, assetList, projectObj, AssetContextDispatch } = props;
-  const { ASSET_FIELD, ASSET_VALID_CHECK_FIELDS } = global.config;
-  const [ assetState, assetStateDispatch ] = useReducer(stateReducer, initalState);
-  //const [ platformSelector, setPlatformSelector] = useState({label:'NONE', value:'NONE'})
-  const projectId = projectObj && projectObj.id;
-  const navigate = useRef(useNavigate());
-  console.log(assetState)
+  const { action, assetState, assetStateDispatch, areaAlias } = props;
+  const { ASSET_FIELD } = global.config;
 
   const assetName = useMemo(()=>
     action === 'detail' ? assetState.name : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.name} onChange={e=>assetStateDispatch({name:'name', value:e.target.value})}/> :  
-    action === 'component' ? assetState.name : null
-  ,[action, assetState.name]);
+    action === 'create' || action === 'edit' ? 
+    <TextField label="자산 이름" variant="outlined" size='small' fullWidth error={assetState.name?false : true} helperText={assetState.name? '' : '⛔입력해주세요'} value={assetState.name} onChange={e=>assetStateDispatch({name:'name', value:e.target.value})}/> : null
+  ,[action, assetState.name, assetStateDispatch]);
 
   const assetNum = useMemo(()=>
     action === 'detail' ? assetState.num : 
-    action === 'create' || action === 'edit' ? <input type="number" value={assetState.num} onChange={e=>assetStateDispatch({name:'num', value:e.target.value})} min="1"/> :  
-    action === 'component' ? assetState.num : null
-  ,[action, assetState.num]);
+    action === 'create' || action === 'edit' ? <input type="number" value={assetState.num} onChange={e=>assetStateDispatch({name:'num', value:e.target.value})} min="1"/> : null
+  ,[action, assetState.num, assetStateDispatch]);
 
   const assetNote = useMemo(()=>
     action === 'detail' ? assetState.note : 
-    action === 'create' || action === 'edit' ? <textarea value={assetState.note} onChange={e=>assetStateDispatch({name:'note', value:e.target.value})} style={{width:'100%', height:'80px'}}/> :  
-    action === 'component' ? assetState.note : null
-  ,[action, assetState.note]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth multiline rows={3} label="비고" value={assetState.note} onChange={e=>assetStateDispatch({name:'note', value:e.target.value})}/>: null
+  ,[action, assetState.note, assetStateDispatch]);
 
   const assetHostname = useMemo(()=>
     action === 'detail' ? assetState.hostname : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.hostname} onChange={e=>assetStateDispatch({name:'hostname', value:e.target.value})}/> :  
-    action === 'component' ? assetState.hostname : null
-  ,[action, assetState.hostname]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth label="호스트명" value={assetState.hostname} helperText={assetState.hostname? '' : '⚠️필수는 아니지만 자동 점검을 위해 필요한 필드입니다'} onChange={e=>assetStateDispatch({name:'hostname', value:e.target.value})}/> : null
+  ,[action, assetState.hostname, assetStateDispatch]);
 
   const assetPWDCycle = useMemo(()=>
     action === 'detail' ? assetState.pwd_change_cycle : 
-    action === 'create' || action === 'edit' ? <input type="number" value={assetState.pwd_change_cycle} onChange={e=>assetStateDispatch({name:'pwd_change_cycle', value:e.target.value})} min="0" defaultValue="0"/> :  
-    action === 'component' ? assetState.pwd_change_cycle : null
-  ,[action, assetState.pwd_change_cycle]);
+    action === 'create' || action === 'edit' ? <input type="number" value={assetState.pwd_change_cycle} onChange={e=>assetStateDispatch({name:'pwd_change_cycle', value:e.target.value})} min="0" defaultValue="0"/> : null
+  ,[action, assetState.pwd_change_cycle, assetStateDispatch]);
 
   const assetURL = useMemo(()=>
     action === 'detail' ? assetState.ip_url : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.ip_url} onChange={e=>assetStateDispatch({name:'ip_url', value:e.target.value})}/> :  
-    action === 'component' ? assetState.ip_url : null
-  ,[action, assetState.ip_url]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth label="IP/URL" value={assetState.ip_url} onChange={e=>assetStateDispatch({name:'ip_url', value:e.target.value})}/> : null
+  ,[action, assetState.ip_url, assetStateDispatch]);
 
   const assetVersion = useMemo(()=>
     action === 'detail' ? assetState.version : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.version} onChange={e=>assetStateDispatch({name:'version', value: e.target.value})}/> :  
-    action === 'component' ? assetState.version : null
-  ,[action, assetState.version]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth label="버전" value={assetState.version} onChange={e=>assetStateDispatch({name:'version', value: e.target.value})}/> : null
+  ,[action, assetState.version, assetStateDispatch]);
 
   const assetAssessors = useMemo(()=>
     action === 'detail' ? assetState.assessors : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.assessors} onChange={e=>assetStateDispatch({name:'assessors', value: e.target.value})}/> :  
-    action === 'component' ? assetState.assessors : null
-  ,[action, assetState.assessors]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth label="평가자" value={assetState.assessors} onChange={e=>assetStateDispatch({name:'assessors', value: e.target.value})}/> : null
+  ,[action, assetState.assessors, assetStateDispatch]);
 
   const assetProductModel = useMemo(()=>
     action === 'detail' ? assetState.product_model : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.product_model} onChange={e=>assetStateDispatch({name:'product_model', value: e.target.value})}/> :  
-    action === 'component' ? assetState.product_model : null
-  ,[action, assetState.product_model]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth label="제조사" value={assetState.product_model} onChange={e=>assetStateDispatch({name:'product_model', value: e.target.value})}/> : null
+  ,[action, assetState.product_model, assetStateDispatch]);
 
   const assetOperator = useMemo(()=>
     action === 'detail' ? assetState.operator : 
-    action === 'create' || action === 'edit' ? <input type="text" value={assetState.operator} onChange={e=>assetStateDispatch({name:'operator', value: e.target.value})}/> :   
-    action === 'component' ? assetState.operator : null
-  ,[action, assetState.operator]);
+    action === 'create' || action === 'edit' ? <TextField size='small' fullWidth label="담당자" value={assetState.operator} onChange={e=>assetStateDispatch({name:'operator', value: e.target.value})}/> : null
+  ,[action, assetState.operator, assetStateDispatch]);
 
   const assetBackUpCycle = useMemo(()=>
     action === 'detail' ? assetState.backup_cycle : 
     action === 'create' || action === 'edit' ? <input type="number" value={assetState.backup_cycle} onChange={e=>assetStateDispatch({name:'backup_cycle', value:e.target.value})} min="0" defaultValue="0"/> :  
-    action === 'component' ? assetState.backup_cycle : null
-  ,[action, assetState.backup_cycle]);
+    null
+  ,[action, assetState.backup_cycle, assetStateDispatch]);
 
   const assetSwitchBool = useMemo(()=>
-    action === 'detail' ? assetState.is_switch : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_SWITCH.find(e=>e.value === assetState.is_switch)} onChange={e=>assetStateDispatch({name:'is_switch', value:e.value})} options={ASSET_FIELD.IS_SWITCH}/> :  
-    action === 'component' ? assetState.is_switch : null
-  ,[action, assetState.is_switch, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_SWITCH.find(e=> e.value === assetState.is_switch).label : 
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>스위치/라우터</InputLabel>
+      <Select value={assetState.is_switch} label="스위치/라우터" onChange={e=>assetStateDispatch({name:'is_switch', value:e.target.value})}>
+      { ASSET_FIELD.IS_SWITCH.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_switch, ASSET_FIELD.IS_SWITCH, assetStateDispatch]);
 
   const assetExternalBool = useMemo(()=>
-    action === 'detail' ? assetState.is_external : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_EXTERNAL.find(e=>e.value === assetState.is_external)} onChange={e=>assetStateDispatch({name:'is_external', value:e.value})} options={ASSET_FIELD.IS_EXTERNAL}/> :  
-    action === 'component' ? assetState.is_external : null
-  ,[action, assetState.is_external, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_EXTERNAL.find(e=> e.value === assetState.is_external).label : 
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>외부망 연결여부</InputLabel>
+      <Select value={assetState.is_external} label="외부망 연결여부" onChange={e=>assetStateDispatch({name:'is_external', value:e.target.value})}>
+      { ASSET_FIELD.IS_EXTERNAL.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_external, ASSET_FIELD.IS_EXTERNAL, assetStateDispatch]);
 
   const assetIsFinancialBool = useMemo(()=>
-    action === 'detail' ? assetState.is_financial : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_FINANCIAL.find(e=>e.value === assetState.is_financial)} onChange={e=>assetStateDispatch({name:'is_financial', value:e.value})} options={ASSET_FIELD.IS_FINANCIAL}/> :  
-    action === 'component' ? assetState.is_financial : null
-  ,[action, assetState.is_financial, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_FINANCIAL.find(e=> e.value === assetState.is_financial).label : 
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>비/전자금융서비스</InputLabel>
+      <Select value={assetState.is_financial} label="비/전자금융서비스" onChange={e=>assetStateDispatch({name:'is_financial', value:e.target.value})}>
+      { ASSET_FIELD.IS_FINANCIAL.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_financial, ASSET_FIELD.IS_FINANCIAL, assetStateDispatch]);
 
   const assetIsHttpsBool = useMemo(()=>
-    action === 'detail' ? assetState.is_https : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_HTTPS.find(e=>e.value === assetState.is_https)} onChange={e=>assetStateDispatch({name:'is_https', value:e.value})} options={ASSET_FIELD.IS_HTTPS}/> :  
-    action === 'component' ? assetState.is_https : null
-  ,[action, assetState.is_https, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_HTTPS.find(e=> e.value === assetState.is_https).label : 
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>HTTPS/HTTP</InputLabel>
+      <Select value={assetState.is_https} label="HTTPS/HTTP" onChange={e=>assetStateDispatch({name:'is_https', value:e.target.value})}>
+      { ASSET_FIELD.IS_HTTPS.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_https, ASSET_FIELD.IS_HTTPS, assetStateDispatch]);
 
   const assetPlatform = useMemo(()=>
-    action === 'detail' ? assetState.platform : 
-    action === 'create' ? <CreatableSelect onChange={e=>assetStateDispatch({name:'platform', value:e.value})} options={ assetState.platformList } /> :  
-    action === 'edit' ? <CreatableSelect value={{value: assetState.platform, label: assetState.platform}} onChange={e=>assetStateDispatch({name:'platform', value:e.value})} options={ assetState.platformList } /> :  
-    action === 'component' ? assetState.platform : null
-  ,[action, assetState.platform, assetState.platformList]);
+    action === 'detail' ? assetState.platform === '[[OTHER]]' ? `${assetState.platform_t}(기타 자산)` : assetState.platform : 
+    action === 'create' || action === 'edit' ?
+    <FormControl fullWidth>
+      <CreatableSelect styles={{menu: provided => ({ ...provided, zIndex: 9999 })}} value={{value: assetState.platform, label: assetState.platform}} onChange={e=>assetStateDispatch({name:'platform', value:e.value})} options={ assetState.platformList } /> 
+      { assetState.platform ? null : <FormHelperText>⛔선택해주세요</FormHelperText> }
+    </FormControl>
+    : null
+  ,[action, assetState.platform, assetState.platformList, assetState.platform_t, assetStateDispatch]);
 
   const assetValue = useMemo(()=>
     action === 'detail' ? assetState.asset_value : 
-    action === 'create' || action === 'edit' ? <Select value={{value: assetState.asset_value, label: assetState.asset_value}} onChange={e=>assetStateDispatch(e.value)} options={ [5, 4, 3, 2, 1].map(e => { return { value:e, label: e } })}/> : 
-    action === 'component' ? assetState.asset_value : null
-  ,[action, assetState.asset_value]);
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>자산 가치</InputLabel>
+      <Select value={assetState.asset_value} label="자산 가치" onChange={e=>assetStateDispatch({name:'asset_value', value:e.target.value})}>
+      { [5, 4, 3, 2, 1].map(e=>
+        <MenuItem key={e} value={e}>{e}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.asset_value, assetStateDispatch]);
 
   const assetIsTestBool = useMemo(()=>
-    action === 'detail' ? assetState.is_test : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_TEST.find(e=>e.value === assetState.is_test)} onChange={e=>assetStateDispatch({name:'is_test', value: e.value})} options={ASSET_FIELD.IS_TEST}/> :  
-    action === 'component' ? assetState.is_test : null
-  ,[action, assetState.is_test, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_TEST.find(e=> e.value === assetState.is_test).label :  
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>평가 환경</InputLabel>
+      <Select value={assetState.is_test} label="테스트/운영" onChange={e=>assetStateDispatch({name:'is_test', value:e.target.value})}>
+      { ASSET_FIELD.IS_TEST.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_test, ASSET_FIELD.IS_TEST, assetStateDispatch]);
 
   const assetIsServerBool = useMemo(()=>
-    action === 'detail' ? assetState.is_server : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_SERVER.find(e=>e.value === assetState.is_server)} onChange={e=>assetStateDispatch({name:'is_server', value: e.value})} options={ ASSET_FIELD.IS_SERVER }/> :  
-    action === 'component' ? assetState.is_server : null
-  ,[action, assetState.is_server, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_SERVER.find(e=> e.value === assetState.is_server).label :  
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>서버점검 여부</InputLabel>
+      <Select value={assetState.is_server} label="서버점검 여부" onChange={e=>assetStateDispatch({name:'is_server', value:e.target.value})}>
+      { ASSET_FIELD.IS_SERVER.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_server, ASSET_FIELD.IS_SERVER, assetStateDispatch]);
 
   const assetIsNewBool = useMemo(()=>
-    action === 'detail' ? assetState.is_new : 
-    action === 'create' || action === 'edit' ? <Select value={ASSET_FIELD.IS_NEW.find(e=>e.value === assetState.is_new)} onChange={e=>assetStateDispatch({name:'is_new', value: e.value})} options={ ASSET_FIELD.IS_NEW }/> : 
-    action === 'component' ? assetState.is_new : null
-  ,[action, assetState.is_new, ASSET_FIELD]);
+    action === 'detail' ? ASSET_FIELD.IS_NEW.find(e=> e.value === assetState.is_new).label :
+    action === 'create' || action === 'edit' ? 
+    <FormControl fullWidth>
+      <InputLabel>신규/기존</InputLabel>
+      <Select value={assetState.is_new} label="신규/기존" onChange={e=>assetStateDispatch({name:'is_new', value:e.target.value})}>
+      { ASSET_FIELD.IS_NEW.map(e=>
+        <MenuItem key={e.value} value={e.value}>{e.label}</MenuItem>
+        )
+      }
+      </Select>
+    </FormControl> : null
+  ,[action, assetState.is_new, ASSET_FIELD.IS_NEW, assetStateDispatch]);
 
-
-
- 
-  useEffect(() => {
-    if((action === 'create' || action === 'edit') && projectObj.compliance)
-      getPlatformListReq(projectObj.compliance, areaAlias).then( ([result, jsonData]) => (result)? assetStateDispatch({name:'platformList' ,value:jsonData}) : console.log('fetch failed'));
-  }, [action, projectObj, areaAlias]);
-
-  useEffect(() => {
-    if(action === 'create' && assetList.length)
-      assetStateDispatch({name:'num' ,value:assetList[assetList.length-1].num +1})
-  }, [action, assetList]);
-
-  useEffect(() => {
-    if(assetObj !== false)
-      assetStateDispatch({type:'setAssetObj', value: assetObj})
-  }, [assetObj]);
-
-
-  const createAsset = () => {
-    let payload = {...assetState, area_alias: areaAlias, project: projectId };
-    if( ['SRV', 'DBM', 'MOB', 'ISS', 'NET'].includes(areaAlias) && payload.platform === 'NONE'){
-      alert(`[자산종류] 필드가 비어있습니다!`); 
-      return false;
-    }
-
-    if(!assetState.platformList.find(e=>e.value===payload.platform)){
-      payload.platform_t = payload.platform;
-      payload.platform = '[[OTHER]]';
-    }
-
-    const [validResult, value] = payloadEmptyCheck(payload, ASSET_VALID_CHECK_FIELDS);
-    if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
-
-    createAssetReq(payload).then( ([result, jsonData]) => {
-      if(result){ 
-        AssetContextDispatch({ type:'reset' });
-        navigate.current(`/w/${projectId}/${areaAlias}/step1`); 
-      }else{ console.log(jsonData); navigate.current('/auth');}
-    });
-  };
-
-  const deleteAsset = ()=>{
-    if(window.confirm("자산을 정말 삭제 하시겠습니까?")){
-      deleteAssetReq(assetObj.id).then( (result) => {
-        if(result){
-          AssetContextDispatch({type:'reset'});
-          navigate.current(`/w/${projectId}/${areaAlias}/step1`);
-        }
-      });
-    }//(() ? navigate.current('/p/') : navigate.current('/auth')): console.log('delete canceled')
-  };
-
-  const editAsset = () => {
-    let payload = {...assetState };
-    console.log(payload);
-    
-    if( ['SRV', 'DBM', 'MOB', 'ISS', 'NET'].includes(areaAlias) && payload.platform === 'NONE'){
-      alert(`[자산종류] 필드가 비어있습니다!`); 
-      return false;
-    }
-
-    if(!assetState.platformList.find(e=>e.value===payload.platform)){
-      payload.platform_t = payload.platform;
-      payload.platform = '[[OTHER]]';
-    }
-
-    const [validResult, value] = payloadEmptyCheck(payload, global.config.ASSET_VALID_CHECK_FIELDS);
-    if (!validResult){ alert(`[${value}] 필드가 비어있습니다!`); return false;}
-
-    editAssetReq(assetObj.id, payload).then( ([result, jsonData]) => {
-       if(result){ AssetContextDispatch({ type:'reset' }); navigate.current(`/a/${projectId}/${areaAlias}/${assetObj.id}`); }else{ navigate.current('/auth');}
-    });
-  };
 
   const tableRowsByAreaAlias = () => {
     let fragment = null;
     if (global.config.INFRA_DEVICE_AREA_LIST.includes(areaAlias)){
       fragment = (
         <Fragment>
-        <tr>
-          <th colSpan={2} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>자산종류</th>
-          <td colSpan={4} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>{assetPlatform}</td>
-          <th colSpan={2}>호스트명</th>
-          <td colSpan={6}>{assetHostname}</td>
-          <th colSpan={2}>버전</th>
-          <td colSpan={4}>{assetVersion}</td>
-        </tr>
+        <TableRow>
+          <TableCell component="th" colSpan={2} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>자산종류</TableCell>
+          <TableCell component="td" colSpan={4} rowSpan={ (areaAlias === 'NET') ? 3 : 2}>{assetPlatform}</TableCell>
+          <TableCell component="th" colSpan={2}>호스트명</TableCell>
+          <TableCell component="td" colSpan={6}>{assetHostname}</TableCell>
+          <TableCell component="th" colSpan={2}>버전</TableCell>
+          <TableCell component="td" colSpan={4}>{assetVersion}</TableCell>
+        </TableRow>
         </Fragment>
       )
       if(areaAlias === 'SRV' || areaAlias === 'DBM'){
         fragment = (
           <Fragment>
           {fragment}
-          <tr>
-            <th colSpan={2}>URL</th>
-            <td colSpan={6}>{assetURL}</td>
-            <th colSpan={3}>테스트/운영</th>
-            <td colSpan={3}>{assetIsTestBool}</td>
-          </tr>
+          <TableRow>
+            <TableCell component="th" colSpan={2}>IP/URL</TableCell>
+            <TableCell component="td" colSpan={6}>{assetURL}</TableCell>
+            <TableCell component="th" colSpan={3}>평가 환경</TableCell>
+            <TableCell component="td" colSpan={3}>{assetIsTestBool}</TableCell>
+          </TableRow>
           </Fragment>
         )
       }else{ // NET, ISS
         fragment = (
           <Fragment>
           {fragment}
-          <tr>
-            <th colSpan={2}>URL</th>
-            <td colSpan={2}>{assetURL}</td>
-            <th colSpan={2}>제조사</th>
-            <td colSpan={4}>{assetProductModel}</td>
-            <th colSpan={2}>테스트/운영</th>
-            <td colSpan={2}>{assetIsTestBool}</td>
-          </tr>
+          <TableRow>
+            <TableCell component="th" colSpan={2}>IP/URL</TableCell>
+            <TableCell component="td" colSpan={2}>{assetURL}</TableCell>
+            <TableCell component="th" colSpan={2}>제조사</TableCell>
+            <TableCell component="td" colSpan={4}>{assetProductModel}</TableCell>
+            <TableCell component="th" colSpan={2}>평가 환경</TableCell>
+            <TableCell component="td" colSpan={2}>{assetIsTestBool}</TableCell>
+          </TableRow>
           </Fragment>
         )
         if(areaAlias === 'NET'){
           fragment = (
             <Fragment>
             {fragment}
-            <tr>
-            <th colSpan={2}>스위치 여부</th>
-            <td colSpan={2}>{assetSwitchBool}</td>
-            <th colSpan={2}>연결여부(대외)</th>
-            <td colSpan={2}>{assetExternalBool}</td>
-            <th colSpan={2}>백업주기</th>
-            <td colSpan={1}>{assetBackUpCycle}</td>
-            <th colSpan={2}>PWD 변경주기</th>
-            <td colSpan={1}>{assetPWDCycle}</td>
-          </tr>
+            <TableRow>
+            <TableCell component="th" colSpan={2}>스위치 여부</TableCell>
+            <TableCell component="td" colSpan={2}>{assetSwitchBool}</TableCell>
+            <TableCell component="th" colSpan={2}>대외 연결여부</TableCell>
+            <TableCell component="td" colSpan={2}>{assetExternalBool}</TableCell>
+            <TableCell component="th" colSpan={2}>백업주기</TableCell>
+            <TableCell component="td" colSpan={1}>{assetBackUpCycle}</TableCell>
+            <TableCell component="th" colSpan={2}>PWD 변경주기</TableCell>
+            <TableCell component="td" colSpan={1}>{assetPWDCycle}</TableCell>
+          </TableRow>
             </Fragment>
           )
         }
@@ -306,69 +269,69 @@ export default function AssetInfoTable(props){
     }else if(areaAlias === 'WEB'){
       fragment = (
         <Fragment>
-        <tr>
-          <th colSpan={2}>URL</th>
-          <td colSpan={6}>{assetURL}</td>
-          <th colSpan={2}>전자금융여부</th>
-          <td colSpan={2}>{assetIsFinancialBool}</td>
-          <th colSpan={2}>https여부</th>
-          <td colSpan={2}>{assetIsHttpsBool}</td>
-          <th colSpan={2}>테스트/운영</th>
-          <td colSpan={2}>{assetIsTestBool}</td>
-        </tr>
+        <TableRow>
+          <TableCell component="th" colSpan={2}>IP/URL</TableCell>
+          <TableCell component="td" colSpan={6}>{assetURL}</TableCell>
+          <TableCell component="th" colSpan={2}>전자금융서비스 여부</TableCell>
+          <TableCell component="td" colSpan={2}>{assetIsFinancialBool}</TableCell>
+          <TableCell component="th" colSpan={2}>HTTPS/HTTP</TableCell>
+          <TableCell component="td" colSpan={2}>{assetIsHttpsBool}</TableCell>
+          <TableCell component="th" colSpan={2}>평가 환경</TableCell>
+          <TableCell component="td" colSpan={2}>{assetIsTestBool}</TableCell>
+        </TableRow>
         </Fragment>
       )
     }else if (areaAlias === 'MOB'){
       fragment = (
         <Fragment>
-        <tr>
-          <th colSpan={2}>자산종류</th>
-          <td colSpan={4}>{assetPlatform}</td>
-          <th colSpan={2}>전자금융여부</th>
-          <td colSpan={3}>{assetIsFinancialBool}</td>
-          <th colSpan={2}>서버측 여부</th>
-          <td colSpan={3}>{assetIsServerBool}</td>
-          <th colSpan={2}>테스트/운영</th>
-          <td colSpan={2}>{assetIsTestBool}</td>
-        </tr>
+        <TableRow>
+          <TableCell component="th" colSpan={2}>자산종류</TableCell>
+          <TableCell component="td" colSpan={4}>{assetPlatform}</TableCell>
+          <TableCell component="th" colSpan={2}>전자금융서비스 여부</TableCell>
+          <TableCell component="td" colSpan={3}>{assetIsFinancialBool}</TableCell>
+          <TableCell component="th" colSpan={2}>서버점검 여부</TableCell>
+          <TableCell component="td" colSpan={3}>{assetIsServerBool}</TableCell>
+          <TableCell component="th" colSpan={2}>평가 환경</TableCell>
+          <TableCell component="td" colSpan={2}>{assetIsTestBool}</TableCell>
+        </TableRow>
         </Fragment>
       )
     }else if(areaAlias === 'HTS') {
       fragment = (
         <Fragment>
-        <tr>
-          <th colSpan={2}>전자금융여부</th>
-          <td colSpan={3}>{assetIsFinancialBool}</td>
-          <th colSpan={2}>테스트/운영</th>
-          <td colSpan={2}>{assetIsTestBool}</td>
-        </tr>
+        <TableRow>
+          <TableCell component="th" colSpan={2}>전자금융서비스 여부</TableCell>
+          <TableCell component="td" colSpan={3}>{assetIsFinancialBool}</TableCell>
+          <TableCell component="th" colSpan={2}>평가 환경</TableCell>
+          <TableCell component="td" colSpan={2}>{assetIsTestBool}</TableCell>
+        </TableRow>
         </Fragment>
       )
     }
     return (
       <Fragment>
-        <tr>
-        <th colSpan={2} rowSpan={2}>자산번호</th>
-        <td colSpan={2} rowSpan={2}>{assetNum}</td>
-        <th colSpan={2}>자산명</th>
-        <td colSpan={8}>{assetName}</td>
-        <th colSpan={2}>담당자</th>
-        <td colSpan={4}>{assetOperator}</td>
-      </tr>
-
-      <tr>
-        <th colSpan={2}>신규여부</th>
-        <td colSpan={3}>{assetIsNewBool}</td>
-        <th colSpan={2}>자산가치</th>
-        <td colSpan={3}>{assetValue}</td>
-        <th colSpan={2}>평가자</th>
-        <td colSpan={4}>{assetAssessors}</td>
-      </tr>
+      <TableRow>
+        <TableCell component="th" colSpan={2} rowSpan={2}>자산번호</TableCell>
+        <TableCell component="td" colSpan={2} rowSpan={2}>{assetNum}</TableCell>
+        <TableCell component="th" colSpan={2}>자산명</TableCell>
+        <TableCell component="td" colSpan={8}>{assetName}</TableCell>
+        <TableCell component="th" colSpan={2}>담당자</TableCell>
+        <TableCell component="td" colSpan={4}>{assetOperator}</TableCell>
+      </TableRow>
+  
+      <TableRow>
+        <TableCell component="th" colSpan={2}>신규여부</TableCell>
+        <TableCell component="td" colSpan={3}>{assetIsNewBool}</TableCell>
+        <TableCell component="th" colSpan={2}>자산가치</TableCell>
+        <TableCell component="td" colSpan={3}>{assetValue}</TableCell>
+        <TableCell component="th" colSpan={2}>평가자</TableCell>
+        <TableCell component="td" colSpan={4}>{assetAssessors}</TableCell>
+      </TableRow>
         {fragment}
-      <tr>
-        <th colSpan={2}>비고</th>
-        <td colSpan={18}>{assetNote}</td>
-      </tr>
+      <TableRow>
+        <TableCell component="th" colSpan={2}>비고</TableCell>
+        <TableCell component="td" sx={{height:'80px'}}colSpan={18}>{assetNote}</TableCell>
+      </TableRow>
       </Fragment>
     );
   };
@@ -376,65 +339,40 @@ export default function AssetInfoTable(props){
 
   return (
     <Fragment>
-      { action !== 'component' ? 
-        <div className="card-header py-3">
-          <span className="m-0 font-weight-bold search-title">
-            { action === 'detail' ? '자산 정보':
-              action === 'create' ? '자산 생성':
-              action === 'edit' ? '자산 편집':
-              null
-            }</span>
-        </div>
-      : null }
-        <div className="card-body">
-        <Table responsive="md" bordered>
-          <colgroup>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-            <col width="5%"/>
-          </colgroup>
-          <tbody>
-            {tableRowsByAreaAlias()}
-          </tbody>
-        </Table>
-        <div className="form-actions">
-        { action === 'detail' ? 
-        <>
-          <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetObj.id}/edit`} state={{assetObj: assetObj}}size="sm" style={{marginLeft : '5px'}}>편집</Button>
-          <Button onClick={deleteAsset} size="sm" style={{marginLeft : '5px'}}>삭제</Button>
-          <Button as={Link} to={`/w/${projectId}/${areaAlias}/step1`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
-        </> 
-        : action === 'create' ?
-          <>
-          <Button size="sm" onClick={createAsset} style={{marginLeft : '5px'}}>저장</Button>
-          <Button as={Link} to={`/w/${projectId}/${areaAlias}/step1`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
-          </> 
-        : action === 'edit' ?
-          <>
-          <Button size="sm" onClick={editAsset} style={{marginLeft : '5px'}}>저장</Button>
-          <Button as={Link} to={`/a/${projectId}/${areaAlias}/${assetObj.id}`} size="sm" style={{marginLeft : '5px'}}>취소</Button>
-          </> 
-        : null
-        }
-        </div>
-      </div>
+      <TableStyle>
+        <TableContainer>
+          <Table>
+            
+            <colgroup>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+              <col width="5%"/>
+            </colgroup>
+           
+            <TableBody>
+              {tableRowsByAreaAlias()}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </TableStyle>
+      
     </Fragment>
   );
 }
