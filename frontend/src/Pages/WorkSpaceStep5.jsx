@@ -2,12 +2,13 @@
 import { Fragment, useContext, useCallback } from 'react';
 import { useParams } from "react-router-dom";
 import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import AddRoadIcon from '@mui/icons-material/AddRoad';
 import AssetListTable from '../Components/AssetListTable'
 import { exportHtmlReporttReq } from '../utils'
 import FileSaver from 'file-saver'
 import { AppContext } from '../Context/AppContext'
+import HtmlIcon from '@mui/icons-material/Html';
+import ArticleIcon from '@mui/icons-material/Article';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 
 export default function WorkSpaceStep5(){
   const { appContextState } = useContext(AppContext);
@@ -32,19 +33,19 @@ export default function WorkSpaceStep5(){
           <>
           <Tooltip title="Docx" placement="top" arrow>
             <IconButton sx={{mr:1}} onClick={exportDocx} >
-              <AddIcon sx={{ fontSize: 40 }}/>
+              <ArticleIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Html" placement="top" arrow>
             <IconButton sx={{mr:2}} onClick={exportHtml} >
-              <AddRoadIcon sx={{ fontSize: 40 }}/>
+              <HtmlIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Xlsx" placement="top" arrow>
             <IconButton sx={{mr:2}} onClick={exportXlsx} >
-              <AddRoadIcon sx={{ fontSize: 40 }}/>
+              <TableRowsIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
 

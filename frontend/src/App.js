@@ -30,9 +30,6 @@ import VulsByAssetGridPage from './Pages/VulsByAssetGridPage';
 
 import VulListByAssetPage from './Pages/VulListByAssetPage';
 import { AppContextProvider } from './Context/AppContext';
-import { AssetContextProvider } from './Context/AssetContext';
-import { VulsByAssetContextProvider } from './Context/VulsByAssetContext';
-import { VulsByAreaContextProvider } from './Context/VulsByAreaContext'
 import VulsByAreaGridPage from './Pages/VulsByAreaGridPage';
 
 //import 'bootstrap/dist/css/bootstrap.min.css';
@@ -79,10 +76,6 @@ export default function App (){
             <Route path="vuls-grid" element={<VulsByAreaGridPage/>}/>
           </Route>
           
-          <Route path="w/:projectId/:areaAlias/asset-grid" element={<AssetContextProvider><WorkSpaceLayOut step={0}><AssetGridPage/></WorkSpaceLayOut></AssetContextProvider>} />
-
-          <Route path="w/:projectId/:areaAlias/step2" element={<AssetContextProvider><WorkSpaceLayOut step={1}><WorkSpaceStep2/></WorkSpaceLayOut></AssetContextProvider>} />
-
           
           <Route path="v-a/:projectId/:areaAlias/:assetId" element={
 
@@ -100,22 +93,6 @@ export default function App (){
 
           <Route path="v/:projectId/:areaAlias/:vulId" element={<WorkSpaceLayOut step={1}><VulEditPage/></WorkSpaceLayOut>} />
 
-          
-          <Route path="/w/:projectId/:areaAlias/vuls-grid" element={
-            <VulsByAreaContextProvider>
-              <WorkSpaceLayOut step={2}>
-                <VulsByAreaGridPage/>
-              </WorkSpaceLayOut>
-            </VulsByAreaContextProvider>}/>
-
-          <Route path="w/:projectId/:areaAlias/step4" element={
-            <VulsByAreaContextProvider>
-              <WorkSpaceLayOut step={3}>
-                <WorkSpaceStep4/>
-              </WorkSpaceLayOut>
-            </VulsByAreaContextProvider>} />
-            
-          <Route path="w/:projectId/:areaAlias/step5" element={<AssetContextProvider><WorkSpaceLayOut step={4}><WorkSpaceStep5/></WorkSpaceLayOut></AssetContextProvider>} />
 
         </Route>
 

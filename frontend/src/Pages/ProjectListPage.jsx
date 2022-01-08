@@ -1,12 +1,11 @@
-import { Fragment, useContext, useState, useEffect } from 'react';
+import { Fragment, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from '../Context/AppContext';
-import { Tooltip, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Card, CardHeader, CardContent ,Checkbox,  Collapse, List, ListItemIcon, ListItemText, ListSubheader, ListItemButton, Drawer, Divider, Menu, MenuItem, IconButton, CssBaseline, AppBar, Toolbar, Box, Button, Typography, Grid, Container } from '@mui/material';
+import { Tooltip, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Card, CardHeader, CardContent ,Checkbox,  IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteProjectReq } from '../utils';
 import { styled } from '@mui/system';
 
 const TableStyle = styled('div')(
@@ -26,9 +25,8 @@ const TableStyle = styled('div')(
   `,
 );
 export default function ProjectListPage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
+  const { appContextState } = useContext(AppContext);
   const { projectList } = appContextState;
-  const [ checkedProjectList, setCheckedProjectList ] = useState([]);
   
   const navigate = useNavigate();
 

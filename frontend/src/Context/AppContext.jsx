@@ -1,8 +1,8 @@
-import { useMemo, createContext, useReducer, useRef, useState } from 'react';
+import { useMemo, createContext, useCallback, useReducer, useRef, useState } from 'react';
 import { useEffect, useContext } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { getPlatformListReq, getVulListByAreaReq, getUserInfoReq, getProjectListReq, getAssetListByAreaAliasReq, getVulListByAssetReq } from '../utils'
-
+const { PROJECT_FIELD } = global.config;
 export const AppContext = createContext();
 
 const initialState = {
@@ -28,62 +28,56 @@ const initialState = {
 
 const contextReducer = (state, action) => {
   console.log(action);
-  const newState = state;
-  if(action.type){
-    switch (action.type) {
-      case 'setProject':
-        const projectObj = newState.projectList.find( (e) => e.id === parseInt(action.value));
-        newState.currentProject = projectObj;
-        let sortedArea = [];
-        for(let element of global.config.PROJECT_FIELD.EFI_PROJECT_AREALIST){
-          for(let _ of newState.currentProject.area){
-            if(element.value === _.split('-').pop()){
-              sortedArea.push(_);
-            }
-          }
-        }
-        newState.currentProject.area = sortedArea;
-        return (projectObj)? newState : state;
-      
-
-      default :
-        return state;
-      }
-    }
-  else{
-    return { ...state, [action.name]: action.value};
-  }
+  return { ...state, [action.name]: action.value};
 };
 
 export const AppContextProvider = ({children}) => {
   const [appContextState, appContextDispatch] = useReducer(contextReducer, initialState);
-  const contextValue = useMemo(() => ({ appContextState, appContextDispatch }),[appContextState, appContextDispatch]);
   const { projectId, areaAlias, assetId } = useParams();
-  const { currentProject, currentUser, currentArea, projectReset, assetList, assetListReset, vulList, vulListLoading, vulListReset, vulListByAsset, vulListByAssetReset, assetObj, projectList } = appContextState;
+  const { assetList, projectList } = appContextState;
 
-
-  const navigate = useRef(useNavigate());
+  const navigate = useRef(useNavigate())
   
+  const sortProjectList = useCallback(
+    ( projectList ) =>{
+    let sortedProjectList = []
+    for(let projectObj of projectList){
+      let sortedArea = [];
+      for(let element of PROJECT_FIELD.EFI_PROJECT_AREALIST){
+        for(let _ of projectObj.area){
+          if(element.value === _.split('-').pop())
+            sortedArea.push(_);
+        }
+      }
+      projectObj.area = sortedArea;
+      sortedProjectList.push(projectObj);
+    }
+    return sortedProjectList;
+  },[]);
+
   // init
   useEffect(() => {
     getUserInfoReq().then( ([result, jsonData]) => (result)? appContextDispatch({ name: 'currentUser', value: jsonData }) : navigate.current('/auth'));
 
-    getProjectListReq().then( ([result, jsonData]) => (result)? appContextDispatch({ name: 'projectList', value: jsonData }) : navigate.current('/auth'));
-  },[]);
-
+    getProjectListReq().then( ([result, jsonData]) => {
+      if(result){
+        appContextDispatch({ name: 'projectList', value: sortProjectList(jsonData) })
+      }else{
+        navigate.current('/auth');
+      }
+    });
+  },[sortProjectList]);
 
   // projectId 변경시
   useEffect(() => {
-    if(projectId){
-      if( projectList.length ) appContextDispatch({ type: 'setProject', value: projectId });
-    }else{
-      appContextDispatch({ name: 'currentProject', value: {} });
-    }
+      projectId ? appContextDispatch({ name: 'currentProject', value: projectList.find(e=>e.id===parseInt(projectId)) || {} })
+      : appContextDispatch({ name: 'currentProject', value: {} })
   },[projectList, projectId]);
 
   // areaAlias 변경시
   useEffect(() => {
-    (areaAlias) ? appContextDispatch({ name: 'currentArea', value: areaAlias }) : appContextDispatch({ name: 'currentArea', value: '' })
+    areaAlias ? appContextDispatch({ name: 'currentArea', value: areaAlias })
+    : appContextDispatch({ name: 'currentArea', value: '' })
   },[areaAlias]);
 
 
@@ -112,6 +106,7 @@ export const AppContextProvider = ({children}) => {
   },[assetList, assetId]);
 
 
+  const contextValue = useMemo(() => ({ appContextState, appContextDispatch, sortProjectList }),[appContextState, appContextDispatch, sortProjectList]);
   return (
     <AppContext.Provider value={contextValue}>
     { children }
@@ -119,6 +114,16 @@ export const AppContextProvider = ({children}) => {
   );
 };
 
+export const useProjectContext=()=>{
+  const { appContextState, appContextDispatch, sortProjectList } = useContext(AppContext);
+  const { currentProject } = appContextState
+  
+  const resetProjectList = () => {
+    getProjectListReq().then( ([result, jsonData]) => appContextDispatch({ name: 'projectList', value: sortProjectList(jsonData) }));
+  }
+
+  return ({ projectObj: currentProject, resetProjectList : resetProjectList });
+}
 
 
 export const useVulListByAssetContext=(assetId)=>{

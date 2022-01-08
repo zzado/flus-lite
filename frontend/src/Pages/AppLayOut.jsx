@@ -5,13 +5,11 @@ import { AppContext } from '../Context/AppContext';
 import { Outlet } from 'react-router-dom';
 
 import { Collapse, List, ListItemIcon, ListItemText, ListSubheader, ListItemButton, Drawer, Divider, Button, Menu, MenuItem, IconButton, CssBaseline, AppBar, Toolbar, Box, Typography, Grid, Container } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
-// import TopNavBar from '../Components/TopNavBar'
-// import SideNavBar from '../Components/SideNavBar'
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ConstructionIcon from '@mui/icons-material/Construction';
@@ -25,6 +23,16 @@ export default function AppLayOut() {
   const [ areaListopen, setAreaListopen ] = useState(true)
   const [ toolsOpen, setToolsOpen ] = useState(false)
   const [ documentOpen, setDocumentOpen ] = useState(false)
+
+  console.log(currentUser)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
 
   const projectSelectButtonStyle = currentProject.name ? {backgroundColor:'#fbc22c', fontWeight:'bold', color:'black', border: '0.5px solid #fbc22c', '&:hover': { backgroundColor: '#fbc22c',
@@ -40,7 +48,7 @@ export default function AppLayOut() {
       <CssBaseline />
       <AppBar position='fixed' sx={{ background:'white', }}>
         <Toolbar variant='dense' >
-          <Grid container spacing={2} >
+          <Grid container spacing={3} >
             <Grid item sx={{width: '210px', paddingLeft:'0px',}}>
               <Box/>
             </Grid>
@@ -78,9 +86,34 @@ export default function AppLayOut() {
           </Grid>
           <Grid container spacing={2} justifyContent={'flex-end'}>
             <Grid item>
-            <IconButton color="inherit">
-                <NotificationsIcon />
-            </IconButton>
+              <IconButton color="inherit" size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  >
+                <AccountCircleIcon sx={{ color:'black', fontSize: 40 }}/>
+              </IconButton>
+              <Menu
+                  id="menu-appbar"
+                  sx={{ mt: '45px' }}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem disabled onClick={handleClose}>{currentUser.username}</MenuItem>
+                  <MenuItem disabled onClick={handleClose}>{currentUser.is_admin ? '관리자' : currentUser.is_manager ? '프로젝트 관리자' : '일반 사용자'}</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                </Menu>
             </Grid>
             
           </Grid>

@@ -1,18 +1,12 @@
-import { useEffect, Fragment, useReducer, useMemo, useRef } from 'react';
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
-import { getVulReq, editVulReq, getScreenShotReq, getRefFileReq } from '../utils'
+import { useEffect, Fragment, useReducer, useMemo } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
+import { getVulReq, editVulReq, getScreenShotReq } from '../utils'
 import VulInfoTable from '../Components/VulInfoTable';
 import POCInfoTable from '../Components/POCInfoTable';
 import ScreenShotInfoTable from '../Components/ScreenShotInfoTable';
-import ReferFileInfoTable from '../Components/ReferFileInfoTable';
-import { Box, Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
+import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import UploadIcon from '@mui/icons-material/Upload';
-import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ZoomOutMapRoundedIcon from '@mui/icons-material/ZoomOutMapRounded';
-import ZoomInMapRoundedIcon from '@mui/icons-material/ZoomInMapRounded';
 import { useState } from 'react';
 
 const pocListStateReducer = (state, action) => {
@@ -37,7 +31,7 @@ const vulObjStateReducer = (state, action) => {
 };
 
 export default function VulEditPage(props){
-  const { projectId, areaAlias, assetId, vulId } = useParams();
+  const {  areaAlias, vulId } = useParams();
   const { VUL_INIT_STATE } = global.config
   const [ vulObj, vulObjDispatch ] = useReducer(vulObjStateReducer, VUL_INIT_STATE);
   const [ pocList, pocListDispatch ] = useReducer(pocListStateReducer, []);

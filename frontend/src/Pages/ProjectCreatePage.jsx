@@ -1,18 +1,17 @@
-import { Fragment, useContext, useReducer } from 'react';
-import { AppContext } from '../Context/AppContext';
+import { Fragment, useReducer } from 'react';
+import { useProjectContext } from '../Context/AppContext';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
 import { Typography, Tooltip, IconButton, Card, CardHeader, CardContent } from '@mui/material';
-import {Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import { payloadEmptyCheck, createProjectReq } from '../utils';
 
 const stateReducer = (state, action) => {
-  console.log(action)
   return { ...state, [action.name]: action.value};
 };
 export default function ProjectDetailPage(){
-  const { appContextDispatch } = useContext(AppContext);
+  const { resetProjectList } = useProjectContext();
   const { PROJECT_VALID_CHECK_FIELDS, PROJECT_INIT_STATE } = global.config;
   const [ projectState, projectStateDispatch ] = useReducer(stateReducer, PROJECT_INIT_STATE);
   
@@ -26,10 +25,9 @@ export default function ProjectDetailPage(){
     }
     createProjectReq({...projectState, assessors: projectState.assessors.map(e=>e.id)}).then(([result, jsonData]) => {
       if (result) {
-        appContextDispatch({ type: 'projectReset' });
+        resetProjectList()
         navigate(`/p/`);
       } else {
-        console.log(jsonData);
         navigate('/auth');
       }
     });
@@ -41,7 +39,7 @@ export default function ProjectDetailPage(){
     <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>프로젝트 생성</Typography>} action={ 
       <>
       <Tooltip title="뒤로가기" placement="top" arrow>
-        <IconButton sx={{mr:1}} component={Link} to={`/p`}>
+        <IconButton sx={{mr:1}} onClick={()=>navigate('p')}>
           <ArrowBackIcon sx={{ color:'black', fontSize: 40 }}/>
         </IconButton>
       </Tooltip>

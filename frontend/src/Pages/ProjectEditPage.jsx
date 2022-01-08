@@ -1,8 +1,8 @@
-import { Fragment, useContext, useReducer, useEffect } from 'react';
-import { AppContext } from '../Context/AppContext';
+import { Fragment, useReducer, useEffect } from 'react';
+import { useProjectContext } from '../Context/AppContext';
 import ProjectInfoTable from '../Components/ProjectInfoTable';
 import { Typography, Tooltip, IconButton, Card, CardHeader, CardContent } from '@mui/material';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import { payloadEmptyCheck, editProjectReq } from '../utils';
@@ -16,8 +16,7 @@ const stateReducer = (state, action) => {
 };
 
 export default function ProjectEditPage(){
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { currentProject } = appContextState;
+  const { projectObj, resetProjectList } = useProjectContext();
   const { projectId } = useParams();
   const { PROJECT_VALID_CHECK_FIELDS, PROJECT_INIT_STATE } = global.config;
   const [ projectState, projectStateDispatch ] = useReducer(stateReducer, PROJECT_INIT_STATE);
@@ -33,7 +32,7 @@ export default function ProjectEditPage(){
     
     editProjectReq({...projectState, assessors: projectState.assessors.map(e=>e.id)}).then(([result, jsonData]) => {
       if (result) {
-        appContextDispatch({ type: 'projectReset' });
+        resetProjectList();
         navigate(`/p/${projectState.id}/`);
       } else {
         console.log(jsonData);
@@ -43,9 +42,9 @@ export default function ProjectEditPage(){
   };
 
   useEffect(() => {
-    if(currentProject.name)
-      projectStateDispatch({type:'setProjectObj', value: currentProject});
-  }, [currentProject]);
+    if(projectObj.name)
+      projectStateDispatch({type:'setProjectObj', value: projectObj});
+  }, [projectObj]);
 
 
   return (
@@ -54,7 +53,7 @@ export default function ProjectEditPage(){
       <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>프로젝트 편집</Typography>} action={ 
           <>
           <Tooltip title="뒤로가기" placement="top" arrow>
-            <IconButton sx={{mr:1}} component={Link} to={`/p/${projectId}`}>
+            <IconButton sx={{mr:1}} onClick={()=>`/p/${projectId}`}>
               <ArrowBackIcon sx={{ color:'black', fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
