@@ -1,3 +1,4 @@
+from django.db.models import query
 from rest_framework import generics, mixins, status, response, views
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
@@ -17,6 +18,7 @@ from api.serializers import *
 
 class SignUpAPI(generics.GenericAPIView):
     serializer_class = SignUpUserSerializer
+    queryset = User.objects.all()
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

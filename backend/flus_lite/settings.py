@@ -90,13 +90,21 @@ WSGI_APPLICATION = 'flus_lite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DB_NAME = "flusdb"
+DB_USER = "flususer"
+DB_PASS = "f1usfora55ess34"
 
+DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.mysql"),
+        "NAME": os.environ.get("SQL_DATABASE", DB_NAME),
+        "USER": os.environ.get("SQL_USER", DB_USER),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", DB_PASS),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "3306"),
+        'OPTIONS': {'charset': 'utf8mb4' }
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

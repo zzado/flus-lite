@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  backend:
+    build:
+      context : .
+      dockerfile: ./docker/backend/Dockerfile
+    working_dir: /flus-lite
+    volumes:
+      - ./backend/:/flus-lite
+    env_file:
+      - ./backend/.env
+    command: >
+      bash -c "python /flus-lite/init_app.py run"
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    build: ./docker/db
+    expose:
+      - 3306
+    volumes:
+      - db:/var/lib/mysql/
+    environment:
+      - MYSQL_DATABASE=flusdb
+      - MYSQL_ROOT_PASSWORD=f1usforR00t34
+      - MYSQL_USER=flususer
+      - MYSQL_PASSWORD=f1usfora55ess34
+      - TZ='Asia/Seoul'
+    healthcheck:
+      test: "exit 0"
+    platform: linux/x86_64
+
+volumes:
+  db:
+
