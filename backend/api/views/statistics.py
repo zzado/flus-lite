@@ -77,6 +77,9 @@ class AreaDocxContextApi(views.APIView):
         # 기존 자산의 평가항목 수
         oldVulCount = oldVulObjs.count()
         
+        # 기존 자산의 취약점 수
+        oldVulYCount = oldVulYObjs.count()
+
         from django.db.models import Sum
         # 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
         assessmentScore = round((1-vulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/vulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum'))*100, 1)
@@ -93,7 +96,7 @@ class AreaDocxContextApi(views.APIView):
         # 평가 등급 :: 1등급-(90 ~ 100), 2등급-(80 ~ 89), 3등급-(70 ~ 79), 4등급-(60 ~ 69), 5등급-(0 ~ 59)
         
 
-
+    
 
         docxContext={}
         docxContext['대상기관'] = projectObj.client_company
@@ -121,13 +124,13 @@ class AreaDocxContextApi(views.APIView):
         docxContext['평가_지수'] = assessmentScore
         docxContext['평가_등급'] = grade['total']#project.get_total_level_grade(current_area_alias, compliances=compliances),
         
-        docxContext['기존'] = ('Y' if project.get_area_all_assets(current_area_alias, is_new=False).count() != 0 else 'N')
-        docxContext['기존_평가지수'] = round(project.get_total_level(current_area_alias, compliances=compliances)['old'],1)
+        docxContext['기존_평가지수'] = oldAssessmentScore
         docxContext['기존_등급'] = grade['old']#project.get_total_level_grade(current_area_alias, compliances=compliances, is_new=False),
         
-        docxContext['신규_평가지수'] = round(project.get_total_level(current_area_alias, compliances=compliances)['new'],1)
+        docxContext['신규_평가지수'] = newAssessmentScore
         docxContext['신규_등급'] = grade['new']
-        docxContext['기존대상_취약점수'] = project.get_existing_asset_vulnerability_count(current_area_alias)
+
+        docxContext['기존대상_취약점수'] = oldVulYCount
         docxContext['재발견_취약점수'] = project.get_existing_vulnerability(current_area_alias).count()
 
 
