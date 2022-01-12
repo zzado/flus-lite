@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { Select, MenuItem, Box, TableFooter, Pagination, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Checkbox } from '@mui/material';
+import { Chip, Select, MenuItem, Box, TableFooter, Pagination, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Checkbox } from '@mui/material';
 import { styled } from '@mui/system';
 
 const TableStyle = styled('div')(
@@ -31,7 +31,7 @@ export default function AssetListTable(props){
     <Fragment>
       <TableStyle>
       <TableContainer>
-        <Table size='medium'>
+        <Table size='medium' >
           <TableHead>
             <TableRow >
               <TableCell padding="checkbox">
@@ -50,7 +50,7 @@ export default function AssetListTable(props){
             <TableCell padding="checkbox">
               <Checkbox color="primary" value={assetObj.id}/>
             </TableCell>
-            <TableCell component="td">{assetObj.code}</TableCell>
+            <TableCell component="td"><Chip sx={{color:'white', backgroundColor:'#999', fontWeight:'bold'}} size="small" label={assetObj.code}/></TableCell>
             <TableCell component="td">{assetObj.name}</TableCell>
             <TableCell component="td">{assetObj.assessors}</TableCell>
             <TableCell component="td">{assetObj.operator}</TableCell>

@@ -3,7 +3,7 @@ import { Fragment, useContext, useCallback } from 'react';
 import { useParams } from "react-router-dom";
 import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import AssetListTable from '../Components/AssetListTable'
-import { exportHtmlReporttReq } from '../utils'
+import { exportHtmlReporttReq, exportDocxReporttReq } from '../utils'
 import FileSaver from 'file-saver'
 import { AppContext } from '../Context/AppContext'
 import HtmlIcon from '@mui/icons-material/Html';
@@ -21,7 +21,7 @@ export default function WorkSpaceStep5(){
 
   const exportHtml = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
 
-  const exportDocx = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
+  const exportDocx = useCallback(()=> exportDocxReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.docx`) : alert('error')), [projectId, areaAlias])
 
   const exportXlsx = useCallback(()=> exportHtmlReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.html`) : alert('error')), [projectId, areaAlias])
 

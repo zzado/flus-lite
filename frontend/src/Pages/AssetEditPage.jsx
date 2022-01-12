@@ -16,7 +16,7 @@ const stateReducer = (state, action) => {
 };
 
 export default function AssetEditPage(){
-  const { platformList, assetObj, resetAssetList} = useAssetContext();
+  const { platformList, assetObj, resetAssetList, getPlatformList} = useAssetContext();
   const { areaAlias, assetId, projectId } = useParams();
   const { ASSET_INIT_STATE, ASSET_VALID_CHECK_FIELDS } = global.config
   const [ assetState, assetStateDispatch ] = useReducer(stateReducer, ASSET_INIT_STATE);
@@ -25,6 +25,10 @@ export default function AssetEditPage(){
   useEffect(() => {
     assetStateDispatch({type:'setAssetObj', value: assetObj});
   },[assetObj]);
+
+  useEffect(() => {
+    getPlatformList()
+  }, [getPlatformList]);
 
   useEffect(() => {
       if(platformList.length) assetStateDispatch({name:'platformList' ,value:platformList});

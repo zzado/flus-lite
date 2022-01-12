@@ -64,33 +64,19 @@ export default function App (){
             <Route path=":assetId" element={<AssetDetailPage/>}/>  
           </Route>
           
-          <Route path="w/:projectId/:areaAlias/" element={<WorkSpaceLayOut step={0}/>} >
-            <Route path="step1" element={<WorkSpaceStep1/>}/>
-            <Route path="step2" element={<WorkSpaceStep2/>}/>
-            <Route path="step3" element={<WorkSpaceStep3/>}/>
-            <Route path="step4" element={<WorkSpaceStep4/>}/>
-            <Route path="step5" element={<WorkSpaceStep5/>}/>
-
-            <Route path="asset-grid" element={<AssetGridPage/>}/>
-            <Route path="vul-grid" element={<VulsByAssetGridPage/>}/>
-            <Route path="vuls-grid" element={<VulsByAreaGridPage/>}/>
-          </Route>
+          <Route path="w/:projectId/:areaAlias/step1" element={<WorkSpaceLayOut step={0}><WorkSpaceStep1/></WorkSpaceLayOut>} />
+          <Route path="w/:projectId/:areaAlias/step2" element={<WorkSpaceLayOut step={1}><WorkSpaceStep2/></WorkSpaceLayOut>} />
+          <Route path="w/:projectId/:areaAlias/step3" element={<WorkSpaceLayOut step={2}><WorkSpaceStep3/></WorkSpaceLayOut>} />
+          <Route path="w/:projectId/:areaAlias/step4" element={<WorkSpaceLayOut step={3}><WorkSpaceStep4/></WorkSpaceLayOut>} />
+          <Route path="w/:projectId/:areaAlias/step5" element={<WorkSpaceLayOut step={4}><WorkSpaceStep5/></WorkSpaceLayOut>} />
+          
+          <Route path="w/:projectId/:areaAlias/asset-grid" element={<WorkSpaceLayOut step={0}><AssetGridPage/></WorkSpaceLayOut>}/>
+          <Route path="w/:projectId/:areaAlias/vul-grid" element={<WorkSpaceLayOut step={1}><VulsByAssetGridPage/></WorkSpaceLayOut>}/>
+          <Route path="w/:projectId/:areaAlias/vuls-grid" element={<WorkSpaceLayOut step={2}><VulsByAreaGridPage/></WorkSpaceLayOut>}/>
           
           
-          <Route path="v-a/:projectId/:areaAlias/:assetId" element={
-
-              <WorkSpaceLayOut step={1}>
-                <VulListByAssetPage/>
-              </WorkSpaceLayOut>}/>
-
-
-          <Route path="v-a/:projectId/:areaAlias/:assetId/vul-grid" element={
-
-            <WorkSpaceLayOut step={1}>
-              <VulsByAssetGridPage/>
-            </WorkSpaceLayOut>}/>
-          
-
+          <Route path="v-a/:projectId/:areaAlias/:assetId" element={<WorkSpaceLayOut step={1}><VulListByAssetPage/></WorkSpaceLayOut>}/>
+          <Route path="v-a/:projectId/:areaAlias/:assetId/vul-grid" element={<WorkSpaceLayOut step={1}><VulsByAssetGridPage/></WorkSpaceLayOut>}/>
           <Route path="v/:projectId/:areaAlias/:vulId" element={<WorkSpaceLayOut step={1}><VulEditPage/></WorkSpaceLayOut>} />
 
 

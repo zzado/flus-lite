@@ -39,7 +39,7 @@ export default function ProjectDetailPage(){
     <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>프로젝트 생성</Typography>} action={ 
       <>
       <Tooltip title="뒤로가기" placement="top" arrow>
-        <IconButton sx={{mr:1}} onClick={()=>navigate('p')}>
+        <IconButton sx={{mr:1}} onClick={()=>navigate('/p')}>
           <ArrowBackIcon sx={{ color:'black', fontSize: 40 }}/>
         </IconButton>
       </Tooltip>

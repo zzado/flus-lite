@@ -6,192 +6,211 @@ from api.serializers import *
 from api.models import *
 from flus_lite import settings
 
-class AreaDocxContextApi(views.APIView):
-    def get(self, request, *args, **kwargs):
-        projectId = kwargs['projectId']
-        areaAlias = kwargs['areaAlias']
-        
-        try :
-            projectObj = Project.objects.get(pk=projectId)
-        except Project.DoesNotExist:
-            return response.Response(settings.COMMON_ERROR_MESSAGE, status=status.HTTP_400_BAD_REQUEST)
-            
-        print(projectObj)
-        # 
-        
-        assetObjs = projectObj.assets.filter(area_alias=areaAlias)
-        vulObjs = projectObj.vuls.filter(asset__in=assetObjs)
-        vulYObjs = vulObjs.filter(result='Y')
-        
-        vulYExceptPatchObjs = vulYObjs.filter(is_patched=False)
-        
-        newAssetObjs = assetObjs.filter(is_new=True)
-        newVulObjs = vulObjs.filter(asset__in=newAssetObjs)
-        newVulYObjs = newVulObjs.filter(result='Y')
-        
-        oldAssetObjs = assetObjs.filter(is_new=False)
-        oldVulObjs = vulObjs.filter(asset__in=oldAssetObjs)
-        oldVulYObjs = oldVulObjs.filter(result='Y')
-        
 
+#  평가 등급 :: 1등급-(90 ~ 100), 2등급-(80 ~ 89), 3등급-(70 ~ 79), 4등급-(60 ~ 69), 5등급-(0 ~ 59)
+def getGradeFromScore(score) :
+    if score >= 90 and score <= 100 :
+        return 1
+    elif score >= 80 and score < 90 :
+        return 2
+    elif score >= 70 and score < 80 :
+        return 3
+    elif score >= 60 and score < 70 :
+        return 4
+    elif score >= 50 and score < 60 :
+        return 5
+
+
+def getAreaStatistic(projectObj, areaAlias):
+    # 분야별 자산들
+    assetObjs = projectObj.assets.filter(area_alias=areaAlias)
+    # 분야별 평가항목들
+    vulObjs = projectObj.vuls.filter(asset__in=assetObjs)
+    # 분야별 취약항목들
+    vulYObjs = vulObjs.filter(result='Y')
+    # 패치된 취약항목을 제외한 취약항목들
+    vulYExceptPatchObjs = vulYObjs.filter(is_patched=False)
+    # "신규" 자산들
+    newAssetObjs = assetObjs.filter(is_new=True)
+    # "신규" 자산들의 평가항목들
+    newVulObjs = vulObjs.filter(asset__in=newAssetObjs)
+    # "신규" 자산들의 취약항목들
+    newVulYObjs = newVulObjs.filter(result='Y')
+    # "기존" 자산들
+    oldAssetObjs = assetObjs.filter(is_new=False)
+    # "기존" 자산들의 평가항목들
+    oldVulObjs = vulObjs.filter(asset__in=oldAssetObjs)
+    # "기존" 자산들의 취약항목들
+    oldVulYObjs = oldVulObjs.filter(result='Y')
+    # 재발견 취약항목(is_new=false)
+    notPatchedVulObjs = vulYObjs.filter(is_new=False)
+
+    # 자산가치별 자산 수
+    assetCountByAssetVaule = {
+        1: assetObjs.filter(asset_value=1).count(),
+        2: assetObjs.filter(asset_value=2).count(),
+        3: assetObjs.filter(asset_value=3).count(),
+        4: assetObjs.filter(asset_value=4).count(),
+        5: assetObjs.filter(asset_value=5).count(),
+    }
+
+    # 
+    vulYCountByRisk = {
+        1: vulYObjs.filter(vulnerability_item__risk=1).count(),
+        2: vulYObjs.filter(vulnerability_item__risk=2).count(),
+        3: vulYObjs.filter(vulnerability_item__risk=3).count(),
+        4: vulYObjs.filter(vulnerability_item__risk=4).count(),
+        5: vulYObjs.filter(vulnerability_item__risk=5).count(),
+    }
+
+    #
+    vulYCountExceptPatcByRisk = {
+        1: vulYExceptPatchObjs.filter(vulnerability_item__risk=1).count(),
+        2: vulYExceptPatchObjs.filter(vulnerability_item__risk=2).count(),
+        3: vulYExceptPatchObjs.filter(vulnerability_item__risk=3).count(),
+        4: vulYExceptPatchObjs.filter(vulnerability_item__risk=4).count(),
+        5: vulYExceptPatchObjs.filter(vulnerability_item__risk=5).count(),
+    }
+
+
+    print(assetCountByAssetVaule)
+    # 전체 자산 수
+    allAssetCount = assetObjs.count()
+
+    # 평가항목 수
+    vulCountByAllAsset = vulObjs.count()
+    
+    # 취약점 수
+    vulYCountByAllAsset = vulYObjs.count()
+    
+    # 취약점 종류 수
+    vulCodeCountByAllAsset = vulYObjs.values_list('vulnerability_item__code').distinct().count()
+    
+    # 취약률 ( 취약점 수/ 평가항목수 ) * 100
+    vulRateByAllAsset = round(vulYCountByAllAsset/vulCountByAllAsset * 100, 1)
+
+    # 패치된 취약점을 제외한 취약점 수
+    vulYCountByAllAssetExceptPatch = vulYExceptPatchObjs.count()
+
+    # 패치된 취약점을 제외한 취약점 종류 수
+    vulCodeCountByAllAssetExceptPatch = vulYExceptPatchObjs.values_list('vulnerability_item__code').distinct().count()
+
+    # 패치된 취약점을 제외한 취약률 (패치된 취약점을 제외한 취약점 / 평가항목수) * 100
+    vulRateByAllAssetExceptPatch = round(vulYCountByAllAssetExceptPatch/vulCountByAllAsset * 100, 1)
+    
+    # 취약점 별 자산수
+    from django.db.models import Count
+    vulYInfoIncludeAssetCount = vulYObjs.values('vulnerability_item__code', 'vulnerability_item__name', 'vulnerability_item__risk').distinct().annotate(vulnerable_asset_count=Count('asset')).order_by('-vulnerability_item__risk', '-vulnerable_asset_count')
+
+    # 신규 자산수
+    newAssetCount = newAssetObjs.count()
+    
+    # 신규 자산의 평가항목 수
+    newVulCount = newVulObjs.count()
+    
+    # 기존 자산 수
+    oldAssetCount = oldAssetObjs.count()
+    
+    # 기존 자산의 평가항목 수
+    oldVulCount = oldVulObjs.count()
+    
+    # 기존 자산의 취약점 수
+    oldVulYCount = oldVulYObjs.count()
+
+
+    from django.db.models import Sum
+    # 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
+    assessmentScoreFromAllAsset = round((1-vulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/vulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum'))*100, 1)
+    
+    # 평가 등급 :: 1등급-(90 ~ 100), 2등급-(80 ~ 89), 3등급-(70 ~ 79), 4등급-(60 ~ 69), 5등급-(0 ~ 59)
+    assessmentGradeFromAllAsset = getGradeFromScore(assessmentScoreFromAllAsset)
+    
+    # 신규 자산에 대한 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
+    assessmentScoreFromNewAsset = round((1-newVulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/newVulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum'))*100, 1)
+    print(assessmentScoreFromNewAsset)
+
+    # 평가 등급 :: 1등급-(90 ~ 100), 2등급-(80 ~ 89), 3등급-(70 ~ 79), 4등급-(60 ~ 69), 5등급-(0 ~ 59)
+    assessmentGradeFromNewAsset = getGradeFromScore(assessmentScoreFromNewAsset)
+    
+    # 기존 자산에 대한 평가 지수
+    assessmentScoreFromOldAsset = round((1-oldVulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/oldVulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum',1))*100, 1) if oldVulYCount > 0 else 0
+    
+    # 평가 등급 :: 1등급-(90 ~ 100), 2등급-(80 ~ 89), 3등급-(70 ~ 79), 4등급-(60 ~ 69), 5등급-(0 ~ 59)
+    assessmentGradeFromOldAsset = getGradeFromScore(assessmentScoreFromOldAsset)
+    
+    notPatchedVulCount = notPatchedVulObjs.count()
+
+    vulYInfoIncludeAssetCountExceptPatch = notPatchedVulObjs.values('vulnerability_item__code', 'vulnerability_item__name', 'vulnerability_item__risk').distinct().annotate(vulnerable_asset_count=Count('asset')).order_by('-vulnerability_item__risk', '-vulnerable_asset_count')
+
+    # 재발견 취약점들의 취약률 ( 재발견 취약점 수/ 기존 자산들의 평가항목수 ) * 100
+    vulRateFromNotPatchedVul = round(notPatchedVulCount/oldVulCount * 100, 1) if oldVulYCount > 0 else 0
+
+    assessmentScoreForNotPatchedVulExist = assessmentScoreFromOldAsset if assessmentScoreFromOldAsset <= assessmentScoreFromNewAsset or assessmentScoreFromNewAsset == 0 else round(assessmentScoreFromOldAsset - (assessmentScoreFromOldAsset - assessmentScoreFromNewAsset)*vulRateFromNotPatchedVul, 1)
+
+
+    statisticContext={
+        # (전체) 자산 수
+        'allAssetCount': allAssetCount,
+        # (전체) 평가항목 수
+        'vulCountByAllAsset': vulCountByAllAsset, 
+        # (전체) 취약점 수
+        'vulYCountByAllAsset': vulYCountByAllAsset,
+        # (전체) 취약점 종류 수
+        'vulCodeCountByAllAsset': vulCodeCountByAllAsset, 
+        # (전체) 취약률 ( 취약점 수/ 평가항목수 ) * 100
+        'vulRateByAllAsset': vulRateByAllAsset, 
+        # (전체) 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
+        'assessmentScoreFromAllAsset': assessmentScoreFromAllAsset,
+        # (전체) 평가 등급 
+        'assessmentGradeFromAllAsset': assessmentGradeFromAllAsset, 
+        
+        # (신규) 자산수
+        'newAssetCount': newAssetCount,
+        # (신규) 평가항목 수
+        'newVulCount': newVulCount,
+        # (신규) 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
+        'assessmentScoreFromNewAsset': assessmentScoreFromNewAsset,
+        # (신규) 평가 등급
+        'assessmentGradeFromNewAsset': assessmentGradeFromNewAsset, 
+
+        # (기존) 자산 수
+        'oldAssetCount': oldAssetCount,
+        # (기존) 평가항목 수
+        'oldVulCount': oldVulCount,
+        # (기존) 취약점 수
+        'oldVulYCount': oldVulYCount, 
+        # (기존) 평가 지수
+        'assessmentScoreFromOldAsset': assessmentScoreFromOldAsset,
+        # (기존) 평가 등급
+        'assessmentGradeFromOldAsset': assessmentGradeFromOldAsset,
+
+        # 취약점 별 자산수
+        'vulYInfoIncludeAssetCount': vulYInfoIncludeAssetCount,
         # 자산가치별 자산 수
-        assetCountByAssetVaule = {
-            1: assetObjs.filter(asset_value=1).count(),
-            2: assetObjs.filter(asset_value=2).count(),
-            3: assetObjs.filter(asset_value=3).count(),
-            4: assetObjs.filter(asset_value=3).count(),
-            5: assetObjs.filter(asset_value=3).count(),
-        }
+        'assetCountByAssetVaule': assetCountByAssetVaule, 
 
-        # 평가항목 수
-        vulCount = vulObjs.count()
-        
-        # 취약점 수
-        vulYCount = vulYObjs.count()
-        
-        # 취약점 종류 수
-        vulCodeCount = vulYObjs.values_list('vulnerability_item__code').distinct().count()
-        
-        # 취약률
-        vulRate = round(vulYCount/vulCount * 100, 1)
         
         # 패치된 취약점을 제외한 취약점 수
-        vulYCountExceptPatch = vulYExceptPatchObjs.count()
+        'vulYCountByAllAssetExceptPatch': vulYCountByAllAssetExceptPatch,
+
         # 패치된 취약점을 제외한 취약점 종류 수
-        vulCodeCountExceptPatch = vulYExceptPatchObjs.values_list('vulnerability_item__code').distinct().count()
-        vulRateExceptPatch = round(vulYCountExceptPatch/vulCount * 100, 1)
-        
-        # 취약점 별 자산수
-        from django.db.models import Count
-        vulCodeIncludeAssetCount = vulYObjs.values('vulnerability_item__code', 'vulnerability_item__name', 'vulnerability_item__risk').distinct().annotate(vulnerable_asset_count=Count('asset')).order_by('-vulnerability_item__risk', '-vulnerable_asset_count')
-
-        # 신규 자산수
-        newAssetCount = newAssetObjs.count()
-        
-        # 신규 자산의 평가항목 수
-        newVulCount = newVulObjs.count()
-        
-        # 기존 자산 수
-        oldAssetCount = oldAssetObjs.count()
-        
-        # 기존 자산의 평가항목 수
-        oldVulCount = oldVulObjs.count()
-        
-        # 기존 자산의 취약점 수
-        oldVulYCount = oldVulYObjs.count()
-
-        from django.db.models import Sum
-        # 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
-        assessmentScore = round((1-vulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/vulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum'))*100, 1)
-        print(assessmentScore)
-
-        # 신규 자산에 대한 평가 지수 :: (1 - 평가항목들의 위험도 합 / 취약항목들의 위험도 합) * 100
-        newAssessmentScore = round((1-newVulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/newVulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum'))*100, 1)
-        print(newAssessmentScore)
-        
-        # 기존 자산에 대한 평가 지수
-        oldAssessmentScore = round((1-oldVulYObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum', 0)/oldVulObjs.aggregate(Sum('vulnerability_item__risk')).get('vulnerability_item__risk__sum',1))*100, 1)
-        print(oldAssessmentScore)
-        
-        # 평가 등급 :: 1등급-(90 ~ 100), 2등급-(80 ~ 89), 3등급-(70 ~ 79), 4등급-(60 ~ 69), 5등급-(0 ~ 59)
+        'vulCodeCountByAllAssetExceptPatch': vulCodeCountByAllAssetExceptPatch,
+        # 패치된 취약점을 제외한 취약률 (패치된 취약점을 제외한 취약점 / 평가항목수) * 100
+        'vulRateByAllAssetExceptPatch': vulRateByAllAssetExceptPatch,
         
 
+        # 재발견 취약점수
+        'notPatchedVulCount': notPatchedVulCount,
+        # 재발견 취약점 별 자산수
+        'vulYInfoIncludeAssetCountExceptPatch': vulYInfoIncludeAssetCountExceptPatch,
+        # 재발견 취약점들의 취약률 ( 재발견 취약점 수/ 기존 자산들의 평가항목수 ) * 100
+        'vulRateFromNotPatchedVul': vulRateFromNotPatchedVul,
+
+        'assessmentScoreForNotPatchedVulExist': assessmentScoreForNotPatchedVulExist,
+
+        'vulYCountByRisk': vulYCountByRisk,
+        'vulYCountExceptPatcByRisk': vulYCountExceptPatcByRisk,
+    }
     
-
-        docxContext={}
-        docxContext['대상기관'] = projectObj.client_company
-        docxContext['평가_기준'] = projectObj.compliance
-        docxContext['위험도별_자산수'] = assetCountByAssetVaule
-        docxContext['총_자산수'] = assetObjs.count()
-
-        docxContext['평가_항목수'] = vulCount
-        docxContext['취약점_수'] = vulYCount
-        docxContext['취약점_종류'] = vulCodeCount
-        docxContext['취약률'] = vulRate
-
-        docxContext['AP_취약점_수'] = vulYCountExceptPatch
-        docxContext['AP_취약점_종류'] = vulCodeCountExceptPatch        
-        docxContext['AP_취약률'] = vulRateExceptPatch
-
-        docxContext['주요_취약점'] = vulCodeIncludeAssetCount[:10]
-        
-        docxContext['기존_자산수'] = oldAssetCount
-        docxContext['기존_평가항목수'] = newVulCount
-
-        docxContext['신규_자산수'] = newAssetCount
-        docxContext['신규_평가항목수'] = oldVulCount
-
-        docxContext['평가_지수'] = assessmentScore
-        docxContext['평가_등급'] = grade['total']#project.get_total_level_grade(current_area_alias, compliances=compliances),
-        
-        docxContext['기존_평가지수'] = oldAssessmentScore
-        docxContext['기존_등급'] = grade['old']#project.get_total_level_grade(current_area_alias, compliances=compliances, is_new=False),
-        
-        docxContext['신규_평가지수'] = newAssessmentScore
-        docxContext['신규_등급'] = grade['new']
-
-        docxContext['기존대상_취약점수'] = oldVulYCount
-        docxContext['재발견_취약점수'] = project.get_existing_vulnerability(current_area_alias).count()
-
-
-        #print(sortedVuls)
-        # mysql works
-        #sortedVuls = vulYObjs.values('vulnerability_item__code', 'vulnerability_item__name', 'vulnerability_item__risk').distinct('vulnerability_item__code')
-    
-        
-        return response.Response(docxContext)
-        docxContext = {}
-        docxContext['분야명'] = settings.AREA_CN_LISTS[areaAlias]
-        
-        
-        docxContext['문서_번호'] = ''
-        docxContext['출력일'] = ''
-        docxContext['평가_목적'] = ''
-        docxContext['평가_인력'] = ''
-        docxContext['평가_일정'] = ''
-        docxContext['평가_방법'] = ''
-                
-        if areaAlias != 'FISM' :
-            if areaAlias in ['INF', 'ISS'] :
-                docxContext['평가_분석'] = ''#TK2(F(total_result_summery.get('평가 대상').get('평가 분석(기존 보호대책 중심)')))
-                docxContext['특이사항'] = ''#TK(F(total_result_summery.get('평가 대상').get('특이사항')))
-                if areaAlias == 'INF' :
-                    docxContext['구간별_분석'] = ''#TK(F(total_result_summery.get('평가 대상').get('구간별 분석')))
-            else :
-                docxContext['평가_분석'] = ''#TK(F(total_result_summery.get('평가 대상').get('평가 분석(기존 보호대책 중심)')))
-                docxContext['특이사항'] = ''#TK(F(total_result_summery.get('평가 대상').get('특이사항')))
-
-        docxContext['결과_총평'] = ''#F(total_result_summery.get('평가 결과 (요약)').get('결과 총평'))
-        
-
-        
-        docxContext['TOP10'] = ('Y' if docxContext['주요_취약점'].count() >= 10 else 'N')
-        tempList = TK(F(total_result_summery.get('보호대책 및 권고사항').get('보호대책')))
-        print(tempList)
-        docxContext['보호대책'] = []
-        for x in tempList :
-            if len(x) == 3 :
-                x[2] = x[2].split("\n- ")[1:]
-            for i, _ in enumerate(x):
-                if type(_) is str :
-                    x[i] = _.strip()
-            docxContext['보호대책'].append(x)
-
-        print(docxContext['보호대책'] )
-
-        docxContext['권고사항'] = F(total_result_summery.get('보호대책 및 권고사항').get('권고사항'))
-        docxContext['첨부목록'] = total_result_summery.get('문서 정보').get('첨부 목록')[0].split('\n')
-        #docxContext['안내사항'] = F(total_result_summery.get('안내 사항').get(''))
-        
-        if docxContext['재발견_취약점수'] != 0 :
-            docxContext['재발견'] = 'Y'
-            docxContext['재발견_주요_취약점'] = project.get_vulnerable_vulnerability_item_frequency(current_area_alias, compliances=compliances, is_new=False)[:10]
-            tempVar = docxContext['재발견_취약점수'] / docxContext['기존대상_취약점수']
-            docxContext['재발견율'] = round(tempVar * 100, 1)
-            docxContext['재발견_TOP10'] = ('Y' if docxContext['재발견_주요_취약점'].count() >= 10 else 'N')
-            docxContext['재발견_지수'] = docxContext['기존_평가지수'] if docxContext['기존_평가지수'] <= docxContext['신규_평가지수'] or docxContext['신규_평가지수'] == 0 else round(docxContext['기존_평가지수'] - (docxContext['기존_평가지수'] - docxContext['신규_평가지수'])*tempVar, 1)
-
-        else :
-            docxContext['재발견'] = 'N'
-
-        return response.Response(docxContext)
+    return statisticContext
+   

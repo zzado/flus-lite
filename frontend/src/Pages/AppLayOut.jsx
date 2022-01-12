@@ -86,7 +86,7 @@ export default function AppLayOut() {
           </Grid>
           <Grid container spacing={2} justifyContent={'flex-end'}>
             <Grid item>
-              <IconButton color="inherit" size="large"
+              <IconButton color="inherit" size="small"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"

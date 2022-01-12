@@ -1,6 +1,6 @@
-import { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { AppContext } from '../Context/AppContext'
+import { useAssetContext } from '../Context/AppContext'
 import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddRoadIcon from '@mui/icons-material/AddRoad';
@@ -8,8 +8,7 @@ import AssetListTable from '../Components/AssetListTable'
 
 
 export default function WorkSpaceStep1(){
-  const { appContextState } = useContext(AppContext);
-  const { assetList } = appContextState;
+  const { assetList } = useAssetContext();
   const { projectId, areaAlias } = useParams();
 
   const navigate = useNavigate()

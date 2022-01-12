@@ -17,7 +17,7 @@ urlpatterns = [
     path('auth/user/', UserInfoGetAPI.as_view()),
     path('user/', UserListAPI.as_view()),
 
-    path('area-docx/<int:projectId>/<str:areaAlias>/', AreaDocxContextApi.as_view()),
+    #path('area-docx/<int:projectId>/<str:areaAlias>/', AreaDocxContextApi.as_view()),
 
 
     path('compliance/', ComplianceListAPI.as_view()),

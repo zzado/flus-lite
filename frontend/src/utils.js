@@ -39,6 +39,13 @@ export async function LegacyRequest(URL, OPTION){
       return [false, await responseObj.blob()]
   }
 }
+export const exportDocxReporttReq = async(projectId, areaAlias)=>{
+  const URL = `legacy/export-docx-report/${projectId}/${areaAlias}/`;
+  const OPTION = {method: 'GET'};
+  const [result, resData] = await LegacyRequest(URL, OPTION);
+  return [result, resData];
+};
+
 
 export const exportHtmlReporttReq = async(projectId, areaAlias)=>{
   const URL = `legacy/export-html-report/${projectId}/${areaAlias}/`;

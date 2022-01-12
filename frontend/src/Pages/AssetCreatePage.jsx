@@ -12,8 +12,8 @@ const stateReducer = (state, action) => {
 };
 
 export default function AssetCreatePage(){
-  const { areaAlias, assetId, projectId } = useParams();
-  const { platformList, assetList, resetAssetList} = useAssetContext();
+  const { areaAlias, projectId } = useParams();
+  const { platformList, assetList, resetAssetList, getPlatformList} = useAssetContext();
   const { ASSET_INIT_STATE, ASSET_VALID_CHECK_FIELDS } = global.config
   const [ assetState, assetStateDispatch ] = useReducer(stateReducer, ASSET_INIT_STATE);
   const navigate = useNavigate();
@@ -26,6 +26,9 @@ export default function AssetCreatePage(){
     if(assetList.length) assetStateDispatch({name:'num' , value:assetList[assetList.length-1].num +1});
   }, [assetList]);
 
+  useEffect(() => {
+    getPlatformList()
+  }, [getPlatformList]);
 
   const createAsset = () => {
     let payload = {...assetState, area_alias: areaAlias, project: projectId };
@@ -56,7 +59,7 @@ export default function AssetCreatePage(){
         <CardHeader sx={{ backgroundColor:'white', padding: '10px', pb:0}} title={<Typography variant='h6' sx={{fontWeight:'bold'}}>자산 편집</Typography>} action={ 
           <>
           <Tooltip title="뒤로가기" placement="top" arrow>
-            <IconButton sx={{mr:1}} onClick={()=>navigate(`/a/${projectId}/${areaAlias}/${assetId}`)}>
+            <IconButton sx={{mr:1}} onClick={()=>navigate(`/w/${projectId}/${areaAlias}/step1`)}>
               <ArrowBackIcon sx={{ color:'black', fontSize: 40 }}/>
             </IconButton>
           </Tooltip>

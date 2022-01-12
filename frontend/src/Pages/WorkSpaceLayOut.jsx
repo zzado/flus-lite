@@ -1,13 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import { Tabs, Tab, Button, Box } from '@mui/material'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 
 export default function WorkSpaceLayOut(props){
   const { step } = props;
   const { projectId, areaAlias } = useParams();
-  const location = useLocation();
-  console.log(location)
   const navigate = useNavigate()
   
 

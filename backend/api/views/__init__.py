@@ -6,4 +6,4 @@ from api.views.compliance import ComplianceListAPI, PlatformListAPI
 from api.views.realgrid import RealGridAssetAPI, RealGridVulAPI
 from api.views.poc import POCDetailUpdateDeleteAPI
 from api.views.upload_file import ScreenShotAPI, ScreenShotByVulAPI, ReferFileAPI, ReferFileByVulAPI
-from api.views.statistics import AreaDocxContextApi
+from api.views.statistics import getAreaStatistic
