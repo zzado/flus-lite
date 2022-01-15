@@ -71,7 +71,7 @@ class ExportDocxAreaReport(views.APIView):
         docxObj = DocxTemplate(DOCX_TEMPLATE_PATH)
         docxObj.render(docxContext)
 
-        fp_image1, fp_image2 = makeAreaChartForDocx(docxContext, areaAlias)
+        fp_image1, fp_image2 = self.makeAreaChartForDocx(docxContext, areaAlias)
         if areaAlias == 'INF' :
             docxObj.replace_pic('chart2.png', fp_image2)
         elif areaAlias != 'FISM'  :
@@ -90,81 +90,81 @@ class ExportDocxAreaReport(views.APIView):
         return responseObj
 
 
-def makeAreaChartForDocx(docxContext, areaAlias) :
-    import numpy, time
-    import matplotlib, matplotlib.font_manager as font_manager, matplotlib.pyplot as plt, matplotlib.ticker as mtick
+    def makeAreaChartForDocx(self, docxContext, areaAlias) :
+        import numpy, time
+        import matplotlib, matplotlib.font_manager as font_manager, matplotlib.pyplot as plt, matplotlib.ticker as mtick
 
-    matplotlib.use('Agg')
-    
-    font_manager.fontManager.addfont(os.path.join(settings.SUBFILES_ROOT, 'Fonts/malgun.ttf'))
-    font_manager.fontManager.addfont(os.path.join(settings.SUBFILES_ROOT, 'Fonts/malgunbd.ttf'))
-    font_manager.fontManager.addfont(os.path.join(settings.SUBFILES_ROOT, 'Fonts/malgunsl.ttf'))
-    fp_image1 = None
-    fp_image2 = None
-
-    plt.rcParams["font.family"] = 'Malgun Gothic'
-    plt.rcParams["font.size"] = '15'
-    plt.rcParams["figure.figsize"] = (10,4.5)
-    fig, ax = plt.subplots()
-    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%d'))
-
-    x = ['매우낮음(1)','낮음(2)','보통(3)','높음(4)','매우높음(5)']
-    if areaAlias != 'FISM' :
-        y = list(docxContext['assetCountByAssetVaule'].values())
-        for i, v in enumerate(x) :
-            plt.text(v, y[i], y[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
-
-        plt.bar(x, y, label='자산')
-        plt.legend()
-        plt.yticks([])
-        plt.tight_layout()
-        fp_image1 = io.BytesIO()
-        plt.savefig(fp_image1)
-        plt.close()
-        fp_image1.seek(0)
-    
-
-    plt.rcParams["font.family"] = 'Malgun Gothic'
-    plt.rcParams["font.size"] = '15'
-    plt.rcParams["figure.figsize"] = (10,5)
-    fig, ax = plt.subplots()
-    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%d'))
-
-    fp_image2 = io.BytesIO()
-
-    if(docxContext['vulYCountByAllAsset'] != docxContext['vulYCountByAllAssetExceptPatch']) :
-        y1 = list(docxContext['vulYCountExceptPatcByRisk'].values())
-        y2 = list(docxContext['vulYCountByRisk'].values())
-
-        loc_bar= numpy.arange(len(x))
-        ax.bar(loc_bar-0.15, y1, label='조치후', width=0.28, color='#A4A4A4')
-        ax.bar(loc_bar+0.15, y2, label='분석시', width=0.28)
-
-        for i, v in enumerate(loc_bar+0.15,) :
-            plt.text(v, y2[i], y2[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
-
-        for i, v in enumerate(loc_bar-0.15,) :
-            plt.text(v, y1[i], y1[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
-
-        plt.xticks(loc_bar, x)
-        plt.yticks([])
-        plt.tight_layout()
-        plt.legend()
+        matplotlib.use('Agg')
         
-        plt.savefig(fp_image2)
-        plt.close()
-    else :
-        y = list(docxContext['vulYCountByRisk'].values())
-        for i, v in enumerate(x) :
-            plt.text(v, y[i], y[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
+        font_manager.fontManager.addfont(os.path.join(settings.SUBFILES_ROOT, 'Fonts/malgun.ttf'))
+        font_manager.fontManager.addfont(os.path.join(settings.SUBFILES_ROOT, 'Fonts/malgunbd.ttf'))
+        font_manager.fontManager.addfont(os.path.join(settings.SUBFILES_ROOT, 'Fonts/malgunsl.ttf'))
+        fp_image1 = None
+        fp_image2 = None
 
-        plt.bar(x, y, label='취약점')
-        plt.legend()
-        plt.yticks([])
-        plt.tight_layout()
+        plt.rcParams["font.family"] = 'Malgun Gothic'
+        plt.rcParams["font.size"] = '15'
+        plt.rcParams["figure.figsize"] = (10,4.5)
+        fig, ax = plt.subplots()
+        ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%d'))
 
-        plt.savefig(fp_image2)
-        plt.close()
-    
-    fp_image2.seek(0)
-    return fp_image1, fp_image2
+        x = ['매우낮음(1)','낮음(2)','보통(3)','높음(4)','매우높음(5)']
+        if areaAlias != 'FISM' :
+            y = list(docxContext['assetCountByAssetVaule'].values())
+            for i, v in enumerate(x) :
+                plt.text(v, y[i], y[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
+
+            plt.bar(x, y, label='자산')
+            plt.legend()
+            plt.yticks([])
+            plt.tight_layout()
+            fp_image1 = io.BytesIO()
+            plt.savefig(fp_image1)
+            plt.close()
+            fp_image1.seek(0)
+        
+
+        plt.rcParams["font.family"] = 'Malgun Gothic'
+        plt.rcParams["font.size"] = '15'
+        plt.rcParams["figure.figsize"] = (10,5)
+        fig, ax = plt.subplots()
+        ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%d'))
+
+        fp_image2 = io.BytesIO()
+
+        if(docxContext['vulYCountByAllAsset'] != docxContext['vulYCountByAllAssetExceptPatch']) :
+            y1 = list(docxContext['vulYCountExceptPatcByRisk'].values())
+            y2 = list(docxContext['vulYCountByRisk'].values())
+
+            loc_bar= numpy.arange(len(x))
+            ax.bar(loc_bar-0.15, y1, label='조치후', width=0.28, color='#A4A4A4')
+            ax.bar(loc_bar+0.15, y2, label='분석시', width=0.28)
+
+            for i, v in enumerate(loc_bar+0.15,) :
+                plt.text(v, y2[i], y2[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
+
+            for i, v in enumerate(loc_bar-0.15,) :
+                plt.text(v, y1[i], y1[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
+
+            plt.xticks(loc_bar, x)
+            plt.yticks([])
+            plt.tight_layout()
+            plt.legend()
+            
+            plt.savefig(fp_image2)
+            plt.close()
+        else :
+            y = list(docxContext['vulYCountByRisk'].values())
+            for i, v in enumerate(x) :
+                plt.text(v, y[i], y[i], fontsize=13, color='#000000', horizontalalignment='center', verticalalignment='bottom')
+
+            plt.bar(x, y, label='취약점')
+            plt.legend()
+            plt.yticks([])
+            plt.tight_layout()
+
+            plt.savefig(fp_image2)
+            plt.close()
+        
+        fp_image2.seek(0)
+        return fp_image1, fp_image2

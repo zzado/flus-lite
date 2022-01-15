@@ -143,6 +143,7 @@ class RealGridVulAPI(views.APIView):
         for _ in list(set(updatedVulList)) :
             _.update_status()
 
+        print('111')
         return response.Response({'result':'success'}, status=status.HTTP_200_OK)
 
 class RealGridAssetAPI(views.APIView):
@@ -235,4 +236,6 @@ class RealGridAssetAPI(views.APIView):
             assetObj.delete()
             
         dataDict['result'] = 'success'
+        print('111')
+        
         return response.Response(dataDict)
