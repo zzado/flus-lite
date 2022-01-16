@@ -9,7 +9,7 @@ export function loadAssetGridData(gridView, dataProvider, assetList, areaAlias){
     let columns = [];
     let fields = assetFields;
   
-    for(let field of global.config.ASSET_GRID_FIELD[areaAlias]){
+    for(let field of global.config.ASSET_FIELD_FOR_REALGRID[areaAlias]){
       columns.push(assetColunms.find(e=>e.name === field));
     }
     

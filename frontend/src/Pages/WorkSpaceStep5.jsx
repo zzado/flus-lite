@@ -25,7 +25,7 @@ export default function WorkSpaceStep5(){
 
   const exportDocx = useCallback(()=> exportDocxReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.docx`) : alert('error')), [projectId, areaAlias])
 
-  const exportXlsx = useCallback(()=> exportVulListToXlsx(assetList, vulList),[assetList, vulList])
+  const exportXlsx = useCallback(()=> exportVulListToXlsx(areaAlias, assetList, vulList),[areaAlias, assetList, vulList])
 
 
   return (

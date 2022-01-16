@@ -13,7 +13,7 @@ export function loadVulsGridData(gridView, dataProvider, vulList, areaAlias) {
   let columns = [];
   let fields = vulFields;
 
-  for (let field of global.config.VUL_GRID_FIELD[areaAlias]) {
+  for (let field of global.config.VUL_FIELD_FOR_REALGRID[areaAlias]) {
     //console.log(field);
     columns.push(vulColunms.find((e) => e.name === field));
   }
