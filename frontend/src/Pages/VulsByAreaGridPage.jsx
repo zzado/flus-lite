@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState, useRef, useContext } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import { GridView, LocalDataProvider } from 'realgrid';
-import { loadVulsGridData, saveVulRealGrid, exportVulXlsx, importVulXlsx } from '../Services/vulGridFunc';
+import { loadVulsGridData, saveVulRealGrid, exportVulXlsx, importVulXlsx } from '../Actions/vulGridFunc';
 import { Box, Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import UploadIcon from '@mui/icons-material/Upload';

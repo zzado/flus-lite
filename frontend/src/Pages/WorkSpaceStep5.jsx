@@ -9,7 +9,8 @@ import { AppContext } from '../Context/AppContext'
 import HtmlIcon from '@mui/icons-material/Html';
 import ArticleIcon from '@mui/icons-material/Article';
 import TableRowsIcon from '@mui/icons-material/TableRows';
-import { exportVulListToXlsx } from '../Services/exportXlsx'
+//import { exportResultXlsx } from '../Actions/xlsxAction'
+import { exportResultXlsx } from '../Actions/xlsxAction/exportXlsx'
 
 
 export default function WorkSpaceStep5(){
@@ -25,7 +26,7 @@ export default function WorkSpaceStep5(){
 
   const exportDocx = useCallback(()=> exportDocxReporttReq(projectId, areaAlias).then(([result, resData])=> (result)? FileSaver.saveAs(resData, `[${areaAlias}] 취약점 목록.docx`) : alert('error')), [projectId, areaAlias])
 
-  const exportXlsx = useCallback(()=> exportVulListToXlsx(areaAlias, assetList, vulList),[areaAlias, assetList, vulList])
+  const exportXlsx = useCallback(()=> exportResultXlsx(areaAlias, assetList, vulList),[areaAlias, assetList, vulList])
 
 
   return (

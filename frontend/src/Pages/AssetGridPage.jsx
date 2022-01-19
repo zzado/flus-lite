@@ -1,7 +1,9 @@
 import { Fragment, useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAssetContext } from '../Context/AppContext';
-import { loadAssetGridData, saveAssetRealGrid, exportAssetXlsx, importAssetXlsx } from '../Services/assetGridFunc';
+import { loadAssetGridData, saveAssetRealGrid, importAssetXlsx } from '../Actions/assetGridFunc';
+import { exportAssetXlsx } from '../Actions/xlsxAction';
+
 import { GridView, LocalDataProvider } from 'realgrid';
 import { Box, Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -59,9 +61,15 @@ export default function AssetGridPage(){
           </Tooltip>
 
           <input type="file" onChange={(e)=> importAssetXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
-
+{/* 
           <Tooltip title="XLSX 내보내기" placement="top" arrow>
             <IconButton sx={{mr:1}} onClick={()=> exportAssetXlsx(gridView, `[자산] ${areaAlias}.xlsx`, '자산')}>
+              <DownloadIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip> */}
+
+          <Tooltip title="XLSX 내보내기" placement="top" arrow>
+            <IconButton sx={{mr:1}} onClick={()=> exportAssetXlsx(areaAlias, assetList)}>
               <DownloadIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>

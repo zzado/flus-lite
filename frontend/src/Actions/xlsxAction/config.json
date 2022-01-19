@@ -1,0 +1,395 @@
+
+{
+  "ASSET_FIELD_FOR_XLSX": { 
+    "FISM" : ["code",  "name", "asset_value", "operator", "assessors", "is_new", "note"],
+    "INF" : ["code",  "name", "asset_value", "operator", "assessors", "is_new", "note"],
+    "SRV" : ["code",  "name", "asset_value", "platform", "version", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "note"],
+    "DBM" : ["code",  "name", "asset_value", "platform", "version", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "note"],
+    "NET" : ["code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",   "operator", "assessors", "is_new", "is_test", "is_switch", "is_external", "backup_cycle", "pwd_change_cycle", "note"],
+    "ISS" : ["code",  "name", "asset_value", "platform", "version", "product_model", "hostname", "ip_url",  "operator", "assessors","is_new", "is_test", "note"],
+    "MOB" : ["code",  "name", "asset_value", "platform", "operator", "assessors", "is_new", "is_test", "is_financial", "note"],
+    "WEB" : ["code",  "name", "asset_value", "ip_url", "operator", "assessors", "is_new", "is_test", "is_financial", "is_https", "note"],
+    "HTS" : ["code",  "name", "asset_value", "operator", "assessors", "is_new", "is_test", "is_financial",  "note"]
+  },
+  
+  "VUL_FIELD_FOR_XLSX": { 
+    "SRV" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+    "DBM" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+    "NET" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_gathering_data", "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+    
+    "INF" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide", "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+    "ISS" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide",  "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+    "MOB" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide",  "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+    "WEB" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide",  "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"],
+
+    "HTS" : ["asset_code", "vulitem_code", "vulitem_name", "vulitem_description", "vulitem_checking_guide", "vulitem_judgment_guide",  "vul_status", "vul_result", "poc_point", "poc_found_date", "poc_reported_date", "poc_patched_date", "poc_is_new", "poc_note"]
+  },
+
+  "VUL_COLUMNS_FOR_XLSX" : [
+    {
+      "key": "asset_code",
+      "header": "자산번호",
+      "width": 9,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vulitem_code",
+      "header": "평가항목ID",
+      "width": 9,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vulitem_name",
+      "header": "평가항목명",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vulitem_description",
+      "header": "상세설명",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vulitem_checking_guide",
+      "header": "판단방법",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vulitem_judgment_guide",
+      "header": "판단기준",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vul_gathering_data",
+      "header": "정보수집결과",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vul_status",
+      "header": "현재상태",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "vul_result",
+      "header": "취약여부",
+      "width": 9,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "poc_point",
+      "header": "취약항목",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "poc_found_date",
+      "header": "발견일자",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "poc_reported_date",
+      "header": "전달일자",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "poc_patched_date",
+      "header": "패치일자",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "poc_is_new",
+      "header": "신규/기존",
+      "width": 15,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "poc_note",
+      "header": "비고",
+      "width": 20,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    }
+  ],
+
+  "ASSET_COLUMNS_FOR_XLSX": [
+    {
+      "key": "code",
+      "header": "자산코드",
+      "width": 9,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "name",
+      "header": "자산이름",
+      "width": 30,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "asset_value",
+      "header": "자산가치",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "operator",
+      "header": "담당자",
+      "width": 15,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "assessors",
+      "header": "평가자",
+      "width": 15,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "is_new",
+      "header": "신규 여부",
+      "width": 20,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    
+    {
+      "key": "note",
+      "header": "비고",
+      "width": 30
+    },
+    {
+      "key": "platform",
+      "header": "자산종류",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "version",
+      "header": "버전",
+      "width": 10
+    },
+    {
+      "key": "hostname",
+      "header": "호스트명",
+      "width": 30
+    },
+    {
+      "key": "ip_url",
+      "header": "IP/URL",
+      "width": 20
+    },
+    {
+      "key": "is_test",
+      "header": "테스트 장비여부",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "product_model",
+      "header": "제조사명",
+      "width": 15
+    },
+    {
+      "key": "is_switch",
+      "header": "스위치 여부",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "is_external",
+      "header": "대외구간 연결여부",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "backup_cycle",
+      "header": "백업주기(일)",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "pwd_change_cycle",
+      "header": "비밀번호 변경주기(일)",
+      "width": 10,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "is_server",
+      "header": "서버측 점검여부",
+      "width": 20,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    {
+      "key": "is_financial",
+      "header": "전자금융서비스 여부",
+      "width": 20,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    },
+    
+    {
+      "key": "is_https",
+      "header": "HTTPS 여부",
+      "width": 20,
+      "style": {
+        "alignment": {
+          "horizontal": "center", 
+          "vertical": "middle"
+        }
+      }
+    }
+  ]
+}
