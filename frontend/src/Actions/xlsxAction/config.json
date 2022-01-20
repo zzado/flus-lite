@@ -1,5 +1,30 @@
 
 {
+
+  "ASSET_INIT_DATA_FOR_XLSX" : {
+    "name": "",
+    "assessors": "",
+    "note": "",
+    "hostname": "",
+    "is_switch": true,
+    "is_external": false,
+    "backup_cycle": 0,
+    "pwd_change_cycle": 0,
+    "ip_url": "",
+    "is_financial": false,
+    "is_https": false,
+    "version": "",
+    "platform": "",
+    "platform_t": "",
+    "product_model": "",
+    "asset_value": 5,
+    "operator": "",
+    "is_test": false,
+    "is_server": true,
+    "is_new": true,
+    "manual_done": false
+  },
+
   "ASSET_FIELD_FOR_XLSX": { 
     "FISM" : ["code",  "name", "asset_value", "operator", "assessors", "is_new", "note"],
     "INF" : ["code",  "name", "asset_value", "operator", "assessors", "is_new", "note"],
