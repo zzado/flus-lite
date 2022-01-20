@@ -1,12 +1,15 @@
 import { useEffect, Fragment, useState } from 'react';
-import AssetInfoTable from '../Components/AssetInfoTable';
+import { useParams, useNavigate } from 'react-router-dom';
+import AssetInfoTable from 'Components/AssetInfoTable';
+//import { useAssetContext } from 'Context/AppContext'
+import { useAssetContext } from 'Hooks/useAssetContext';
+import { deleteAssetReq  } from 'utils';
+
 import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
-import { useParams, useNavigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { deleteAssetReq  } from '../utils';
-import { useAssetContext } from '../Context/AppContext'
+
 
 
 export default function AssetDetailPage(){

@@ -1,6 +1,6 @@
 import { Fragment, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { AppContext } from '../Context/AppContext';
+import { AppContext } from 'Context/AppContext';
 import { Tooltip, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Card, CardHeader, CardContent ,Checkbox,  IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -24,7 +24,7 @@ const TableStyle = styled('div')(
   }
   `,
 );
-export default function ProjectListPage(){
+export default function ProjectList(){
   const { appContextState } = useContext(AppContext);
   const { projectList } = appContextState;
   

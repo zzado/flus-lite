@@ -1,7 +1,11 @@
-import { Fragment, useEffect, useState, useRef, useContext } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { Fragment, useState, useRef, useEffect } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+//import { useAssetContext } from 'Context/AppContext';
+import { useAssetContext } from 'Hooks/useAssetContext';
+import { loadAssetGridData, saveAssetRealGrid } from 'Actions/assetGridFunc';
+import { importAssetXlsx, exportAssetXlsx } from 'Actions/xlsxAction';
+
 import { GridView, LocalDataProvider } from 'realgrid';
-import { loadVulsGridData, saveVulRealGrid, exportVulXlsx, importVulXlsx } from '../Actions/vulGridFunc';
 import { Box, Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import UploadIcon from '@mui/icons-material/Upload';
@@ -9,26 +13,23 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ZoomOutMapRoundedIcon from '@mui/icons-material/ZoomOutMapRounded';
 import ZoomInMapRoundedIcon from '@mui/icons-material/ZoomInMapRounded';
-import { AppContext } from '../Context/AppContext'
 
-export default function VulsByAssetGridPage(){
+export default function AssetGridView(){
+  const { assetList, resetAssetList} = useAssetContext();
   const { projectId, areaAlias } = useParams();
-  const { appContextState } = useContext(AppContext);
-  const { vulList } = appContextState;
-  
-  const [gridView, setGridView] = useState(null);
   const [gridMaxSize, setGridMaxSize] = useState(false);
-  const [dataProvider, setDataProvider] = useState(null);
-
   const isFileUploadRef = useRef(false);
   const gridRef = useRef();
+  
+  const [gridView, setGridView] = useState(null);
+  const [dataProvider, setDataProvider] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(gridView !== null && dataProvider !== null){
-      if(vulList.length) loadVulsGridData(gridView, dataProvider, vulList, areaAlias);
-    }
-  },[gridView, dataProvider, vulList, areaAlias]);
+    if(gridView !== null && dataProvider !== null)
+      loadAssetGridData(gridView, dataProvider, assetList, areaAlias);
+    
+  },[gridView, dataProvider, assetList, areaAlias]);
   
   useEffect(() => {
     if(gridView === null && dataProvider === null){
@@ -41,12 +42,13 @@ export default function VulsByAssetGridPage(){
 
   const saveGrid = () => {
     if(gridView && dataProvider){
-      if(saveVulRealGrid(gridView, dataProvider, projectId, areaAlias)){
+      if(saveAssetRealGrid(gridView, dataProvider, projectId, areaAlias)){
+        resetAssetList();
         alert('저장 완료');
       }
     }
   };
-
+  
 
   return (
     <Fragment>
@@ -58,11 +60,17 @@ export default function VulsByAssetGridPage(){
               <UploadIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
-
-          <input type="file" onChange={(e)=> importVulXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/>
+          <input type="file" onChange={(e)=> importAssetXlsx(assetList, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/> 
+          {/* <input type="file" onChange={(e)=> importAssetXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/> */}
+          {/* 
+          <Tooltip title="XLSX 내보내기" placement="top" arrow>
+            <IconButton sx={{mr:1}} onClick={()=> exportAssetXlsx(gridView, `[자산] ${areaAlias}.xlsx`, '자산')}>
+              <DownloadIcon sx={{ fontSize: 40 }}/>
+            </IconButton>
+          </Tooltip> */}
 
           <Tooltip title="XLSX 내보내기" placement="top" arrow>
-            <IconButton sx={{mr:1}} onClick={()=> exportVulXlsx(gridView, `[취약점] ${areaAlias}.xlsx`, '취약점')}>
+            <IconButton sx={{mr:1}} onClick={()=> exportAssetXlsx(areaAlias, assetList)}>
               <DownloadIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
@@ -86,7 +94,7 @@ export default function VulsByAssetGridPage(){
           </Tooltip>
           }
           <Tooltip title="뒤로" placement="top" arrow>
-            <IconButton sx={{mr:2}} onClick={()=>navigate(`/w/${projectId}/${areaAlias}/step3`)}>
+            <IconButton sx={{mr:2}} onClick={()=>navigate(`/w/${projectId}/${areaAlias}/step1`)}>
               <ArrowBackIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>

@@ -1,16 +1,16 @@
 
 import { Fragment, useContext, useCallback } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
-import AssetListTable from '../Components/AssetListTable'
-import { exportHtmlReporttReq, exportDocxReporttReq } from '../utils'
+import AssetListTable from 'Components/AssetListTable'
+import { exportHtmlReporttReq, exportDocxReporttReq } from 'utils'
 import FileSaver from 'file-saver'
-import { AppContext } from '../Context/AppContext'
+import { AppContext } from 'Context/AppContext'
 import HtmlIcon from '@mui/icons-material/Html';
 import ArticleIcon from '@mui/icons-material/Article';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 //import { exportResultXlsx } from '../Actions/xlsxAction'
-import { exportResultXlsx } from '../Actions/xlsxAction/exportXlsx'
+import { exportResultXlsx } from 'Actions/xlsxAction/exportXlsx'
 
 
 export default function WorkSpaceStep5(){

@@ -1,15 +1,15 @@
 import { Fragment, } from 'react';
-import { useProjectContext } from '../Context/AppContext';
-import ProjectInfoTable from '../Components/ProjectInfoTable';
+import { useProjectContext } from 'Hooks/useProjectContext';
+import ProjectInfoTable from 'Components/ProjectInfoTable';
 import { Typography, Tooltip, IconButton, Card, CardHeader, CardContent } from '@mui/material';
 import { useNavigate, useParams} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { deleteProjectReq } from '../utils';
+import { deleteProjectReq } from 'utils';
 
-export default function ProjectDetailPage(){
+export default function ProjectDetail(){
   const { projectObj, resetProjectList } = useProjectContext();
   const { projectId } = useParams();
   const navigate = useNavigate();

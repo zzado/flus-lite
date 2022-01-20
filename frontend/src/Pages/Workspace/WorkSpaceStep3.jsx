@@ -1,10 +1,11 @@
 import { Fragment, useContext } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import VulListTable from '../Components/VulListTable';
+import VulListTable from 'Components/VulListTable';
+import { AppContext } from 'Context/AppContext'
+
 import { Tooltip, Card, CardHeader, CardContent, Typography, IconButton } from '@mui/material';
 import AddRoadIcon from '@mui/icons-material/AddRoad';
 import LinearProgress from '@mui/material/LinearProgress';
-import { AppContext } from '../Context/AppContext'
 
 export default function WorkSpaceStep3(){
   const { projectId, areaAlias } = useParams();

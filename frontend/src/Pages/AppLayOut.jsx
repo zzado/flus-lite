@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link, Outlet } from 'react-router-dom';
 import { AppContext } from '../Context/AppContext';
-import { Outlet } from 'react-router-dom';
-
 import { Collapse, List, ListItemIcon, ListItemText, ListSubheader, ListItemButton, Drawer, Divider, Button, Menu, MenuItem, IconButton, CssBaseline, AppBar, Toolbar, Box, Typography, Grid, Container } from '@mui/material';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';

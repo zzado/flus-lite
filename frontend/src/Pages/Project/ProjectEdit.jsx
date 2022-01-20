@@ -1,11 +1,12 @@
 import { Fragment, useReducer, useEffect } from 'react';
-import { useProjectContext } from '../Context/AppContext';
-import ProjectInfoTable from '../Components/ProjectInfoTable';
-import { Typography, Tooltip, IconButton, Card, CardHeader, CardContent } from '@mui/material';
 import { useNavigate, useParams} from 'react-router-dom';
+import { useProjectContext } from 'Hooks/useProjectContext';
+import ProjectInfoTable from 'Components/ProjectInfoTable';
+import { payloadEmptyCheck, editProjectReq } from 'utils'
+
+import { Typography, Tooltip, IconButton, Card, CardHeader, CardContent } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import SaveIcon from '@mui/icons-material/Save';
-import { payloadEmptyCheck, editProjectReq } from '../utils';
+import SaveIcon from '@mui/icons-material/Save';;
 
 
 const stateReducer = (state, action) => {
@@ -15,7 +16,7 @@ const stateReducer = (state, action) => {
     return { ...state, [action.name]: action.value};
 };
 
-export default function ProjectEditPage(){
+export default function ProjectEdit(){
   const { projectObj, resetProjectList } = useProjectContext();
   const { projectId } = useParams();
   const { PROJECT_VALID_CHECK_FIELDS, PROJECT_INIT_STATE } = global.config;

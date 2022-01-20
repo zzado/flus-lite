@@ -146,8 +146,8 @@ export async function exportAssetXlsx(areaAlias, assetList){
   createAssetSheet(assetWorkSheet, areaAlias, assetList);
 
   const buffer = await workBook.xlsx.writeBuffer(); 
-  const blob = new Blob([buffer]); 
-  FileSaver.saveAs(blob, '취약점 목록.xlsx');
+  const blob = new Blob([buffer]);
+  FileSaver.saveAs(blob, `${areaAlias} 자산.xlsx`);
 }
 
 export async function exportVulXlsx(areaAlias, assetList, vulList){
@@ -164,7 +164,7 @@ export async function exportVulXlsx(areaAlias, assetList, vulList){
 
   const buffer = await workBook.xlsx.writeBuffer(); 
   const blob = new Blob([buffer]); 
-  FileSaver.saveAs(blob, '취약점 목록.xlsx');
+  FileSaver.saveAs(blob, `${areaAlias} 평가.xlsx`);
 }
 
 
@@ -183,5 +183,5 @@ export async function exportResultXlsx(areaAlias, assetList, vulList){
 
   const buffer = await workBook.xlsx.writeBuffer(); 
   const blob = new Blob([buffer]); 
-  FileSaver.saveAs(blob, '취약점 목록.xlsx');
+  FileSaver.saveAs(blob, `${areaAlias} 취약점 목록.xlsx`);
 }

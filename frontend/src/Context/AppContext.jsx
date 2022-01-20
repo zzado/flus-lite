@@ -1,7 +1,7 @@
-import { useMemo, createContext, useCallback, useReducer, useRef, useState } from 'react';
-import { useEffect, useContext } from 'react';
+import { useMemo, createContext, useCallback, useReducer, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { getPlatformListReq, getVulListByAreaReq, getUserInfoReq, getProjectListReq, getAssetListByAreaAliasReq, getVulListByAssetReq } from '../utils'
+import { getVulListByAreaReq, getUserInfoReq, getProjectListReq, getAssetListByAreaAliasReq } from 'utils'
 const { PROJECT_FIELD } = global.config;
 export const AppContext = createContext();
 
@@ -113,57 +113,3 @@ export const AppContextProvider = ({children}) => {
     </AppContext.Provider>
   );
 };
-
-export const useProjectContext=()=>{
-  const { appContextState, appContextDispatch, sortProjectList } = useContext(AppContext);
-  const { currentProject } = appContextState
-  
-  const resetProjectList = () => {
-    getProjectListReq().then( ([result, jsonData]) => appContextDispatch({ name: 'projectList', value: sortProjectList(jsonData) }));
-  }
-
-  return ({ projectObj: currentProject, resetProjectList : resetProjectList });
-}
-
-
-export const useVulListByAssetContext=(assetId)=>{
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { assetObj, vulList, vulListByAsset } = appContextState
-
-  useEffect(() => {
-    if(assetId && vulList.length){
-      appContextDispatch({name: 'vulListByAsset', value: vulList.filter(e=>e.asset.pk === parseInt(assetId))});
-    }
-  },[vulList, assetId, appContextDispatch]);
-  
-  const updateVulList = () => {
-    getVulListByAssetReq(assetId).then( ([result, jsonData]) => {
-      if(result) appContextDispatch({name: 'vulList', value: [ ...vulList.filter(e=>e.asset.pk !== parseInt(assetId)), ...jsonData].sort( (e1, e2) => (e1.id  > e2.id) ? 1 : -1 )})
-    })
-  }
-
-  return ({ assetObj: assetObj, vulListByAsset: vulListByAsset, updateVulList : updateVulList });
-}
-
-
-export const useAssetContext=()=>{
-  const { appContextState, appContextDispatch } = useContext(AppContext);
-  const { currentProject, currentArea, assetObj, assetList } = appContextState
-  const [ platformList, setPlatformList ] = useState([]);
-
-  // useEffect(() => {
-  //   if(currentProject.compliance) getPlatformListReq(currentProject.compliance, currentArea).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : console.log('fetch failed'));
-  // }, [currentArea, currentProject.compliance]);
-
-
-  const getPlatformList = useCallback(() => {
-    getPlatformListReq(currentProject.compliance, currentArea).then( ([result, jsonData]) => (result)? setPlatformList(jsonData) : console.log('fetch failed'));
-  },[currentArea, currentProject.compliance]);
-
-
-  const resetAssetList = useCallback(() => {
-    getAssetListByAreaAliasReq(currentProject.id, currentArea).then( ([result, jsonData]) => appContextDispatch({ name: 'assetList', value: jsonData.sort( (e1, e2) => (e1.num  > e2.num) ? 1 : -1 ) }));
-  },[appContextDispatch, currentArea, currentProject.id]);
-
-  return ({ platformList: platformList, assetObj: assetObj, assetList: assetList, resetAssetList : resetAssetList, getPlatformList: getPlatformList });
-}

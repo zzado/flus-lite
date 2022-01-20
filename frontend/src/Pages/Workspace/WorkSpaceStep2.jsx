@@ -1,10 +1,9 @@
 import { Fragment, useContext } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import { AppContext } from '../Context/AppContext'
+import { AppContext } from 'Context/AppContext'
+import AssetListTable from 'Components/AssetListTable'
 import { Tooltip, IconButton, Card, CardHeader, CardContent, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import AssetListTable from '../Components/AssetListTable'
-
 
 export default function WorkSpaceStep2(){
   const { appContextState } = useContext(AppContext);

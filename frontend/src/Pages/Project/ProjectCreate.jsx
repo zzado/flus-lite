@@ -1,16 +1,16 @@
 import { Fragment, useReducer } from 'react';
-import { useProjectContext } from '../Context/AppContext';
-import ProjectInfoTable from '../Components/ProjectInfoTable';
+import { useProjectContext } from 'Hooks/useProjectContext';
+import ProjectInfoTable from 'Components/ProjectInfoTable';
 import { Typography, Tooltip, IconButton, Card, CardHeader, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
-import { payloadEmptyCheck, createProjectReq } from '../utils';
+import { payloadEmptyCheck, createProjectReq } from 'utils';
 
 const stateReducer = (state, action) => {
   return { ...state, [action.name]: action.value};
 };
-export default function ProjectDetailPage(){
+export default function ProjectCreate(){
   const { resetProjectList } = useProjectContext();
   const { PROJECT_VALID_CHECK_FIELDS, PROJECT_INIT_STATE } = global.config;
   const [ projectState, projectStateDispatch ] = useReducer(stateReducer, PROJECT_INIT_STATE);
