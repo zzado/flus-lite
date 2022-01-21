@@ -24,7 +24,7 @@ export default function AssetGridView(){
   const [gridView, setGridView] = useState(null);
   const [dataProvider, setDataProvider] = useState(null);
   const navigate = useNavigate();
-
+  console.log(assetList)
   useEffect(() => {
     if(gridView !== null && dataProvider !== null)
       loadAssetGridData(gridView, dataProvider, assetList, areaAlias);
@@ -60,7 +60,7 @@ export default function AssetGridView(){
               <UploadIcon sx={{ fontSize: 40 }}/>
             </IconButton>
           </Tooltip>
-          <input type="file" onChange={(e)=> importAssetXlsx(assetList, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/> 
+          <input type="file" onChange={(e)=> importAssetXlsx(assetList, e.target.files[0], projectId, areaAlias)} ref={isFileUploadRef} style={{display:'none'}}/> 
           {/* <input type="file" onChange={(e)=> importAssetXlsx(gridView, dataProvider, e.target.files[0])} ref={isFileUploadRef} style={{display:'none'}}/> */}
           {/* 
           <Tooltip title="XLSX 내보내기" placement="top" arrow>

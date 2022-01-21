@@ -255,3 +255,9 @@ export const payloadEmptyCheck = (payload, fields) =>{
 
 
 
+export const multiAssetReq = async(payload, projectId, areaAlias)=>{
+  const URL = `api/asset-multi/${projectId}/${areaAlias}/`;
+  const OPTION = {method: 'POST', body: JSON.stringify(payload),};
+  const [result, jsonData] = await APIRequest(URL, OPTION);
+  return [result, jsonData];
+}

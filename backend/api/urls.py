@@ -39,4 +39,5 @@ urlpatterns = [
     #path('referfile/<int:pk>/', ReferFileAPI.as_view()),
     path('referfile-by-vul/<int:vulId>/', ReferFileByVulAPI.as_view()),
 
+    path('asset-multi/<int:projectId>/<str:areaAlias>/', AssetMultiFuncAPI.as_view()),
 ]

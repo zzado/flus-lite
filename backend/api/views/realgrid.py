@@ -236,6 +236,5 @@ class RealGridAssetAPI(views.APIView):
             assetObj.delete()
             
         dataDict['result'] = 'success'
-        print('111')
         
         return response.Response(dataDict)

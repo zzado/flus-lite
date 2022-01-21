@@ -1,5 +1,5 @@
 from api.views.project import ProjectAPI
-from api.views.asset import AssetAPI, AssetListByProjectAPI, AssetListByAreaAliasAPI
+from api.views.asset import AssetAPI, AssetListByProjectAPI, AssetListByAreaAliasAPI, AssetMultiFuncAPI
 from api.views.vulnerability import VulnerabilityAPI, VulnerabilityListByAssetAPI, VulnerabilityListByAreaAPI
 from api.views.authentication import SignUpAPI, SignInAPI, UserInfoGetAPI, UserListAPI
 from api.views.compliance import ComplianceListAPI, PlatformListAPI

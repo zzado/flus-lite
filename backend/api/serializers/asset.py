@@ -29,6 +29,21 @@ class AssetSerializer(serializers.ModelSerializer):
         assetObj.init_vulobjs()
         return assetObj
 
+    def update(self, instance, validated_data):
+        for key in ['platform',  'is_financial', 'is_https', 'is_server', 'is_switch'] :
+            if validated_data[key] != instance.__dict__[key] :
+                instance.reset_vulobjs()
+                break
+
+        validated_data['code'] = f'{settings.AREA_SIGNATURE[validated_data["area_alias"]]}{validated_data["num"]:02d}'
+        validated_data['full_code'] = f'[{validated_data["project"].id}]{validated_data["area_alias"]}-{validated_data["code"]}'
+        
+        for _ in validated_data : 
+            instance.__dict__[_] = validated_data[_]
+
+        instance.save()
+        return instance
+
     class Meta:
         model = Asset
         exclude = ['parents', 'gubun', 'instance_name']

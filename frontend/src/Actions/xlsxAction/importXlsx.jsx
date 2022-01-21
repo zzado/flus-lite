@@ -1,6 +1,6 @@
 import ExcelJS from 'exceljs';
 import configData from './config.json'
-
+import { multiAssetReq } from 'utils'
 
 const convertAssetSheetToJson = (assetWorkSheet) => {
   const { ASSET_COLUMNS_FOR_XLSX } = configData;
@@ -32,7 +32,7 @@ const reverseConvertAssetJsonData = (jsonData) => {
   return convAssetList
 }
 
-export async function importAssetXlsx(assetList, fileObj){
+export async function importAssetXlsx(assetList, fileObj, projectId, areaAlias){
   const { ASSET_INIT_DATA_FOR_XLSX } = configData;
   const data = await fileObj.arrayBuffer();
   const workBook = new ExcelJS.Workbook();
@@ -42,45 +42,33 @@ export async function importAssetXlsx(assetList, fileObj){
   jsonData = reverseConvertAssetJsonData(jsonData)
   console.log(jsonData);
 
-  // const convertedAssetList = jsonData.map(e=>{
-  //   const asstObj = assetList.find(e2=> e2.code === e.code);
-  //   return (asstObj)? {...asstObj, ...e } : {...ASSET_INIT_DATA_FOR_XLSX, ...e };
-  // });
-  // //const a = reverseConvertAssetJsonData(jsonData)
-  //console.log(a)
-  // console.log(assetList);
-  
-
   let deleteArr = [];
   let createArr = [];
   let updateArr = [];
-  
-
 
   for(let row of jsonData){
-    const assetObj = assetList.find(e2=> e2.code === row.code);
+    const assetObj = assetList.find(e=> e.code === row.code);
     if(assetObj){
-      // Object compare
-      if (JSON.stringify({...assetObj, ...row }) !== JSON.stringify(assetObj)){
-        // update
-        console.log('equal')
+      if(JSON.stringify({...assetObj, ...row }) !== JSON.stringify(assetObj)){
+        console.log(assetObj)
+        console.log(row)
+        updateArr.push({...assetObj, ...row })
       }
     }else{
-      // createaa
+      createArr.push({...ASSET_INIT_DATA_FOR_XLSX, ...row});
     }
   }
 
-  //console.log(convertedAssetList)  
+  for(let assetObj of assetList){
+    const rowData = jsonData.find(e=> e.code === assetObj.code);
+    if(rowData === undefined) deleteArr.push(assetObj.id);
+  }
 
-  //console.log(jsonData);
-  //console.log(assetList);
-  
-  
-  //const workBook = new ExcelJS.Workbook(); 
-  //const assetWorkSheet = workBook.xlsx.readFile("자산")
-
-  
-  // const buffer = await workBook.xlsx.writeBuffer(); 
-  // const blob = new Blob([buffer]); 
-  // FileSaver.saveAs(blob, '취약점 목록.xlsx');
+  const payload = {
+    createdRow: createArr,
+    updatedRow: updateArr,
+    deletedRow: deleteArr
+  }
+  console.log(payload)
+  multiAssetReq(payload, projectId, areaAlias).then( ([result, jsonData]) => {console.log(jsonData)});
 }

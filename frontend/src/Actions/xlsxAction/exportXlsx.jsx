@@ -125,7 +125,10 @@ const convertVulJsonData = (vulList) => {
 
 const convertAssetJsonData = (assetList) => {
   const { ASSET_FIELD } = global.config
-  let convAssetList = [ ...assetList ];
+  //let convAssetList = [ ...assetList ];
+  // deep copy
+  let convAssetList = JSON.parse(JSON.stringify(assetList));
+  
   convAssetList.forEach(e=>{
     e.is_test = ASSET_FIELD.IS_TEST.find(e2=> e2.value === e.is_test).label;
     e.is_switch = ASSET_FIELD.IS_SWITCH.find(e2=> e2.value === e.is_switch).label;
